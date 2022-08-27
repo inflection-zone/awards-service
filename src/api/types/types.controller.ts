@@ -3,7 +3,6 @@ import { ResponseHandler } from '../../common/response.handler';
 import { ErrorHandler } from '../../common/error.handler';
 import { BaseController } from '../base.controller';
 import { RoleService } from '../../database/repository.services/role.service';
-import { CareplanCategoryService } from '../../database/repository.services/careplan/careplan.category.service';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,12 +12,9 @@ export class TypesController extends BaseController {
 
     _roleService: RoleService = null;
 
-    _careplanCategoryService: CareplanCategoryService = null;
-
     constructor() {
         super();
         this._roleService = new RoleService();
-        this._careplanCategoryService = new CareplanCategoryService();
     }
 
     //#endregion
@@ -50,38 +46,7 @@ export class TypesController extends BaseController {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
-    getCareplanCategories = async (request: express.Request, response: express.Response): Promise<void> => {
-        try {
-            await this.authorize('Types.GetCareplanCategories', request, response, false);
-            const categories = await this._careplanCategoryService.getCareplanCategories();
-            ResponseHandler.success(request, response, 'Careplan categories retrieved successfully!', 200, {
-                CareplanCategories : categories,
-            });
-
-        } catch (error) {
-            ResponseHandler.handleError(request, response, error);
-        }
-    };
-
-    // getPriorityTypes = async (request: express.Request, response: express.Response): Promise<void> => {
-    //     try {
-    //         await this.setContext('HealthPriority.GetPrioritiesTypes', request, response);
-
-    //         const priorityTypes = await this._delegate.getPriorityTypes();
-    //         if (priorityTypes.length === 0) {
-    //             throw new ApiError('Cannot fetch priorities types!', 400);
-    //         }
-
-    //         ResponseHandler.success(request, response, 'Fetched priority types successfully!', 201, {
-    //             PriorityTypes : priorityTypes,
-    //         });
-
-    //     } catch (error) {
-    //         ResponseHandler.handleError(request, response, error);
-    //     }
-    // };
-
+    
     //#endregion
 
 }
