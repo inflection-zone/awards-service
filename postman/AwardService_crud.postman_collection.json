@@ -1,0 +1,2299 @@
+{
+    "info": {
+        "_postman_id": "b00ab8db-9788-414a-a78c-c59131c8171c",
+        "name": "AwardService CRUD",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Client",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"ClientName\": \"Deepak Kumar Jain\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/clients",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "clients"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"CLIENT_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New client record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/clients/{{CLIENT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "clients",
+                                "{{CLIENT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/clients/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "clients",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "clientName",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "clientCode",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"ClientName\": \"Deepak Kumar Jain\",\r\n\"ClientCode\": \"BC456767\",\r\n\"Phone\": \"9876543210\",\r\n\"Email\": \"john.doe@myapp.com\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/clients/{{CLIENT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "clients",
+                                "{{CLIENT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"CLIENT_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New client record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/clients/{{CLIENT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "clients",
+                                "{{CLIENT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"UserName\": \"\",\r\n\"FirstName\": \"John\",\r\n\"LastName\": \"Doe\",\r\n\"Gender\": \"Female\",\r\n\"BirthDate\": \"\",\r\n\"Password\": \"test@123\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/users",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"USER_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New user record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/users/{{USER_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "users",
+                                "{{USER_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/users/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "users",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "userName",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "firstName",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "lastName",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "gender",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "birthDate",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"UserName\": \"\",\r\n\"FirstName\": \"John\",\r\n\"LastName\": \"Doe\",\r\n\"Phone\": \"9876543210\",\r\n\"Email\": \"john.doe@myapp.com\",\r\n\"Gender\": \"Female\",\r\n\"BirthDate\": \"\",\r\n\"Password\": \"test@123\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/users/{{USER_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "users",
+                                "{{USER_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"USER_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New user record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/users/{{USER_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "users",
+                                "{{USER_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Participant",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"ClientId\": \"{{CLIENT_ID}}\",\r\n\"FirstName\": \"John\",\r\n\"LastName\": \"Doe\",\r\n\"Gender\": \"Female\",\r\n\"BirthDate\": \"\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/participants",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "participants"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"PARTICIPANT_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New participant record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/participants/{{PARTICIPANT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "participants",
+                                "{{PARTICIPANT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/participants/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "participants",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "clientId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "firstName",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "lastName",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "gender",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "birthDate",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"ClientId\": \"{{CLIENT_ID}}\",\r\n\"FirstName\": \"John\",\r\n\"LastName\": \"Doe\",\r\n\"Phone\": \"9876543210\",\r\n\"Email\": \"john.doe@myapp.com\",\r\n\"Gender\": \"Female\",\r\n\"BirthDate\": \"\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/participants/{{PARTICIPANT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "participants",
+                                "{{PARTICIPANT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"PARTICIPANT_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New participant record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/participants/{{PARTICIPANT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "participants",
+                                "{{PARTICIPANT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Scheme",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"ClientId\": \"{{CLIENT_ID}}\",\r\n\"Name\": \"\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/schemes",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "schemes"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"SCHEME_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New scheme record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/schemes/{{SCHEME_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "schemes",
+                                "{{SCHEME_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/schemes/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "schemes",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "clientId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "validFrom",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "validTill",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"ClientId\": \"{{CLIENT_ID}}\",\r\n\"Name\": \"\",\r\n\"Description\": \"\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/schemes/{{SCHEME_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "schemes",
+                                "{{SCHEME_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"SCHEME_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New scheme record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/schemes/{{SCHEME_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "schemes",
+                                "{{SCHEME_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Event type",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"ClientId\": \"{{CLIENT_ID}}\",\r\n\"Name\": \"\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-types",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-types"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_TYPE_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event type record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-types/{{EVENT_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-types",
+                                "{{EVENT_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-types/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-types",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "schemeId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "clientId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "rootRuleNodeId",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"ClientId\": \"{{CLIENT_ID}}\",\r\n\"Name\": \"\",\r\n\"Description\": \"\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-types/{{EVENT_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-types",
+                                "{{EVENT_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_TYPE_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event type record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-types/{{EVENT_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-types",
+                                "{{EVENT_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Event action type",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"EventId\": \"{{EVENT_ID}}\",\r\n\"ClientId\": \"{{CLIENT_ID}}\",\r\n\"Name\": \"\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-action-types",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-action-types"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_ACTION_TYPE_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event action type record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-action-types/{{EVENT_ACTION_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-action-types",
+                                "{{EVENT_ACTION_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-action-types/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-action-types",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "schemeId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "eventId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "clientId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "rootRuleNodeId",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"EventId\": \"{{EVENT_ID}}\",\r\n\"ClientId\": \"{{CLIENT_ID}}\",\r\n\"Name\": \"\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-action-types/{{EVENT_ACTION_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-action-types",
+                                "{{EVENT_ACTION_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_ACTION_TYPE_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event action type record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-action-types/{{EVENT_ACTION_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-action-types",
+                                "{{EVENT_ACTION_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Event action",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"EventActionTypeId\": \"{{EVENT_ACTION_TYPE_ID}}\",\r\n\"ParticipantId\": \"{{PARTICIPANT_ID}}\",\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-actions",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-actions"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_ACTION_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event action record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-actions/{{EVENT_ACTION_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-actions",
+                                "{{EVENT_ACTION_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-actions/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-actions",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "eventActionTypeId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "participantId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "schemeId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "timestamp",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "rootRuleNodeId",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"EventActionTypeId\": \"{{EVENT_ACTION_TYPE_ID}}\",\r\n\"ParticipantId\": \"{{PARTICIPANT_ID}}\",\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-actions/{{EVENT_ACTION_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-actions",
+                                "{{EVENT_ACTION_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_ACTION_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event action record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/event-actions/{{EVENT_ACTION_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "event-actions",
+                                "{{EVENT_ACTION_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Event",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"EventTypeId\": \"{{EVENT_TYPE_ID}}\",\r\n\"ParticipantId\": \"{{PARTICIPANT_ID}}\",\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/events",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "events"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/events/{{EVENT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "events",
+                                "{{EVENT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/events/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "events",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "eventTypeId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "participantId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "schemeId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "timestamp",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "rootRuleNodeId",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"EventTypeId\": \"{{EVENT_TYPE_ID}}\",\r\n\"ParticipantId\": \"{{PARTICIPANT_ID}}\",\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/events/{{EVENT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "events",
+                                "{{EVENT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"EVENT_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New event record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/events/{{EVENT_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "events",
+                                "{{EVENT_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Rule node operation type",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"Composition\": \"\",\r\n\"Logical\": \"\",\r\n\"Mathematical\": \"\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/rule-node-operation-types",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "rule-node-operation-types"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"RULE_NODE_OPERATION_TYPE_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New rule node operation type record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/rule-node-operation-types/{{RULE_NODE_OPERATION_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "rule-node-operation-types",
+                                "{{RULE_NODE_OPERATION_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/rule-node-operation-types/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "rule-node-operation-types",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "composition",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "logical",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "mathematical",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"Composition\": \"\",\r\n\"Logical\": \"\",\r\n\"Mathematical\": \"\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/rule-node-operation-types/{{RULE_NODE_OPERATION_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "rule-node-operation-types",
+                                "{{RULE_NODE_OPERATION_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"RULE_NODE_OPERATION_TYPE_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New rule node operation type record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/rule-node-operation-types/{{RULE_NODE_OPERATION_TYPE_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "rule-node-operation-types",
+                                "{{RULE_NODE_OPERATION_TYPE_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Redemption",
+            "item": [
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n   \"ClientId\": \"{{CLIENT_ID}}\",\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"ParticipantId\": \"{{PARTICIPANT_ID}}\",\r\n\"Name\": \"\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/redemptions",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "redemptions"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"REDEMPTION_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New redemption record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get by id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/redemptions/{{REDEMPTION_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "redemptions",
+                                "{{REDEMPTION_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search with filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/redemptions/search",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "redemptions",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "clientId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "schemeId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "participantId",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "redemptionDate",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "redemptionStatus",
+                                    "value": "xyz"
+                                },
+                                {
+                                    "key": "rootRuleNodeId",
+                                    "value": "xyz"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n\"ClientId\": \"{{CLIENT_ID}}\",\r\n\"SchemeId\": \"{{SCHEME_ID}}\",\r\n\"ParticipantId\": \"{{PARTICIPANT_ID}}\",\r\n\"Name\": \"\",\r\n\"Description\": \"\",\r\n\"RootRuleNodeId\": \"{{ROOT_RULE_NODE_ID}}\"\r\n\r\n}\r\n"
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/redemptions/{{REDEMPTION_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "redemptions",
+                                "{{REDEMPTION_ID}}"
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "try {\r",
+                                    "    var respData = pm.response.json();\r",
+                                    "    pm.environment.set(\"REDEMPTION_ID\", respData.Data.id);\r",
+                                    "}\r",
+                                    "catch (error) {\r",
+                                    "    console.log(error.message);\r",
+                                    "}\r",
+                                    "\r",
+                                    "pm.test('Request is successfull', function () {\r    pm.response.to.have.status(200);\r    var jsonRes = pm.response.json();\r    pm.expect(jsonRes.Status).to.eql('success');\r});\r",
+                                    "\r",
+                                    "pm.test('New redemption record is created', function () {\r    var jsonRes = pm.response.json();\r    //pm.expect(jsonRes.Data).to.have.property('xyz');\r    //let expectedXyz = ;\r    //pm.expect(jsonRes.Data.xyz).equals(expectedXyz);\r});\r",
+                                    "\r"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "type": "text",
+                                "value": "Bearer {{USER_JWT}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{BASE_URL}}/redemptions/{{REDEMPTION_ID}}",
+                            "host": [
+                                "{{BASE_URL}}"
+                            ],
+                            "path": [
+                                "redemptions",
+                                "{{REDEMPTION_ID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
