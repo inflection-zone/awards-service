@@ -11,7 +11,7 @@ import {
 export const register = (app: express.Application): void => {
 
     const router = express.Router();
-    const authenticator = Loader.authenticator;
+    const authenticator = Loader.Authenticator;
     const controller = new EventActionController();
 
     router.post('/', authenticator.authenticateClient, controller.create);
