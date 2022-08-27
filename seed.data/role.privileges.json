@@ -1,0 +1,98 @@
+[
+    {
+        "Role": "Admin",
+        "Privileges": [
+            "User.Create",
+            "User.GetById",
+            "User.Search",
+            "User.Update",
+            "User.Delete",
+            "User.LoginWithPassword",
+            "User.ResetPassword",
+            "User.LoginWithOtp",
+            "User.SendOtp",
+            "User.Logout",
+
+            "FileResource.Upload",
+            "FileResource.GetById",
+            "FileResource.Search",
+            "FileResource.Download",
+
+            "ApiClient.Create",
+            "ApiClient.Search",
+            "ApiClient.GetById",
+            "ApiClient.Update",
+            "ApiClient.Delete",
+            "ApiClient.GetApiKey",
+            "ApiClient.RenewApiKey"
+        ]
+    },
+    {
+        "Role": "Moderator",
+        "Privileges": [
+            "User.Create",
+            "User.GetById",
+            "User.Search",
+            "User.Update",
+            "User.Delete",
+            "User.LoginWithPassword",
+            "User.ResetPassword",
+            "User.LoginWithOtp",
+            "User.SendOtp",
+            "User.Logout",
+
+            "FileResource.Upload",
+            "FileResource.GetById",
+            "FileResource.Search",
+            "FileResource.Download",
+
+            "Participant.Create",
+            "Participant.Search",
+            "Participant.GetById",
+            "Participant.Update",
+            "Participant.Delete",
+
+            "Scheme.Create",
+            "Scheme.Search",
+            "Scheme.GetById",
+            "Scheme.Update",
+            "Scheme.Delete",
+
+            "EventType.Create",
+            "EventType.Search",
+            "EventType.GetById",
+            "EventType.Update",
+            "EventType.Delete",
+
+            "EventActionType.Create",
+            "EventActionType.Search",
+            "EventActionType.GetById",
+            "EventActionType.Update",
+            "EventActionType.Delete",
+
+            "EventAction.Create",
+            "EventAction.Search",
+            "EventAction.GetById",
+            "EventAction.Update",
+            "EventAction.Delete",
+
+            "Event.Create",
+            "Event.Search",
+            "Event.GetById",
+            "Event.Update",
+            "Event.Delete",
+
+            "RuleNodeOperationType.Create",
+            "RuleNodeOperationType.Search",
+            "RuleNodeOperationType.GetById",
+            "RuleNodeOperationType.Update",
+            "RuleNodeOperationType.Delete",
+
+            "Redemption.Create",
+            "Redemption.Search",
+            "Redemption.GetById",
+            "Redemption.Update",
+            "Redemption.Delete"
+        ]
+    }
+]
