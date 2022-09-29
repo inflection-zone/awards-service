@@ -1,4 +1,4 @@
-import cors from 'cors';
+//import cors from 'cors';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
@@ -99,7 +99,7 @@ export default class Application {
                 this._app.use(express.urlencoded({ extended: true }));
                 this._app.use(express.json());
                 this._app.use(helmet());
-                this._app.use(cors());
+                //this._app.use(cors());
 
                 const MAX_UPLOAD_FILE_SIZE = ConfigurationManager.MaxUploadFileSize();
             

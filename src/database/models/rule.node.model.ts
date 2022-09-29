@@ -2,11 +2,11 @@ import DatabaseConnector from '../database.connector';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class ClientModel {
+export class RuleNodeModel {
 
-    static TableName = 'clients';
+    static TableName = 'rule_nodes';
 
-    static ModelName = 'Client';
+    static ModelName = 'RuleNode';
 
     static Schema = () => {
 
@@ -19,27 +19,7 @@ export class ClientModel {
                 allowNull    : false,
                 defaultValue : Sequelize.UUIDV4,
                 primaryKey   : true
-            },
-            ClientName : {
-                type      : Sequelize.STRING(256),
-                allowNull : false
-            },
-            ClientCode : {
-                type      : Sequelize.STRING(32),
-                allowNull : false
-            },
-            Phone : {
-                type      : Sequelize.STRING(16),
-                allowNull : true
-            },
-            Email : {
-                type      : Sequelize.STRING(256),
-                allowNull : true
-            },
-
-            CreatedAt : Sequelize.DATE,
-            UpdatedAt : Sequelize.DATE,
-            DeletedAt : Sequelize.DATE
+            }
         };
     }
 
@@ -47,10 +27,10 @@ export class ClientModel {
 
         const db = DatabaseConnector;
         const sequelize = db.sequelize;
-        const schema = ClientModel.Schema();
+        const schema = RuleNodeModel.Schema();
 
         return sequelize.define(
-            ClientModel.ModelName,
+            RuleNodeModel.ModelName,
             schema, {
                 createdAt       : 'CreatedAt',
                 updatedAt       : 'UpdatedAt',
@@ -58,14 +38,14 @@ export class ClientModel {
                 freezeTableName : true,
                 timestamps      : true,
                 paranoid        : true,
-                tableName       : ClientModel.TableName,
+                tableName       : RuleNodeModel.TableName,
             });
     };
 
     static associate = (models) => {
 
         //Add associations here...
-
+       
     };
 
 }

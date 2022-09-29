@@ -37,7 +37,6 @@ export class EventTypeService {
 
     RuleNode = RuleNodeModel.Model();
 
-
     //#endregion
 
     //#region Publics
@@ -54,25 +53,25 @@ export class EventTypeService {
     getById = async (id) => {
         try {
             const record = await this.EventType.findOne({
-                where: {
-                    id: id
+                where : {
+                    id : id
                 },
-                include: [{
-                        model: this.Scheme,
-                        required: false,
-                        as: 'Scheme',
-                        //through: { attributes: [] }
-                    }, {
-                        model: this.Client,
-                        required: false,
-                        as: 'Client',
-                        //through: { attributes: [] }
-                    }, {
-                        model: this.RuleNode,
-                        required: false,
-                        as: 'RootRuleNode',
-                        //through: { attributes: [] }
-                    },
+                include : [{
+                    model    : this.Scheme,
+                    required : false,
+                    as       : 'Scheme',
+                    //through: { attributes: [] }
+                }, {
+                    model    : this.Client,
+                    required : false,
+                    as       : 'Client',
+                    //through: { attributes: [] }
+                }, {
+                    model    : this.RuleNode,
+                    required : false,
+                    as       : 'RootRuleNode',
+                    //through: { attributes: [] }
+                },
 
                 ]
             });
@@ -106,13 +105,13 @@ export class EventTypeService {
 
             const foundResults = await this.EventType.findAndCountAll(search);
             const searchResults: EventTypeSearchResults = {
-                TotalCount: foundResults.count,
-                RetrievedCount: foundResults.rows.length,
-                PageIndex: pageIndex,
-                ItemsPerPage: limit,
-                Order: order === 'DESC' ? 'descending' : 'ascending',
-                OrderedBy: orderByColumn,
-                Items: foundResults.rows,
+                TotalCount     : foundResults.count,
+                RetrievedCount : foundResults.rows.length,
+                PageIndex      : pageIndex,
+                ItemsPerPage   : limit,
+                Order          : order === 'DESC' ? 'descending' : 'ascending',
+                OrderedBy      : orderByColumn,
+                Items          : foundResults.rows,
             };
 
             return searchResults;
@@ -126,8 +125,8 @@ export class EventTypeService {
         try {
             if (Object.keys(updateModel).length > 0) {
                 var res = await this.EventType.update(updateModel, {
-                    where: {
-                        id: id
+                    where : {
+                        id : id
                     }
                 });
                 if (res.length !== 1) {
@@ -143,8 +142,8 @@ export class EventTypeService {
     delete = async (id) => {
         try {
             var result = await this.EventType.destroy({
-                where: {
-                    id: id
+                where : {
+                    id : id
                 }
             });
             return result === 1;
@@ -160,55 +159,54 @@ export class EventTypeService {
     private getSearchModel = (filters) => {
 
         var search = {
-            where: {},
-            include: []
+            where   : {},
+            include : []
         };
 
         if (filters.SchemeId) {
-            search.where['SchemeId'] = filters.SchemeId
+            search.where['SchemeId'] = filters.SchemeId;
         }
         if (filters.ClientId) {
-            search.where['ClientId'] = filters.ClientId
+            search.where['ClientId'] = filters.ClientId;
         }
         if (filters.Name) {
             search.where['Name'] = {
-                [Op.like]: '%' + filters.Name + '%'
-            }
+                [Op.like] : '%' + filters.Name + '%'
+            };
         }
         if (filters.RootRuleNodeId) {
-            search.where['RootRuleNodeId'] = filters.RootRuleNodeId
+            search.where['RootRuleNodeId'] = filters.RootRuleNodeId;
         }
         const includeSchemeAsScheme = {
-            model: this.Scheme,
-            required: false,
-            as: 'Scheme',
-            where: {}
-        }
+            model    : this.Scheme,
+            required : false,
+            as       : 'Scheme',
+            where    : {}
+        };
         //if (filters.Xyz != undefined) {
         //    includeScheme.where['Xyz'] = filters.Xyz;
         //}
         search.include.push(includeSchemeAsScheme);
         const includeClientAsClient = {
-            model: this.Client,
-            required: false,
-            as: 'Client',
-            where: {}
-        }
+            model    : this.Client,
+            required : false,
+            as       : 'Client',
+            where    : {}
+        };
         //if (filters.Xyz != undefined) {
         //    includeClient.where['Xyz'] = filters.Xyz;
         //}
         search.include.push(includeClientAsClient);
         const includeRuleNodeAsRootRuleNode = {
-            model: this.RuleNode,
-            required: false,
-            as: 'RootRuleNode',
-            where: {}
-        }
+            model    : this.RuleNode,
+            required : false,
+            as       : 'RootRuleNode',
+            where    : {}
+        };
         //if (filters.Xyz != undefined) {
         //    includeRuleNode.where['Xyz'] = filters.Xyz;
         //}
         search.include.push(includeRuleNodeAsRootRuleNode);
-
 
         return search;
     }

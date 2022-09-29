@@ -1,11 +1,12 @@
 import {
     BaseSearchFilters,
-    BaseSearchResults
+    BaseSearchResults,
 } from "./miscellaneous/base.search.types";
 import {
-    uuid
-} from "./miscellaneous/system.types";
-
+    Composition,
+    Logical,
+    Mathematical
+} from "./miscellaneous/rule.node.operation.type";
 export interface RuleNodeOperationTypeCreateModel {
     Composition: Composition;Logical: Logical;Mathematical: Mathematical;
 }
