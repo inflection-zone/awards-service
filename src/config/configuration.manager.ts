@@ -1,6 +1,6 @@
 import path from 'path';
-import * as defaultConfiguration from '../../reancare.config.json';
-import * as localConfiguration from '../../reancare.config.local.json';
+import * as defaultConfiguration from '../../service.config.json';
+import * as localConfiguration from '../../service.config.local.json';
 import {
     AuthenticationType,
     AuthorizationType, Configurations,

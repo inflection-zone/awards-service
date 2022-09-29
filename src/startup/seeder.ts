@@ -8,7 +8,6 @@ import { UserRoleService } from '../database/repository.services/user/user.role.
 import { RolePrivilegeService } from '../database/repository.services/role.privilege.service';
 import { UserService } from '../database/repository.services/user/user.service';
 import { ApiClientService } from '../database/repository.services/api.client.service';
-import { CareplanCategoryService } from '../database/repository.services/careplan/careplan.category.service';
 import { RoleList } from '../domain.types/miscellaneous/role.types';
 import { UserCreateModel } from "../domain.types/user/user.domain.types";
 import { Gender } from "../domain.types/miscellaneous/system.types";
@@ -28,7 +27,7 @@ export class Seeder {
 
     _userRoleService: UserRoleService = new UserRoleService();
 
-    _careplanCategoryService: CareplanCategoryService = new CareplanCategoryService();
+    //_careplanCategoryService: CareplanCategoryService = new CareplanCategoryService();
 
     // _fileResourceService: FileResourceService = null;
 
@@ -187,11 +186,11 @@ export class Seeder {
 
         for await (var cc of defaultCareplanCategories) {
 
-            var exists = await this._careplanCategoryService.existsByName(cc.Type);
-            if (exists) {
-                continue;
-            }
-            await this._careplanCategoryService.create(cc);
+            // //var exists = await this._careplanCategoryService.existsByName(cc.Type);
+            // if (exists) {
+            //     continue;
+            // }
+            // //await this._careplanCategoryService.create(cc);
         }
 
         Logger.instance().log('Seeded default careplan categories successfully!');

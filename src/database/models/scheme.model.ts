@@ -1,7 +1,4 @@
-import {
-    DatabaseConnector
-} from '../database.connector';
-
+import DatabaseConnector from '../database.connector';
 ////////////////////////////////////////////////////////////////////////
 
 export class SchemeModel {
@@ -12,61 +9,61 @@ export class SchemeModel {
 
     static Schema = () => {
 
-        const db = DatabaseConnector.db();
+        const db = DatabaseConnector;
         const Sequelize: any = db.Sequelize;
 
         return {
-            id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                defaultValue: Sequelize.UUIDV4,
-                primaryKey: true
+            id : {
+                type         : Sequelize.UUID,
+                allowNull    : false,
+                defaultValue : Sequelize.UUIDV4,
+                primaryKey   : true
             },
-            ClientId: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                foreignKey: true,
-                unique: false
+            ClientId : {
+                type       : Sequelize.UUID,
+                allowNull  : false,
+                foreignKey : true,
+                unique     : false
             },
-            Name: {
-                type: Sequelize.STRING(256),
-                allowNull: false
+            Name : {
+                type      : Sequelize.STRING(256),
+                allowNull : false
             },
-            Description: {
-                type: Sequelize.STRING(512),
-                allowNull: true
+            Description : {
+                type      : Sequelize.STRING(512),
+                allowNull : true
             },
-            ValidFrom: {
-                type: Sequelize.DATE,
-                allowNull: false
+            ValidFrom : {
+                type      : Sequelize.DATE,
+                allowNull : false
             },
-            ValidTill: {
-                type: Sequelize.DATE,
-                allowNull: false
+            ValidTill : {
+                type      : Sequelize.DATE,
+                allowNull : false
             },
 
-            CreatedAt: Sequelize.DATE,
-            UpdatedAt: Sequelize.DATE,
-            DeletedAt: Sequelize.DATE
+            CreatedAt : Sequelize.DATE,
+            UpdatedAt : Sequelize.DATE,
+            DeletedAt : Sequelize.DATE
         };
     }
 
     static Model: any = () => {
 
-        const db = DatabaseConnector.db();
+        const db = DatabaseConnector;
         const sequelize = db.sequelize;
         const schema = SchemeModel.Schema();
 
         return sequelize.define(
             SchemeModel.ModelName,
             schema, {
-                createdAt: 'CreatedAt',
-                updatedAt: 'UpdatedAt',
-                deletedAt: 'DeletedAt',
-                freezeTableName: true,
-                timestamps: true,
-                paranoid: true,
-                tableName: SchemeModel.TableName,
+                createdAt       : 'CreatedAt',
+                updatedAt       : 'UpdatedAt',
+                deletedAt       : 'DeletedAt',
+                freezeTableName : true,
+                timestamps      : true,
+                paranoid        : true,
+                tableName       : SchemeModel.TableName,
             });
     };
 
@@ -74,11 +71,10 @@ export class SchemeModel {
 
         //Add associations here...
 
-
         models.Scheme.belongsTo(models.Client, {
-            sourceKey: 'ClientId',
-            targetKey: 'id',
-            as: 'Client'
+            sourceKey : 'ClientId',
+            targetKey : 'id',
+            as        : 'Client'
         });
 
     };

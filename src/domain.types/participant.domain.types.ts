@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "./miscellaneous/system.types";
-
+type Gender = "male" | "female";
 export interface ParticipantCreateModel {
     ClientId ? : uuid;
     FirstName ? : string;

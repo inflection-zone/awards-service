@@ -40,9 +40,6 @@ export class EventActionService {
 
     Scheme = SchemeModel.Model();
 
-    RuleNode = RuleNodeModel.Model();
-
-
     //#endregion
 
     //#region Publics
@@ -59,30 +56,30 @@ export class EventActionService {
     getById = async (id) => {
         try {
             const record = await this.EventAction.findOne({
-                where: {
-                    id: id
+                where : {
+                    id : id
                 },
-                include: [{
-                        model: this.EventActionType,
-                        required: false,
-                        as: 'EventActionType',
-                        //through: { attributes: [] }
-                    }, {
-                        model: this.Participant,
-                        required: false,
-                        as: 'Participant',
-                        //through: { attributes: [] }
-                    }, {
-                        model: this.Scheme,
-                        required: false,
-                        as: 'Scheme',
-                        //through: { attributes: [] }
-                    }, {
-                        model: this.RuleNode,
-                        required: false,
-                        as: 'RootRuleNode',
-                        //through: { attributes: [] }
-                    },
+                include : [{
+                    model    : this.EventActionType,
+                    required : false,
+                    as       : 'EventActionType',
+                    //through: { attributes: [] }
+                }, {
+                    model    : this.Participant,
+                    required : false,
+                    as       : 'Participant',
+                    //through: { attributes: [] }
+                }, {
+                    model    : this.Scheme,
+                    required : false,
+                    as       : 'Scheme',
+                    //through: { attributes: [] }
+                }, {
+                    //model: this.RuleNode,
+                    required : false,
+                    as       : 'RootRuleNode',
+                    //through: { attributes: [] }
+                },
 
                 ]
             });
@@ -116,13 +113,13 @@ export class EventActionService {
 
             const foundResults = await this.EventAction.findAndCountAll(search);
             const searchResults: EventActionSearchResults = {
-                TotalCount: foundResults.count,
-                RetrievedCount: foundResults.rows.length,
-                PageIndex: pageIndex,
-                ItemsPerPage: limit,
-                Order: order === 'DESC' ? 'descending' : 'ascending',
-                OrderedBy: orderByColumn,
-                Items: foundResults.rows,
+                TotalCount     : foundResults.count,
+                RetrievedCount : foundResults.rows.length,
+                PageIndex      : pageIndex,
+                ItemsPerPage   : limit,
+                Order          : order === 'DESC' ? 'descending' : 'ascending',
+                OrderedBy      : orderByColumn,
+                Items          : foundResults.rows,
             };
 
             return searchResults;
@@ -136,8 +133,8 @@ export class EventActionService {
         try {
             if (Object.keys(updateModel).length > 0) {
                 var res = await this.EventAction.update(updateModel, {
-                    where: {
-                        id: id
+                    where : {
+                        id : id
                     }
                 });
                 if (res.length !== 1) {
@@ -153,8 +150,8 @@ export class EventActionService {
     delete = async (id) => {
         try {
             var result = await this.EventAction.destroy({
-                where: {
-                    id: id
+                where : {
+                    id : id
                 }
             });
             return result === 1;
@@ -170,66 +167,65 @@ export class EventActionService {
     private getSearchModel = (filters) => {
 
         var search = {
-            where: {},
-            include: []
+            where   : {},
+            include : []
         };
 
         if (filters.EventActionTypeId) {
-            search.where['EventActionTypeId'] = filters.EventActionTypeId
+            search.where['EventActionTypeId'] = filters.EventActionTypeId;
         }
         if (filters.ParticipantId) {
-            search.where['ParticipantId'] = filters.ParticipantId
+            search.where['ParticipantId'] = filters.ParticipantId;
         }
         if (filters.SchemeId) {
-            search.where['SchemeId'] = filters.SchemeId
+            search.where['SchemeId'] = filters.SchemeId;
         }
         if (filters.Timestamp) {
-            search.where['Timestamp'] = filters.Timestamp
+            search.where['Timestamp'] = filters.Timestamp;
         }
         if (filters.RootRuleNodeId) {
-            search.where['RootRuleNodeId'] = filters.RootRuleNodeId
+            search.where['RootRuleNodeId'] = filters.RootRuleNodeId;
         }
         const includeEventActionTypeAsEventActionType = {
-            model: this.EventActionType,
-            required: false,
-            as: 'EventActionType',
-            where: {}
-        }
+            model    : this.EventActionType,
+            required : false,
+            as       : 'EventActionType',
+            where    : {}
+        };
         //if (filters.Xyz != undefined) {
         //    includeEventActionType.where['Xyz'] = filters.Xyz;
         //}
         search.include.push(includeEventActionTypeAsEventActionType);
         const includeParticipantAsParticipant = {
-            model: this.Participant,
-            required: false,
-            as: 'Participant',
-            where: {}
-        }
+            model    : this.Participant,
+            required : false,
+            as       : 'Participant',
+            where    : {}
+        };
         //if (filters.Xyz != undefined) {
         //    includeParticipant.where['Xyz'] = filters.Xyz;
         //}
         search.include.push(includeParticipantAsParticipant);
         const includeSchemeAsScheme = {
-            model: this.Scheme,
-            required: false,
-            as: 'Scheme',
-            where: {}
-        }
+            model    : this.Scheme,
+            required : false,
+            as       : 'Scheme',
+            where    : {}
+        };
         //if (filters.Xyz != undefined) {
         //    includeScheme.where['Xyz'] = filters.Xyz;
         //}
         search.include.push(includeSchemeAsScheme);
         const includeRuleNodeAsRootRuleNode = {
-            model: this.RuleNode,
-            required: false,
-            as: 'RootRuleNode',
-            where: {}
-        }
+            //model    : this.RuleNode,
+            required : false,
+            as       : 'RootRuleNode',
+            where    : {}
+        };
         //if (filters.Xyz != undefined) {
         //    includeRuleNode.where['Xyz'] = filters.Xyz;
         //}
         search.include.push(includeRuleNodeAsRootRuleNode);
-
 
         return search;
     }
