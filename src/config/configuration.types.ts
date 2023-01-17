@@ -66,7 +66,6 @@ export interface Configurations {
     BaseUrl             : string;
     Auth                : AuthConfig;
     FileStorage         : FileStorageConfig;
-    Communication       : CommunicationConfig;
     TemporaryFolders    : TemporaryFoldersConfig;
     MaxUploadFileSize   : number;
     JwtExpiresIn        : number;

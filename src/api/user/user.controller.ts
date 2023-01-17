@@ -95,27 +95,27 @@ export class UserController extends BaseController {
         }
     };
 
-    loginWithOtp = async (request: express.Request, response: express.Response): Promise <void> => {
-        try {
-            this.authorize('User.LoginWithOtp', request, response, false);
-            const result = await this._delegate.loginWithOtp(request.body);
-            const message = 'User logged in successfully!';
-            ResponseHandler.success(request, response, message, 200, result);
-        } catch (error) {
-            ResponseHandler.handleError(request, response, error);
-        }
-    };
+    // loginWithOtp = async (request: express.Request, response: express.Response): Promise <void> => {
+    //     try {
+    //         this.authorize('User.LoginWithOtp', request, response, false);
+    //         const result = await this._delegate.loginWithOtp(request.body);
+    //         const message = 'User logged in successfully!';
+    //         ResponseHandler.success(request, response, message, 200, result);
+    //     } catch (error) {
+    //         ResponseHandler.handleError(request, response, error);
+    //     }
+    // };
 
-    sendOtp = async (request: express.Request, response: express.Response): Promise <void> => {
-        try {
-            this.authorize('User.SendOtp', request, response, false);
-            const result = await this._delegate.sendOtp(request.body);
-            const message = 'Otp sent successfully!';
-            ResponseHandler.success(request, response, message, 200, result);
-        } catch (error) {
-            ResponseHandler.handleError(request, response, error);
-        }
-    };
+    // sendOtp = async (request: express.Request, response: express.Response): Promise <void> => {
+    //     try {
+    //         this.authorize('User.SendOtp', request, response, false);
+    //         const result = await this._delegate.sendOtp(request.body);
+    //         const message = 'Otp sent successfully!';
+    //         ResponseHandler.success(request, response, message, 200, result);
+    //     } catch (error) {
+    //         ResponseHandler.handleError(request, response, error);
+    //     }
+    // };
 
     logout = async (request: express.Request, response: express.Response): Promise <void> => {
         try {
