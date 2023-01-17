@@ -4,8 +4,7 @@ import * as localConfiguration from '../../service.config.local.json';
 import {
     AuthenticationType,
     AuthorizationType, Configurations,
-    EmailServiceProvider, FileStorageProvider,
-    SMSServiceProvider
+    FileStorageProvider
 } from './configuration.types';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,10 +26,6 @@ export class ConfigurationManager {
             },
             FileStorage : {
                 Provider : configuration.FileStorage.Provider as FileStorageProvider,
-            },
-            Communication : {
-                SMSProvider   : configuration.Communication.SMS.Provider as SMSServiceProvider,
-                EmailProvider : configuration.Communication.Email.Provider as EmailServiceProvider
             },
             TemporaryFolders : {
                 Upload                     : configuration.TemporaryFolders.Upload as string,
@@ -69,25 +64,17 @@ export class ConfigurationManager {
     public static FileStorageProvider = (): FileStorageProvider => {
         return ConfigurationManager._config.FileStorage.Provider;
     };
-    
-    public static SMSServiceProvider = (): SMSServiceProvider => {
-        return ConfigurationManager._config.Communication.SMSProvider;
-    };
-    
-    public static EmailServiceProvider = (): EmailServiceProvider => {
-        return ConfigurationManager._config.Communication.EmailProvider;
-    };
-    
+
     public static UploadTemporaryFolder = (): string => {
         var location = ConfigurationManager._config.TemporaryFolders.Upload;
         return path.join(process.cwd(), location);
     };
-    
+
     public static DownloadTemporaryFolder = (): string => {
         var location = ConfigurationManager._config.TemporaryFolders.Download;
         return path.join(process.cwd(), location);
     };
-    
+
     public static TemporaryFolderCleanupBefore = (): number => {
         return ConfigurationManager._config.TemporaryFolders.CleanupFolderBeforeMinutes;
     };

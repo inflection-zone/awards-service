@@ -15,8 +15,8 @@ export const register = (app: express.Application): void => {
     router.delete('/:id', authenticator.authenticateUser, controller.delete);
 
     router.post('/login-password', controller.loginWithPassword);
-    router.post('/login-otp', controller.loginWithOtp);
-    router.post('/generate-otp', controller.sendOtp);
+    // router.post('/login-otp', controller.loginWithOtp);
+    // router.post('/generate-otp', controller.sendOtp);
     router.post('/change-password', authenticator.authenticateUser, controller.changePassword);
     router.post('/logout', authenticator.authenticateUser, controller.logout);
 
