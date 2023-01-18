@@ -1,4 +1,6 @@
 import DatabaseConnector from '../database.connector';
+const sequelize = DatabaseConnector.sequelize;
+import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -8,83 +10,71 @@ export class RedemptionModel {
 
     static ModelName = 'Redemption';
 
-    static Schema = () => {
+    static Schema = {
+        id : {
+            type         : DataTypes.UUID,
+            allowNull    : false,
+            defaultValue : DataTypes.UUIDV4,
+            primaryKey   : true
+        },
+        ClientId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        SchemeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        ParticipantId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        Name : {
+            type      : DataTypes.STRING(256),
+            allowNull : false
+        },
+        Description : {
+            type      : DataTypes.STRING(512),
+            allowNull : true
+        },
+        RedemptionDate : {
+            type      : DataTypes.DATE,
+            allowNull : false
+        },
+        RedemptionStatus : {
+            type      : DataTypes.STRING(512),
+            allowNull : false
+        },
+        RootRuleNodeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
 
-        const db = DatabaseConnector;
-        const Sequelize: any = db.Sequelize;
-
-        return {
-            id : {
-                type         : Sequelize.UUID,
-                allowNull    : false,
-                defaultValue : Sequelize.UUIDV4,
-                primaryKey   : true
-            },
-            ClientId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-            SchemeId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-            ParticipantId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-            Name : {
-                type      : Sequelize.STRING(256),
-                allowNull : false
-            },
-            Description : {
-                type      : Sequelize.STRING(512),
-                allowNull : true
-            },
-            RedemptionDate : {
-                type      : Sequelize.DATE,
-                allowNull : false
-            },
-            RedemptionStatus : {
-                type      : Sequelize.STRING(512),
-                allowNull : false
-            },
-            RootRuleNodeId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-
-            CreatedAt : Sequelize.DATE,
-            UpdatedAt : Sequelize.DATE,
-            DeletedAt : Sequelize.DATE
-        };
-    }
-
-    static Model: any = () => {
-
-        const db = DatabaseConnector;
-        const sequelize = db.sequelize;
-        const schema = RedemptionModel.Schema();
-
-        return sequelize.define(
-            RedemptionModel.ModelName,
-            schema, {
-                createdAt       : 'CreatedAt',
-                updatedAt       : 'UpdatedAt',
-                deletedAt       : 'DeletedAt',
-                freezeTableName : true,
-                timestamps      : true,
-                paranoid        : true,
-                tableName       : RedemptionModel.TableName,
-            });
+        CreatedAt : DataTypes.DATE,
+        UpdatedAt : DataTypes.DATE,
+        DeletedAt : DataTypes.DATE
     };
+
+    static Model: any = sequelize.define(
+        RedemptionModel.ModelName,
+        RedemptionModel.Schema,
+        {
+            createdAt       : 'CreatedAt',
+            updatedAt       : 'UpdatedAt',
+            deletedAt       : 'DeletedAt',
+            freezeTableName : true,
+            timestamps      : true,
+            paranoid        : true,
+            tableName       : RedemptionModel.TableName,
+        });
 
     static associate = (models) => {
 

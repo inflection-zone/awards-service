@@ -1,4 +1,6 @@
 import DatabaseConnector from '../database.connector';
+const sequelize = DatabaseConnector.sequelize;
+import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -8,71 +10,59 @@ export class EventActionModel {
 
     static ModelName = 'EventAction';
 
-    static Schema = () => {
+    static Schema = {
+        id : {
+            type         : DataTypes.UUID,
+            allowNull    : false,
+            defaultValue : DataTypes.UUIDV4,
+            primaryKey   : true
+        },
+        EventActionTypeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        ParticipantId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        SchemeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        Timestamp : {
+            type      : DataTypes.DATE,
+            allowNull : false
+        },
+        RootRuleNodeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
 
-        const db = DatabaseConnector;
-        const Sequelize: any = db.Sequelize;
-
-        return {
-            id : {
-                type         : Sequelize.UUID,
-                allowNull    : false,
-                defaultValue : Sequelize.UUIDV4,
-                primaryKey   : true
-            },
-            EventActionTypeId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-            ParticipantId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-            SchemeId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-            Timestamp : {
-                type      : Sequelize.DATE,
-                allowNull : false
-            },
-            RootRuleNodeId : {
-                type       : Sequelize.UUID,
-                allowNull  : false,
-                foreignKey : true,
-                unique     : false
-            },
-
-            CreatedAt : Sequelize.DATE,
-            UpdatedAt : Sequelize.DATE,
-            DeletedAt : Sequelize.DATE
-        };
-    }
-
-    static Model: any = () => {
-
-        const db = DatabaseConnector;
-        const sequelize = db.sequelize;
-        const schema = EventActionModel.Schema();
-
-        return sequelize.define(
-            EventActionModel.ModelName,
-            schema, {
-                createdAt       : 'CreatedAt',
-                updatedAt       : 'UpdatedAt',
-                deletedAt       : 'DeletedAt',
-                freezeTableName : true,
-                timestamps      : true,
-                paranoid        : true,
-                tableName       : EventActionModel.TableName,
-            });
+        CreatedAt : DataTypes.DATE,
+        UpdatedAt : DataTypes.DATE,
+        DeletedAt : DataTypes.DATE
     };
+
+    static Model: any = sequelize.define(
+        EventActionModel.ModelName,
+        EventActionModel.Schema,
+        {
+            createdAt       : 'CreatedAt',
+            updatedAt       : 'UpdatedAt',
+            deletedAt       : 'DeletedAt',
+            freezeTableName : true,
+            timestamps      : true,
+            paranoid        : true,
+            tableName       : EventActionModel.TableName,
+        });
 
     static associate = (models) => {
 

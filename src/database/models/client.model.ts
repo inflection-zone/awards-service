@@ -1,4 +1,6 @@
 import DatabaseConnector from '../database.connector';
+const sequelize = DatabaseConnector.sequelize;
+import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -8,59 +10,47 @@ export class ClientModel {
 
     static ModelName = 'Client';
 
-    static Schema = () => {
+    static Schema = {
+        id : {
+            type         : DataTypes.UUID,
+            allowNull    : false,
+            defaultValue : DataTypes.UUIDV4,
+            primaryKey   : true
+        },
+        ClientName : {
+            type      : DataTypes.STRING(256),
+            allowNull : false
+        },
+        ClientCode : {
+            type      : DataTypes.STRING(32),
+            allowNull : false
+        },
+        Phone : {
+            type      : DataTypes.STRING(16),
+            allowNull : true
+        },
+        Email : {
+            type      : DataTypes.STRING(256),
+            allowNull : true
+        },
 
-        const db = DatabaseConnector;
-        const Sequelize: any = db.Sequelize;
-
-        return {
-            id : {
-                type         : Sequelize.UUID,
-                allowNull    : false,
-                defaultValue : Sequelize.UUIDV4,
-                primaryKey   : true
-            },
-            ClientName : {
-                type      : Sequelize.STRING(256),
-                allowNull : false
-            },
-            ClientCode : {
-                type      : Sequelize.STRING(32),
-                allowNull : false
-            },
-            Phone : {
-                type      : Sequelize.STRING(16),
-                allowNull : true
-            },
-            Email : {
-                type      : Sequelize.STRING(256),
-                allowNull : true
-            },
-
-            CreatedAt : Sequelize.DATE,
-            UpdatedAt : Sequelize.DATE,
-            DeletedAt : Sequelize.DATE
-        };
-    }
-
-    static Model: any = () => {
-
-        const db = DatabaseConnector;
-        const sequelize = db.sequelize;
-        const schema = ClientModel.Schema();
-
-        return sequelize.define(
-            ClientModel.ModelName,
-            schema, {
-                createdAt       : 'CreatedAt',
-                updatedAt       : 'UpdatedAt',
-                deletedAt       : 'DeletedAt',
-                freezeTableName : true,
-                timestamps      : true,
-                paranoid        : true,
-                tableName       : ClientModel.TableName,
-            });
+        CreatedAt : DataTypes.DATE,
+        UpdatedAt : DataTypes.DATE,
+        DeletedAt : DataTypes.DATE
     };
+
+    static Model: any = sequelize.define(
+        ClientModel.ModelName,
+        ClientModel.Schema,
+        {
+            createdAt       : 'CreatedAt',
+            updatedAt       : 'UpdatedAt',
+            deletedAt       : 'DeletedAt',
+            freezeTableName : true,
+            timestamps      : true,
+            paranoid        : true,
+            tableName       : ClientModel.TableName,
+        });
 
     static associate = (models) => {
 
