@@ -1,4 +1,6 @@
 import DatabaseConnector from '../database.connector';
+const sequelize = DatabaseConnector.sequelize;
+import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -8,55 +10,43 @@ export class RuleNodeOperationTypeModel {
 
     static ModelName = 'RuleNodeOperationType';
 
-    static Schema = () => {
+    static Schema = {
+        id : {
+            type         : DataTypes.UUID,
+            allowNull    : false,
+            defaultValue : DataTypes.UUIDV4,
+            primaryKey   : true
+        },
+        Composition : {
+            type      : DataTypes.ENUM({ values: ["and", "or", "xor"] }),
+            allowNull : false
+        },
+        Logical : {
+            type      : DataTypes.ENUM({ values: ["equals", "lessThan"] }),
+            allowNull : false
+        },
+        Mathematical : {
+            type      : DataTypes.ENUM({ values: ["add", "subtract", "divide", "multiply", "percentage"] }),
+            allowNull : false
+        },
 
-        const db = DatabaseConnector;
-        const Sequelize: any = db.Sequelize;
-
-        return {
-            id : {
-                type         : Sequelize.UUID,
-                allowNull    : false,
-                defaultValue : Sequelize.UUIDV4,
-                primaryKey   : true
-            },
-            Composition : {
-                type      : Sequelize.ENUM(["and", "or"]),
-                allowNull : false
-            },
-            Logical : {
-                type      : Sequelize.ENUM(["", ""]),
-                allowNull : false
-            },
-            Mathematical : {
-                type      : Sequelize.ENUM(["", ""]),
-                allowNull : false
-            },
-
-            CreatedAt : Sequelize.DATE,
-            UpdatedAt : Sequelize.DATE,
-            DeletedAt : Sequelize.DATE
-        };
-    }
-
-    static Model: any = () => {
-
-        const db = DatabaseConnector;
-        const sequelize = db.sequelize;
-        const schema = RuleNodeOperationTypeModel.Schema();
-
-        return sequelize.define(
-            RuleNodeOperationTypeModel.ModelName,
-            schema, {
-                createdAt       : 'CreatedAt',
-                updatedAt       : 'UpdatedAt',
-                deletedAt       : 'DeletedAt',
-                freezeTableName : true,
-                timestamps      : true,
-                paranoid        : true,
-                tableName       : RuleNodeOperationTypeModel.TableName,
-            });
+        CreatedAt : DataTypes.DATE,
+        UpdatedAt : DataTypes.DATE,
+        DeletedAt : DataTypes.DATE
     };
+
+    static Model: any = sequelize.define(
+        RuleNodeOperationTypeModel.ModelName,
+        RuleNodeOperationTypeModel.Schema,
+        {
+            createdAt       : 'CreatedAt',
+            updatedAt       : 'UpdatedAt',
+            deletedAt       : 'DeletedAt',
+            freezeTableName : true,
+            timestamps      : true,
+            paranoid        : true,
+            tableName       : RuleNodeOperationTypeModel.TableName,
+        });
 
     static associate = (models) => {
 
