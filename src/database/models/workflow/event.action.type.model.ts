@@ -1,14 +1,14 @@
-import DatabaseConnector from '../database.connector';
+import DatabaseConnector from '../../database.connector';
 const sequelize = DatabaseConnector.sequelize;
 import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class EventTypeModel {
+export class EventActionTypeModel {
 
-    static TableName = 'event_types';
+    static TableName = 'event_action_types';
 
-    static ModelName = 'EventType';
+    static ModelName = 'EventActionType';
 
     static Schema = {
         id : {
@@ -18,6 +18,12 @@ export class EventTypeModel {
             primaryKey   : true
         },
         SchemeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        EventId : {
             type       : DataTypes.UUID,
             allowNull  : false,
             foreignKey : true,
@@ -33,10 +39,6 @@ export class EventTypeModel {
             type      : DataTypes.STRING(256),
             allowNull : false
         },
-        Description : {
-            type      : DataTypes.STRING(512),
-            allowNull : true
-        },
         RootRuleNodeId : {
             type       : DataTypes.UUID,
             allowNull  : false,
@@ -50,34 +52,41 @@ export class EventTypeModel {
     };
 
     static Model: any = sequelize.define(
-        EventTypeModel.ModelName,
-        EventTypeModel.Schema, {
+        EventActionTypeModel.ModelName,
+        EventActionTypeModel.Schema,
+        {
             createdAt       : 'CreatedAt',
             updatedAt       : 'UpdatedAt',
             deletedAt       : 'DeletedAt',
             freezeTableName : true,
             timestamps      : true,
             paranoid        : true,
-            tableName       : EventTypeModel.TableName,
+            tableName       : EventActionTypeModel.TableName,
         });
 
     static associate = (models) => {
 
         //Add associations here...
 
-        models.EventType.belongsTo(models.Scheme, {
+        models.EventActionType.belongsTo(models.Scheme, {
             sourceKey : 'SchemeId',
             targetKey : 'id',
             as        : 'Scheme'
         });
 
-        models.EventType.belongsTo(models.Client, {
+        models.EventActionType.belongsTo(models.Event, {
+            sourceKey : 'EventId',
+            targetKey : 'id',
+            as        : 'Event'
+        });
+
+        models.EventActionType.belongsTo(models.Client, {
             sourceKey : 'ClientId',
             targetKey : 'id',
             as        : 'Client'
         });
 
-        models.EventType.belongsTo(models.RuleNode, {
+        models.EventActionType.belongsTo(models.RuleNode, {
             sourceKey : 'RootRuleNodeId',
             targetKey : 'id',
             as        : 'RootRuleNode'

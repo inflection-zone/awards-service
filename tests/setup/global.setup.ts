@@ -14,13 +14,13 @@ export default async () => {
         const envPath = path.join(process.cwd(), '.env');
         dotenv.config({ path: envPath });
 
-        //Logger.instance().log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+        //logger.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
         await TestLoader.init();
 
         //jest.setTimeout(30000);
     }
     catch (error) {
-        Logger.instance().log('Problem in setting up the tests! -> ' + error.message);
+        logger.log('Problem in setting up the tests! -> ' + error.message);
     }
 };
 

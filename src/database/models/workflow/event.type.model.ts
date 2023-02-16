@@ -1,14 +1,14 @@
-import DatabaseConnector from '../database.connector';
+import DatabaseConnector from '../../database.connector';
 const sequelize = DatabaseConnector.sequelize;
 import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class ParticipantModel {
+export class EventTypeModel {
 
-    static TableName = 'participants';
+    static TableName = 'event_types';
 
-    static ModelName = 'Participant';
+    static ModelName = 'EventType';
 
     static Schema = {
         id : {
@@ -17,36 +17,31 @@ export class ParticipantModel {
             defaultValue : DataTypes.UUIDV4,
             primaryKey   : true
         },
+        SchemeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
         ClientId : {
             type       : DataTypes.UUID,
             allowNull  : false,
             foreignKey : true,
             unique     : false
         },
-        FirstName : {
-            type      : DataTypes.STRING(64),
-            allowNull : false
-        },
-        LastName : {
-            type      : DataTypes.STRING(64),
-            allowNull : false
-        },
-        Phone : {
-            type      : DataTypes.STRING(16),
-            allowNull : true
-        },
-        Email : {
+        Name : {
             type      : DataTypes.STRING(256),
+            allowNull : false
+        },
+        Description : {
+            type      : DataTypes.STRING(512),
             allowNull : true
         },
-        Gender : {
-            type         : DataTypes.ENUM({ values: ["Male", "Female", "Other"] }),
-            allowNull    : false,
-            defaultValue : 'Male'
-        },
-        BirthDate : {
-            type      : DataTypes.DATE,
-            allowNull : false
+        RootRuleNodeId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
         },
 
         CreatedAt : DataTypes.DATE,
@@ -55,26 +50,37 @@ export class ParticipantModel {
     };
 
     static Model: any = sequelize.define(
-        ParticipantModel.ModelName,
-        ParticipantModel.Schema,
-        {
+        EventTypeModel.ModelName,
+        EventTypeModel.Schema, {
             createdAt       : 'CreatedAt',
             updatedAt       : 'UpdatedAt',
             deletedAt       : 'DeletedAt',
             freezeTableName : true,
             timestamps      : true,
             paranoid        : true,
-            tableName       : ParticipantModel.TableName,
+            tableName       : EventTypeModel.TableName,
         });
 
     static associate = (models) => {
 
         //Add associations here...
 
-        models.Participant.belongsTo(models.Client, {
+        models.EventType.belongsTo(models.Scheme, {
+            sourceKey : 'SchemeId',
+            targetKey : 'id',
+            as        : 'Scheme'
+        });
+
+        models.EventType.belongsTo(models.Client, {
             sourceKey : 'ClientId',
             targetKey : 'id',
             as        : 'Client'
+        });
+
+        models.EventType.belongsTo(models.RuleNode, {
+            sourceKey : 'RootRuleNodeId',
+            targetKey : 'id',
+            as        : 'RootRuleNode'
         });
 
     };

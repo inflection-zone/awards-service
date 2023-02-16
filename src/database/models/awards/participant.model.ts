@@ -1,14 +1,14 @@
-import DatabaseConnector from '../database.connector';
+import DatabaseConnector from '../../database.connector';
 const sequelize = DatabaseConnector.sequelize;
 import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class SchemeModel {
+export class ParticipantModel {
 
-    static TableName = 'schemes';
+    static TableName = 'participants';
 
-    static ModelName = 'Scheme';
+    static ModelName = 'Participant';
 
     static Schema = {
         id : {
@@ -23,19 +23,28 @@ export class SchemeModel {
             foreignKey : true,
             unique     : false
         },
-        Name : {
-            type      : DataTypes.STRING(256),
+        FirstName : {
+            type      : DataTypes.STRING(64),
             allowNull : false
         },
-        Description : {
-            type      : DataTypes.STRING(512),
+        LastName : {
+            type      : DataTypes.STRING(64),
+            allowNull : false
+        },
+        Phone : {
+            type      : DataTypes.STRING(16),
             allowNull : true
         },
-        ValidFrom : {
-            type      : DataTypes.DATE,
-            allowNull : false
+        Email : {
+            type      : DataTypes.STRING(256),
+            allowNull : true
         },
-        ValidTill : {
+        Gender : {
+            type         : DataTypes.ENUM({ values: ["Male", "Female", "Other"] }),
+            allowNull    : false,
+            defaultValue : 'Male'
+        },
+        BirthDate : {
             type      : DataTypes.DATE,
             allowNull : false
         },
@@ -46,8 +55,8 @@ export class SchemeModel {
     };
 
     static Model: any = sequelize.define(
-        SchemeModel.ModelName,
-        SchemeModel.Schema,
+        ParticipantModel.ModelName,
+        ParticipantModel.Schema,
         {
             createdAt       : 'CreatedAt',
             updatedAt       : 'UpdatedAt',
@@ -55,14 +64,14 @@ export class SchemeModel {
             freezeTableName : true,
             timestamps      : true,
             paranoid        : true,
-            tableName       : SchemeModel.TableName,
+            tableName       : ParticipantModel.TableName,
         });
 
     static associate = (models) => {
 
         //Add associations here...
 
-        models.Scheme.belongsTo(models.Client, {
+        models.Participant.belongsTo(models.Client, {
             sourceKey : 'ClientId',
             targetKey : 'id',
             as        : 'Client'

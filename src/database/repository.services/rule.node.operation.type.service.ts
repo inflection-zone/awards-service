@@ -1,6 +1,6 @@
 import {
     RuleNodeOperationTypeModel
-} from '../models/rule.node.operation.type.model';
+} from '../models/workflow/rule.node.operation.type.model';
 
 import {
     ErrorHandler

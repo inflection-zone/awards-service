@@ -1,9 +1,8 @@
-import { ApiClientModel } from '../models/api.client.model';
+import { ApiClientModel } from '../models/api.client/api.client.model';
 import { ApiClientCreateModel, ApiClientDto, ApiClientSearchFilters, ApiClientSearchResults, ApiClientUpdateModel, ApiClientVerificationDomainModel, ClientApiKeyDto } from '../../domain.types/api.client.domain.types';
-import { Logger } from '../../common/logger';
+import logger from '../../logger/logger';
 import { ApiError } from '../../common/api.error';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
-import { Op } from 'sequelize';
 import { ErrorHandler } from '../../common/error.handler';
 import { Helper } from '../../common/helper';
 import * as apikeyGenerator from 'uuid-apikey';
@@ -32,7 +31,7 @@ export class ApiClientService {
             const dto = await this.toDto(client);
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
@@ -43,7 +42,7 @@ export class ApiClientService {
             const dto = await this.toDto(client);
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
@@ -75,9 +74,10 @@ export class ApiClientService {
             return searchResults;
 
         } catch (error) {
+            logger.error(error.message);
             ErrorHandler.throwDbAccessError('DB Error: Unable to search api client records!', error);
         }
-    }
+    };
 
     getByClientCode = async (clientCode: string): Promise<ApiClientDto> =>{
         try {
@@ -89,10 +89,10 @@ export class ApiClientService {
             const dto = await this.toDto(client);
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    }
+    };
 
     getApiKeyByClientCode = async (clientCode: string): Promise<ClientApiKeyDto> =>{
         try {
@@ -104,20 +104,20 @@ export class ApiClientService {
             const dto = await this.toClientSecretsDto(client);
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    }
+    };
 
     getClientHashedPassword = async(id: string): Promise<string> => {
         try {
             const client = await this.ApiClient.findByPk(id);
             return client.Password;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    }
+    };
 
     getApiKey = async(verificationModel: ApiClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
         try {
@@ -135,10 +135,10 @@ export class ApiClientService {
             const dto = await this.toClientSecretsDto(client);
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    }
+    };
 
     renewApiKey = async (verificationModel: ApiClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
 
@@ -161,10 +161,10 @@ export class ApiClientService {
             verificationModel.ValidFrom,
             verificationModel.ValidTill
         );
-        
+
         return clientApiKeyDto;
     };
-    
+
     setApiKey = async(id: string, apiKey: string, validFrom: Date, validTill: Date): Promise<ClientApiKeyDto> => {
         try {
             const client = await this.ApiClient.findByPk(id);
@@ -175,11 +175,11 @@ export class ApiClientService {
             const dto = await this.toClientSecretsDto(client);
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    }
-    
+    };
+
     isApiKeyValid = async (apiKey: string): Promise<CurrentClient> => {
         try {
             const client = await this.ApiClient.findOne({
@@ -199,18 +199,18 @@ export class ApiClientService {
             };
             return currentClient;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    }
-    
+    };
+
     update = async (id: string, clientDomainModel: ApiClientUpdateModel): Promise<ApiClientDto> => {
         try {
             const client = await this.ApiClient.findByPk(id);
 
             //Client code is not modifiable
             //Use renew key to update ApiKey, ValidFrom and ValidTill
-            
+
             if (clientDomainModel.ClientName != null) {
                 client.ClientName = clientDomainModel.ClientName;
             }
@@ -237,17 +237,17 @@ export class ApiClientService {
             const dto = await this.toDto(client);
             return dto;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    }
+    };
 
     delete = async (id: string): Promise<boolean> => {
         try {
             const result = await this.ApiClient.destroy({ where: { id: id } });
             return result === 1;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
@@ -271,7 +271,7 @@ export class ApiClientService {
             IsPrivileged : client.IsPrivileged,
         };
         return dto;
-    }
+    };
 
     toClientSecretsDto = (client): ClientApiKeyDto => {
         if (client == null){
@@ -286,8 +286,8 @@ export class ApiClientService {
             ValidTill  : client.ValidTill,
         };
         return dto;
-    }
-    
+    };
+
     //#region Privates
 
     private getSearchModel = (filters) => {
@@ -327,7 +327,7 @@ export class ApiClientService {
         }
 
         return search;
-    }
+    };
 
     private addSortingToSearch = (search, filters) => {
 
@@ -351,7 +351,7 @@ export class ApiClientService {
             order,
             orderByColumn
         };
-    }
+    };
 
     private addPaginationToSearch = (search, filters) => {
 
@@ -372,7 +372,7 @@ export class ApiClientService {
             pageIndex,
             limit
         };
-    }
+    };
 
     //#endregion
 

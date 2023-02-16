@@ -1,4 +1,4 @@
-import { FileResourceModel } from '../models/file.resource.model';
+import { FileResourceModel } from '../models/general/file.resource.model';
 import { UserModel } from '../models/user/user.model';
 import { ErrorHandler } from '../../common/error.handler';
 import { FileResourceCreateModel } from '../../domain.types/file.resource.domain.types';

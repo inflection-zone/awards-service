@@ -1,14 +1,14 @@
-import DatabaseConnector from '../database.connector';
+import DatabaseConnector from '../../database.connector';
 const sequelize = DatabaseConnector.sequelize;
 import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class ClientModel {
+export class RuleNodeOperationTypeModel {
 
-    static TableName = 'clients';
+    static TableName = 'rule_node_operation_types';
 
-    static ModelName = 'Client';
+    static ModelName = 'RuleNodeOperationType';
 
     static Schema = {
         id : {
@@ -17,21 +17,17 @@ export class ClientModel {
             defaultValue : DataTypes.UUIDV4,
             primaryKey   : true
         },
-        ClientName : {
-            type      : DataTypes.STRING(256),
+        Composition : {
+            type      : DataTypes.ENUM({ values: ["and", "or", "xor"] }),
             allowNull : false
         },
-        ClientCode : {
-            type      : DataTypes.STRING(32),
+        Logical : {
+            type      : DataTypes.ENUM({ values: ["equals", "lessThan"] }),
             allowNull : false
         },
-        Phone : {
-            type      : DataTypes.STRING(16),
-            allowNull : true
-        },
-        Email : {
-            type      : DataTypes.STRING(256),
-            allowNull : true
+        Mathematical : {
+            type      : DataTypes.ENUM({ values: ["add", "subtract", "divide", "multiply", "percentage"] }),
+            allowNull : false
         },
 
         CreatedAt : DataTypes.DATE,
@@ -40,8 +36,8 @@ export class ClientModel {
     };
 
     static Model: any = sequelize.define(
-        ClientModel.ModelName,
-        ClientModel.Schema,
+        RuleNodeOperationTypeModel.ModelName,
+        RuleNodeOperationTypeModel.Schema,
         {
             createdAt       : 'CreatedAt',
             updatedAt       : 'UpdatedAt',
@@ -49,7 +45,7 @@ export class ClientModel {
             freezeTableName : true,
             timestamps      : true,
             paranoid        : true,
-            tableName       : ClientModel.TableName,
+            tableName       : RuleNodeOperationTypeModel.TableName,
         });
 
     static associate = (models) => {

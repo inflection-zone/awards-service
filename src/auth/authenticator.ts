@@ -4,14 +4,14 @@ import { IAuthenticator } from './authenticator.interface';
 import { injectable, inject } from "tsyringe";
 
 import { ResponseHandler } from '../common/response.handler';
-import { Logger } from '../common/logger';
+import { Logger } from '../logger/logger';
 import { ApiError } from '../common/api.error';
 
 ////////////////////////////////////////////////////////////////////////
 
 @injectable()
 export class Authenticator {
-    
+
     constructor(
         @inject('IAuthenticator') private _authenticator: IAuthenticator
     ) {}
@@ -29,7 +29,7 @@ export class Authenticator {
             }
             next();
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.log(error.message);
             ResponseHandler.failure(request, response, 'User authentication error: ' + error.message, 401);
         }
     };
@@ -52,7 +52,7 @@ export class Authenticator {
             }
             next();
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.log(error.message);
             ResponseHandler.failure(request, response, 'Client authentication error: ' + error.message, 401);
         }
     };

@@ -1,43 +1,42 @@
-import { Sequelize } from 'sequelize';
-import { DbConfig } from './database.config';
-import { Logger } from '../common/logger';
+import "reflect-metadata";
+import { Config } from './database.config';
+import logger from '../logger/logger';
+import { DataSource } from "typeorm";
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-const config = DbConfig.config;
+logger.log('info', `environment : ${process.env.NODE_ENV}`);
+logger.log('info', `db name     : ${Config.database}`);
+logger.log('info', `db username : ${Config.username}`);
+logger.log('info', `db host     : ${Config.host}`);
 
-Logger.instance().log('environment : ' + process.env.NODE_ENV);
-Logger.instance().log('db name     : ' + config.database);
-Logger.instance().log('db username : ' + config.username);
-Logger.instance().log('db host     : ' + config.host);
-
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-    host    : config.host,
-    dialect : 'mysql',
-    pool    : {
-        max     : config.pool.max,
-        min     : config.pool.min,
-        acquire : config.pool.acquire,
-        idle    : config.pool.idle
-    },
-    logging : false
+const Source = new DataSource({
+    name        : Config.dialect,
+    type        : Config.dialect,
+    host        : Config.host,
+    port        : Config.port,
+    username    : Config.username,
+    password    : Config.password,
+    database    : Config.database,
+    synchronize : true,
+    entities    : [__dirname + '/models/**/*{.js,.ts}'],
+    migrations  : [],
+    subscribers : [],
+    logger      : 'advanced-console',
+    logging     : true,
+    poolSize    : Config.pool.max,
+    cache       : true,
 });
 
-sequelize
-    .authenticate()
+Source
+    .initialize()
     .then(() => {
-        Logger.instance().log('Database connection has been established successfully.');
+        logger.log('info', 'Database connection has been established successfully.');
     })
     .catch(error => {
-        Logger.instance().log('Unable to connect to the database:' + error.message);
+        logger.error('Unable to connect to the database:' + error.message);
     });
 
-/////////////////////////////////////////////////////////////////////////////////////////
-
-//Creates DB if d
-export default {
-    Sequelize : Sequelize,
-    sequelize : sequelize
-};
-
 ///////////////////////////////////////////////////////////////////////////////////
+
+export default Source;

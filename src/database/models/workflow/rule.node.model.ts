@@ -1,4 +1,4 @@
-import DatabaseConnector from '../database.connector';
+import DatabaseConnector from '../../database.connector';
 const sequelize = DatabaseConnector.sequelize;
 import { DataTypes } from 'sequelize';
 
