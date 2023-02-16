@@ -6,13 +6,13 @@ import {
 } from '../models/client.model';
 import {
     SchemeModel
-} from '../models/workflow/scheme.model';
+} from '../models/engine/schema.model';
 import {
     ParticipantModel
 } from '../models/awards/participant.model';
 import {
     RuleNodeModel
-} from '../models/workflow/rule.node.model';
+} from '../models/engine/schema.model';
 
 import {
     ErrorHandler

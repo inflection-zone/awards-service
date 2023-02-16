@@ -1,18 +1,18 @@
 import {
     EventModel
-} from '../models/workflow/event.model';
+} from '../models/engine/incoming.event.model';
 import {
     EventTypeModel
-} from '../models/workflow/event.type.model';
+} from '../models/engine/incoming.event.type.model';
 import {
     ParticipantModel
 } from '../models/awards/participant.model';
 import {
     SchemeModel
-} from '../models/workflow/scheme.model';
+} from '../models/engine/schema.model';
 import {
     RuleNodeModel
-} from '../models/workflow/rule.node.model';
+} from '../models/engine/schema.model';
 
 import {
     ErrorHandler

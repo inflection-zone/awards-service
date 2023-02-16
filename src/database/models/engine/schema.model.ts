@@ -7,12 +7,11 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
 } from 'typeorm';
-import { IsEmail } from 'class-validator';
 
 ////////////////////////////////////////////////////////////////////////
 
-@Entity({ name: 'api_clients' })
-export class ApiClient {
+@Entity({ name: 'schema' })
+export class Schema {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
@@ -20,27 +19,11 @@ export class ApiClient {
     @Column({ type: 'string', length: 256, nullable: false })
     Name : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
-    Code : string;
-
-    @Column({ type: 'string', length: 10, nullable: false, default: '+91' })
-    CountryCode : string;
-
-    @Column({ type: 'string', length: 16, nullable: true })
-    Phone : string;
-
-    @Column({ type: 'string', length: 256, nullable: true })
-    @IsEmail()
-    Email : string;
-
     @Column({ type: 'string', length: 512, nullable: true })
-    Password : string;
+    Description : string;
 
-    @Column({ type: 'boolean', nullable: false, default: false })
-    IsPrivileged : string;
-
-    @Column({ type: 'string', length: 256, nullable: false })
-    ApiKey : string;
+    @Column({ type: 'uuid', nullable: true })
+    RootNodeId: string;
 
     @Column({ type: 'date', nullable: true })
     ValidFrom : Date;
