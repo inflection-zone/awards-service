@@ -171,7 +171,7 @@ export class UserControllerDelegate {
     // `Dear ${user.FirstName}, ${otp.Otp} is OTP for your ${appIdentifier} login and will expire in 10 mins.`;
     //         const sendStatus = await this._smsService.sendSMS(phoneStr, message);
     //         if (sendStatus) {
-    //             Logger.instance().log('Otp sent successfully.\n ' + JSON.stringify(otp, null, 2));
+    //             logger.log('Otp sent successfully.\n ' + JSON.stringify(otp, null, 2));
     //         }
     //         return true;
     //     }

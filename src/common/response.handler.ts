@@ -3,7 +3,7 @@ import { ResponseDto } from '../domain.types/miscellaneous/response.dto';
 import { ActivityRecorder } from './activity.recorder';
 import { ApiError } from './api.error';
 import { InputValidationError } from './input.validation.error';
-import { Logger } from './logger';
+import { Logger } from '../logger/logger';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ export class ResponseHandler {
         const ips = [
             request.header('x-forwarded-for') || request.socket.remoteAddress
         ];
-        
+
         const msg = error ? error.message : (message ? message : 'An error has occurred.');
 
         const errorStack = error ? error.stack : '';
@@ -46,9 +46,9 @@ export class ResponseHandler {
             APIVersion     : process.env.API_VERSION,
             ServiceVersion : process.env.SERVICE_VERSION,
         };
-        
+
         if (process.env.NODE_ENV !== 'test') {
-            Logger.instance().log(JSON.stringify(responseObject, null, 2));
+            logger.log(JSON.stringify(responseObject, null, 2));
         }
 
         ActivityRecorder.record(responseObject);
@@ -71,7 +71,7 @@ export class ResponseHandler {
         const ips = [
             request.header('x-forwarded-for') || request.socket.remoteAddress
         ];
-       
+
         const responseObject: ResponseDto = {
             Status   : 'success',
             Message  : message,
@@ -98,11 +98,11 @@ export class ResponseHandler {
             if (!logDataObject) {
                 responseObject.Data = null;
             }
-            Logger.instance().log(JSON.stringify(responseObject, null, 2));
+            logger.log(JSON.stringify(responseObject, null, 2));
         }
-        
+
         ActivityRecorder.record(responseObject);
-        
+
         //Sanitize response: Don't send request and trace related info in response, only use it for logging
         delete responseObject.Request;
         delete responseObject.Trace;

@@ -1,6 +1,6 @@
 import {
     ParticipantModel
-} from '../models/participant.model';
+} from '../models/awards/participant.model';
 import {
     ClientModel
 } from '../models/client.model';

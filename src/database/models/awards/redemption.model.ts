@@ -1,14 +1,14 @@
-import DatabaseConnector from '../database.connector';
+import DatabaseConnector from '../../database.connector';
 const sequelize = DatabaseConnector.sequelize;
 import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class EventActionModel {
+export class RedemptionModel {
 
-    static TableName = 'event_actions';
+    static TableName = 'redemptions';
 
-    static ModelName = 'EventAction';
+    static ModelName = 'Redemption';
 
     static Schema = {
         id : {
@@ -17,13 +17,7 @@ export class EventActionModel {
             defaultValue : DataTypes.UUIDV4,
             primaryKey   : true
         },
-        EventActionTypeId : {
-            type       : DataTypes.UUID,
-            allowNull  : false,
-            foreignKey : true,
-            unique     : false
-        },
-        ParticipantId : {
+        ClientId : {
             type       : DataTypes.UUID,
             allowNull  : false,
             foreignKey : true,
@@ -35,8 +29,26 @@ export class EventActionModel {
             foreignKey : true,
             unique     : false
         },
-        Timestamp : {
+        ParticipantId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        Name : {
+            type      : DataTypes.STRING(256),
+            allowNull : false
+        },
+        Description : {
+            type      : DataTypes.STRING(512),
+            allowNull : true
+        },
+        RedemptionDate : {
             type      : DataTypes.DATE,
+            allowNull : false
+        },
+        RedemptionStatus : {
+            type      : DataTypes.STRING(512),
             allowNull : false
         },
         RootRuleNodeId : {
@@ -52,8 +64,8 @@ export class EventActionModel {
     };
 
     static Model: any = sequelize.define(
-        EventActionModel.ModelName,
-        EventActionModel.Schema,
+        RedemptionModel.ModelName,
+        RedemptionModel.Schema,
         {
             createdAt       : 'CreatedAt',
             updatedAt       : 'UpdatedAt',
@@ -61,32 +73,32 @@ export class EventActionModel {
             freezeTableName : true,
             timestamps      : true,
             paranoid        : true,
-            tableName       : EventActionModel.TableName,
+            tableName       : RedemptionModel.TableName,
         });
 
     static associate = (models) => {
 
         //Add associations here...
 
-        models.EventAction.belongsTo(models.EventActionType, {
-            sourceKey : 'EventActionTypeId',
+        models.Redemption.belongsTo(models.Client, {
+            sourceKey : 'ClientId',
             targetKey : 'id',
-            as        : 'EventActionType'
+            as        : 'Client'
         });
 
-        models.EventAction.belongsTo(models.Participant, {
-            sourceKey : 'ParticipantId',
-            targetKey : 'id',
-            as        : 'Participant'
-        });
-
-        models.EventAction.belongsTo(models.Scheme, {
+        models.Redemption.belongsTo(models.Scheme, {
             sourceKey : 'SchemeId',
             targetKey : 'id',
             as        : 'Scheme'
         });
 
-        models.EventAction.belongsTo(models.RuleNode, {
+        models.Redemption.belongsTo(models.Participant, {
+            sourceKey : 'ParticipantId',
+            targetKey : 'id',
+            as        : 'Participant'
+        });
+
+        models.Redemption.belongsTo(models.RuleNode, {
             sourceKey : 'RootRuleNodeId',
             targetKey : 'id',
             as        : 'RootRuleNode'

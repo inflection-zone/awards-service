@@ -1,14 +1,14 @@
-import DatabaseConnector from '../database.connector';
+import DatabaseConnector from '../../database.connector';
 const sequelize = DatabaseConnector.sequelize;
 import { DataTypes } from 'sequelize';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class RuleNodeOperationTypeModel {
+export class SchemeModel {
 
-    static TableName = 'rule_node_operation_types';
+    static TableName = 'schemes';
 
-    static ModelName = 'RuleNodeOperationType';
+    static ModelName = 'Scheme';
 
     static Schema = {
         id : {
@@ -17,16 +17,26 @@ export class RuleNodeOperationTypeModel {
             defaultValue : DataTypes.UUIDV4,
             primaryKey   : true
         },
-        Composition : {
-            type      : DataTypes.ENUM({ values: ["and", "or", "xor"] }),
+        ClientId : {
+            type       : DataTypes.UUID,
+            allowNull  : false,
+            foreignKey : true,
+            unique     : false
+        },
+        Name : {
+            type      : DataTypes.STRING(256),
             allowNull : false
         },
-        Logical : {
-            type      : DataTypes.ENUM({ values: ["equals", "lessThan"] }),
+        Description : {
+            type      : DataTypes.STRING(512),
+            allowNull : true
+        },
+        ValidFrom : {
+            type      : DataTypes.DATE,
             allowNull : false
         },
-        Mathematical : {
-            type      : DataTypes.ENUM({ values: ["add", "subtract", "divide", "multiply", "percentage"] }),
+        ValidTill : {
+            type      : DataTypes.DATE,
             allowNull : false
         },
 
@@ -36,8 +46,8 @@ export class RuleNodeOperationTypeModel {
     };
 
     static Model: any = sequelize.define(
-        RuleNodeOperationTypeModel.ModelName,
-        RuleNodeOperationTypeModel.Schema,
+        SchemeModel.ModelName,
+        SchemeModel.Schema,
         {
             createdAt       : 'CreatedAt',
             updatedAt       : 'UpdatedAt',
@@ -45,12 +55,18 @@ export class RuleNodeOperationTypeModel {
             freezeTableName : true,
             timestamps      : true,
             paranoid        : true,
-            tableName       : RuleNodeOperationTypeModel.TableName,
+            tableName       : SchemeModel.TableName,
         });
 
     static associate = (models) => {
 
         //Add associations here...
+
+        models.Scheme.belongsTo(models.Client, {
+            sourceKey : 'ClientId',
+            targetKey : 'id',
+            as        : 'Client'
+        });
 
     };
 

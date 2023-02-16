@@ -1,6 +1,6 @@
 import {
     SchemeModel
-} from '../models/scheme.model';
+} from '../models/workflow/scheme.model';
 import {
     ClientModel
 } from '../models/client.model';

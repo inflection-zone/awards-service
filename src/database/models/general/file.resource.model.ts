@@ -1,4 +1,4 @@
-import * as db from '../database.connector';
+import * as db from '../../database.connector';
 import { DataTypes } from 'sequelize';
 const sequelize = db.default.sequelize;
 

@@ -1,5 +1,5 @@
 import { MysqlClient as client } from './mysql.client';
-import { Logger } from '../common/logger';
+import logger from '../logger/logger';
 import { execSync } from 'child_process';
 
 ////////////////////////////////////////////////////////////////////////
@@ -12,7 +12,7 @@ export class DbClient {
             await client.createDb();
             return true;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
         }
         return false;
     };
@@ -23,7 +23,7 @@ export class DbClient {
             await client.dropDb();
             return true;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
         }
         return false;
     };
@@ -34,7 +34,7 @@ export class DbClient {
             await client.executeQuery(query);
             return true;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
         }
         return false;
     };
@@ -42,14 +42,12 @@ export class DbClient {
     public static migrate = async () => {
         try {
             const output = execSync('npx sequelize-cli db:migrate');
-
             const str = output.toString();
-            Logger.instance().log('Database migrated successfully!');
-            Logger.instance().log(str);
-
+            logger.log('info', 'Database migrated successfully!');
+            logger.log('info', str);
             return true;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
         }
         return false;
     };

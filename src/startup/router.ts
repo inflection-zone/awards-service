@@ -1,5 +1,5 @@
 import express from "express";
-import { Logger } from "../common/logger";
+import { Logger } from "../logger/logger";
 ////////////////////////////////////////////////////////////////////////////////////
 
 export class Router {
@@ -24,7 +24,7 @@ export class Router {
                 resolve(true);
 
             } catch (error) {
-                Logger.instance().log('Error initializing the router: ' + error.message);
+                logger.log('Error initializing the router: ' + error.message);
                 reject(false);
             }
         });

@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 
-import { Logger } from '../../common/logger';
+import { Logger } from '../../logger/logger';
 import { IAuthorizer } from '../authorizer.interface';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
 import { RolePrivilegeService } from '../../database/repository.services/role.privilege.service';
@@ -44,7 +44,7 @@ export class CustomAuthorizer implements IAuthorizer {
             }
             return false;
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.log(error.message);
         }
         return false;
     };
@@ -71,8 +71,8 @@ export class CustomAuthorizer implements IAuthorizer {
 
     private hasConsent = async (currentRoleId: number, context: string): Promise<boolean> => {
 
-        Logger.instance().log('Current role id: ' + currentRoleId);
-        Logger.instance().log('Context: ' + context);
+        logger.log('Current role id: ' + currentRoleId);
+        logger.log('Context: ' + context);
 
         //for time being, return true always
         return true;

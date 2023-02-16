@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Helper } from "../common/helper";
-import { Logger } from "../common/logger";
+import { Logger } from "../logger/logger";
 import * as RolePrivilegesList from '../../seed.data/role.privileges.json';
 import { RoleService } from '../database/repository.services/role.service';
 import { UserRoleService } from '../database/repository.services/user/user.role.service';
@@ -40,7 +40,7 @@ export class Seeder {
             await this.seedDefaultUsers();
             await this.seedDefaultCareplanCategories();
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.log(error.message);
         }
     };
 
@@ -73,9 +73,9 @@ export class Seeder {
                 }
             }
         } catch (error) {
-            Logger.instance().log('Error occurred while seeding role-privileges!');
+            logger.log('Error occurred while seeding role-privileges!');
         }
-        Logger.instance().log('Seeded role-privileges successfully!');
+        logger.log('Seeded role-privileges successfully!');
     };
 
     private seedDefaultUsers = async () => {
@@ -90,7 +90,7 @@ export class Seeder {
             if (existingUser) {
                 continue;
             }
-       
+
             const userDomainModel : UserCreateModel = {
                 Phone       : u.Phone,
                 FirstName   : u.FirstName,
@@ -104,7 +104,7 @@ export class Seeder {
                 BirthDate   : null,
                 Prefix      : ""
             };
-            
+
             userDomainModel.Password = Helper.generateHashedPassword(u.Password);
             const user = await this._userService.create(userDomainModel);
             const userRole: UserRoleCreateModel = {
@@ -114,7 +114,7 @@ export class Seeder {
             await this._userRoleService.create(userRole);
         }
 
-        Logger.instance().log('Seeded admin and moderator successfully!');
+        logger.log('Seeded admin and moderator successfully!');
     };
 
     private loadJSONSeedFile(file: string): any {
@@ -126,7 +126,7 @@ export class Seeder {
 
     private seedInternalClients = async () => {
 
-        Logger.instance().log('Seeding internal clients...');
+        logger.log('Seeding internal clients...');
 
         const arr = this.loadJSONSeedFile('internal.clients.seed.json');
 
@@ -146,14 +146,14 @@ export class Seeder {
                 };
                 client = await this._apiClientService.create(model);
                 var str = JSON.stringify(client, null, '  ');
-                Logger.instance().log(str);
+                logger.log(str);
             }
         }
 
     };
 
     private seedDefaultRoles = async () => {
-        
+
         for await (var role of RoleList) {
 
             var r = await this._roleService.getByName(role);
@@ -164,7 +164,7 @@ export class Seeder {
             }
         }
 
-        Logger.instance().log('Seeded default roles successfully!');
+        logger.log('Seeded default roles successfully!');
     };
 
     private seedDefaultCareplanCategories = async () => {
@@ -193,7 +193,7 @@ export class Seeder {
             // //await this._careplanCategoryService.create(cc);
         }
 
-        Logger.instance().log('Seeded default careplan categories successfully!');
+        logger.log('Seeded default careplan categories successfully!');
     };
 
 }

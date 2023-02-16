@@ -4,7 +4,7 @@ import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import "reflect-metadata";
 import { Router } from './startup/router';
-import { Logger } from './common/logger';
+import { Logger } from './logger/logger';
 import { ConfigurationManager } from "./config/configuration.manager";
 import { Loader } from './startup/loader';
 import { Scheduler } from './startup/scheduler';
@@ -53,7 +53,7 @@ export default class Application {
             await Scheduler.instance().schedule();
         }
         catch (error) {
-            Logger.instance().log('An error occurred while warming up.' + error.message);
+            logger.log('An error occurred while warming up.' + error.message);
         }
     };
 
@@ -80,7 +80,7 @@ export default class Application {
             await this.warmUp();
 
             process.on('exit', code => {
-                Logger.instance().log(`Process exited with code: ${code}`);
+                logger.log(`Process exited with code: ${code}`);
             });
 
             //Start listening
@@ -88,7 +88,7 @@ export default class Application {
 
         }
         catch (error){
-            Logger.instance().log('An error occurred while starting reancare-api service.' + error.message);
+            logger.log('An error occurred while starting reancare-api service.' + error.message);
         }
     };
 
@@ -125,7 +125,7 @@ export default class Application {
                 const port = process.env.PORT;
                 const server = this._app.listen(port, () => {
                     const serviceName = 'Careplan service api' + '-' + process.env.NODE_ENV;
-                    Logger.instance().log(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
+                    logger.log(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
                     this._app.emit("server_started");
                 });
                 module.exports.server = server;

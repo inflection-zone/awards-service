@@ -1,15 +1,15 @@
 import {
     EventTypeModel
-} from '../models/event.type.model';
+} from '../models/workflow/event.type.model';
 import {
     SchemeModel
-} from '../models/scheme.model';
+} from '../models/workflow/scheme.model';
 import {
     ClientModel
 } from '../models/client.model';
 import {
     RuleNodeModel
-} from '../models/rule.node.model';
+} from '../models/workflow/rule.node.model';
 
 import {
     ErrorHandler

@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { Logger } from '../../common/logger';
+import { Logger } from '../../logger/logger';
 import { AuthenticationResult } from '../../domain.types/auth.domain.types';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
 import { ApiClientService } from '../../database/repository.services/api.client.service';
@@ -37,7 +37,7 @@ export class CustomAuthenticator implements IAuthenticator {
                 if (IsPrivileged) {
                     return res;
                 }
-                
+
                 res = {
                     Result        : false,
                     Message       : 'Unauthorized user access',
@@ -57,9 +57,9 @@ export class CustomAuthenticator implements IAuthenticator {
                 }
                 request.currentUser = user;
             });
-            
+
         } catch (err) {
-            Logger.instance().log(JSON.stringify(err, null, 2));
+            logger.log(JSON.stringify(err, null, 2));
             res = {
                 Result        : false,
                 Message       : 'Error authenticating user',
@@ -101,9 +101,9 @@ export class CustomAuthenticator implements IAuthenticator {
                 return res;
             }
             request.currentClient = client;
-            
+
         } catch (err) {
-            Logger.instance().log(JSON.stringify(err, null, 2));
+            logger.log(JSON.stringify(err, null, 2));
             res = {
                 Result        : false,
                 Message       : 'Error authenticating client',
