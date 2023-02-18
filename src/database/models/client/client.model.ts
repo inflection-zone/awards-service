@@ -11,8 +11,8 @@ import { IsEmail } from 'class-validator';
 
 ////////////////////////////////////////////////////////////////////////
 
-@Entity({ name: 'api_clients' })
-export class ApiClient {
+@Entity({ name: 'clients' })
+export class Client {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;

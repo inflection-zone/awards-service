@@ -1,82 +1,27 @@
-import DatabaseConnector from '../../database.connector';
-const sequelize = DatabaseConnector.sequelize;
-import { DataTypes } from 'sequelize';
+import "reflect-metadata";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Client } from "../client/client.model";
+import { Person } from "../user/person.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-export class ParticipantModel {
+@Entity({ name: 'participants' })
+export class Participant extends Person {
 
-    static TableName = 'participants';
+    @PrimaryGeneratedColumn('uuid')
+    id : string;
 
-    static ModelName = 'Participant';
+    @ManyToOne(() => Client, { nullable: true })
+    @JoinColumn()
+    Client : Client;
 
-    static Schema = {
-        id : {
-            type         : DataTypes.UUID,
-            allowNull    : false,
-            defaultValue : DataTypes.UUIDV4,
-            primaryKey   : true
-        },
-        ClientId : {
-            type       : DataTypes.UUID,
-            allowNull  : false,
-            foreignKey : true,
-            unique     : false
-        },
-        FirstName : {
-            type      : DataTypes.STRING(64),
-            allowNull : false
-        },
-        LastName : {
-            type      : DataTypes.STRING(64),
-            allowNull : false
-        },
-        Phone : {
-            type      : DataTypes.STRING(16),
-            allowNull : true
-        },
-        Email : {
-            type      : DataTypes.STRING(256),
-            allowNull : true
-        },
-        Gender : {
-            type         : DataTypes.ENUM({ values: ["Male", "Female", "Other"] }),
-            allowNull    : false,
-            defaultValue : 'Male'
-        },
-        BirthDate : {
-            type      : DataTypes.DATE,
-            allowNull : false
-        },
-
-        CreatedAt : DataTypes.DATE,
-        UpdatedAt : DataTypes.DATE,
-        DeletedAt : DataTypes.DATE
-    };
-
-    static Model: any = sequelize.define(
-        ParticipantModel.ModelName,
-        ParticipantModel.Schema,
-        {
-            createdAt       : 'CreatedAt',
-            updatedAt       : 'UpdatedAt',
-            deletedAt       : 'DeletedAt',
-            freezeTableName : true,
-            timestamps      : true,
-            paranoid        : true,
-            tableName       : ParticipantModel.TableName,
-        });
-
-    static associate = (models) => {
-
-        //Add associations here...
-
-        models.Participant.belongsTo(models.Client, {
-            sourceKey : 'ClientId',
-            targetKey : 'id',
-            as        : 'Client'
-        });
-
-    };
+    @Column({ type: 'date', nullable: true })
+    OnboardingDate : Date;
 
 }

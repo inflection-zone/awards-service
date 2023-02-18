@@ -1,6 +1,6 @@
 import {
     RedemptionModel
-} from '../models/awards/redemption.model';
+} from '../models/awards/disbursed.award.point.model';
 import {
     ClientModel
 } from '../models/client.model';

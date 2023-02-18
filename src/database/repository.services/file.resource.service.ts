@@ -1,5 +1,5 @@
 import { FileResourceModel } from '../models/general/file.resource.model';
-import { UserModel } from '../models/user/user.model';
+import { UserModel } from '../models/user/person.model';
 import { ErrorHandler } from '../../common/error.handler';
 import { FileResourceCreateModel } from '../../domain.types/file.resource.domain.types';
 import { Op } from 'sequelize';

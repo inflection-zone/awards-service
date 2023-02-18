@@ -6,7 +6,10 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    ManyToOne,
+    JoinColumn,
 } from 'typeorm';
+import { Client } from "../client/client.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +24,10 @@ export class Schema {
 
     @Column({ type: 'string', length: 512, nullable: true })
     Description : string;
+
+    @ManyToOne(() => Client, { nullable: true })
+    @JoinColumn()
+    Client : Client;
 
     @Column({ type: 'uuid', nullable: true })
     RootNodeId: string;
