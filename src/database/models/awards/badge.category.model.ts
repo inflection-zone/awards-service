@@ -6,19 +6,18 @@ import {
     DeleteDateColumn,
     Entity,
     JoinColumn,
-    JoinTable,
-    ManyToMany,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Client } from "../client/client.model";
-import { Participant } from "./participant.model";
+import { Badge } from "./badge.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-@Entity({ name: 'groups' })
-export class Group {
+@Entity({ name: 'badge_categories' })
+export class BadgeCategory {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
@@ -35,11 +34,10 @@ export class Group {
 
     @Column({ type: 'string', length: 1024, nullable: true })
     @IsUrl()
-    ProfileImageUrl : string;
+    ImageUrl : string;
 
-    @ManyToMany(() => Participant)
-    @JoinTable()
-    Participants: Participant[];
+    @OneToMany(() => Badge, (badge)=> badge.Category)
+    Badges: Badge[];
 
     @CreateDateColumn()
     CreatedAt : Date;
