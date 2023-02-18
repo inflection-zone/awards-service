@@ -7,18 +7,17 @@ import {
     Entity,
     JoinColumn,
     JoinTable,
-    ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Client } from "../client/client.model";
-import { Participant } from "./participant.model";
+import { BadgeCategory } from "./badge.category.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-@Entity({ name: 'groups' })
-export class Group {
+@Entity({ name: 'badges' })
+export class Badge {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
@@ -35,11 +34,11 @@ export class Group {
 
     @Column({ type: 'string', length: 1024, nullable: true })
     @IsUrl()
-    ProfileImageUrl : string;
+    ImageUrl : string;
 
-    @ManyToMany(() => Participant)
+    @ManyToOne(() => BadgeCategory)
     @JoinTable()
-    Participants: Participant[];
+    Category: BadgeCategory;
 
     @CreateDateColumn()
     CreatedAt : Date;
