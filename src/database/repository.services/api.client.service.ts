@@ -1,4 +1,4 @@
-import { ApiClientModel } from '../models/api.client/api.client.model';
+import { ApiClientModel } from '../models/client/client.model';
 import { ApiClientCreateModel, ApiClientDto, ApiClientSearchFilters, ApiClientSearchResults, ApiClientUpdateModel, ApiClientVerificationDomainModel, ClientApiKeyDto } from '../../domain.types/api.client.domain.types';
 import logger from '../../logger/logger';
 import { ApiError } from '../../common/api.error';

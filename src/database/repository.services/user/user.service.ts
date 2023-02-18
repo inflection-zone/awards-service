@@ -1,4 +1,4 @@
-import { UserModel } from '../../models/user/user.model';
+import { UserModel } from '../../models/user/person.model';
 import { UserLoginSessionModel } from '../../models/user/user.login.session.model';
 import { RoleModel } from '../../models/role.model';
 import { UserRoleModel } from '../../models/user/user.role.model';

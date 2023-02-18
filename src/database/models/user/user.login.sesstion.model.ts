@@ -1,3 +1,4 @@
+import { IsDate } from "class-validator";
 import "reflect-metadata";
 import {
     Column,
@@ -6,25 +7,33 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    JoinColumn,
+    ManyToOne,
 } from 'typeorm';
-import { Person } from "./person.model";
+import { User } from "./user.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-@Entity({ name: 'users' })
-export class User extends Person {
+@Entity({ name: 'user_login_sessions' })
+export class UserLoginSession {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'string', length: 16, nullable: false })
-    Username : string;
+    @ManyToOne(() => User, { nullable: false })
+    @JoinColumn()
+    User: User;
 
-    @Column({ type: 'string', length: 1024, nullable: true })
-    Password : string;
+    @Column({ type: 'boolean', nullable: false, default: true })
+    IsActive: boolean;
 
     @Column({ type: 'date', nullable: true })
-    LastLogin : Date;
+    @IsDate()
+    StartedAt : Date;
+
+    @Column({ type: 'date', nullable: true })
+    @IsDate()
+    ValidTill : Date;
 
     @CreateDateColumn()
     CreatedAt : Date;

@@ -1,4 +1,14 @@
 
+export enum ContextType {
+    Person  = 'Person',
+    Group   = 'Group',
+}
+
+export const ContextTypeList: ContextType[] = [
+    ContextType.Person,
+    ContextType.Group,
+];
+
 export enum CompositionOperator {
     And  = 'And',
     Or   = 'Or',
@@ -83,7 +93,16 @@ export enum EventActionType {
     ExecuteNext = "ExecuteNext",
     WaitForInputEvents = "WaitForInputEvents",
     Exit = "Exit",
+    Custom = "Custom",
 }
+
+export const EventActionTypeList: EventActionType[] = [
+    EventActionType.ExecuteNext,
+    EventActionType.WaitForInputEvents,
+    EventActionType.Exit,
+    EventActionType.Custom,
+];
+
 
 export enum ExecutionStatus {
     Pending = "Pending",

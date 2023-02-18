@@ -3,7 +3,7 @@ import {
 } from '../../models/user/user.role.model';
 import {
     UserModel
-} from '../../models/user/user.model';
+} from '../../models/user/person.model';
 import {
     RoleModel
 } from '../../models/role.model';

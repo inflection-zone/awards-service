@@ -1,87 +1,52 @@
-import * as db from '../../database.connector';
-import { DataTypes } from 'sequelize';
-const sequelize = db.default.sequelize;
+import "reflect-metadata";
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    DeleteDateColumn,
+} from 'typeorm';
 
 ////////////////////////////////////////////////////////////////////////
 
-export class FileResourceModel {
+@Entity({ name: 'file_resources' })
+export class FileResource {
 
-    static TableName = 'file_resources';
+    @PrimaryGeneratedColumn('uuid')
+    id : string;
 
-    static ModelName = 'FileResource';
+    @Column({ type: 'string', length: 1024, nullable: false })
+    StorageKey : string;
 
-    static Schema = {
-        id : {
-            type         : DataTypes.UUID,
-            allowNull    : false,
-            defaultValue : DataTypes.UUIDV4,
-            primaryKey   : true
-        },
-        StorageKey : {
-            type      : DataTypes.TEXT,
-            allowNull : true
-        },
-        OriginalFilename : {
-            type      : DataTypes.STRING(512),
-            allowNull : false
-        },
-        MimeType : {
-            type      : DataTypes.STRING(256),
-            allowNull : false
-        },
-        Public : {
-            type         : DataTypes.BOOLEAN,
-            allowNull    : false,
-            defaultValue : false
-        },
-        Size : {
-            type      : DataTypes.INTEGER,
-            allowNull : true,
-        },
-        Tags : {
-            type         : DataTypes.TEXT,
-            allowNull    : false,
-            defaultValue : '[]'
-        },
-        DownloadCount : {
-            type         : DataTypes.INTEGER,
-            allowNull    : false,
-            defaultValue : 0
-        },
-        UserId : {
-            type       : DataTypes.UUID,
-            allowNull  : true,
-            foreignKey : true
-        },
+    @Column({ type: 'string', length: 256, nullable: false })
+    OriginalFilename : string;
 
-        CreatedAt : DataTypes.DATE,
-        UpdatedAt : DataTypes.DATE,
-        DeletedAt : DataTypes.DATE
-    };
+    @Column({ type: 'string', length: 256, nullable: false })
+    MimeType : string;
 
-    static Model: any = sequelize.define(
-        FileResourceModel.ModelName,
-        FileResourceModel.Schema,
-        {
-            createdAt       : 'CreatedAt',
-            updatedAt       : 'UpdatedAt',
-            deletedAt       : 'DeletedAt',
-            freezeTableName : true,
-            timestamps      : true,
-            paranoid        : true,
-            tableName       : FileResourceModel.TableName,
-        });
+    @Column({ type: 'boolean', nullable: false, default: false })
+    Public : boolean;
 
-    static associate = (models) => {
+    @Column({ type: 'integer', nullable: true })
+    Size : number;
 
-        //Add associations here...
+    @Column({ type: 'integer', nullable: false, default: 0 })
+    DownloadCount : number;
 
-        models.FileResource.belongsTo(models.User, {
-            sourceKey : 'UserId',
-            targetKey : 'id',
-            as        : 'User'
-        });
+    @Column({ type: 'uuid', nullable: true })
+    UploadedBy : string;
 
-    };
+    @Column('simple_array')
+    Tags : string[];
+
+    @CreateDateColumn()
+    CreatedAt : Date;
+
+    @UpdateDateColumn()
+    UpdatedAt : Date;
+
+    @DeleteDateColumn()
+    DeletedAt : Date;
 
 }

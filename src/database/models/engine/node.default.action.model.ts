@@ -8,7 +8,7 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
 } from 'typeorm';
-import { EventActionType } from "../../../domain.types/engine/enums";
+import { EventActionType, EventActionTypeList } from "../../../domain.types/engine/enums";
 import { Node } from "./node.model";
 import { EventActionParams } from "../../../domain.types/engine/event.action.params";
 
@@ -20,7 +20,7 @@ export class NodeDefaultAction {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'enum', enum: EventActionType, nullable: false })
+    @Column({ type: 'enum', enum: EventActionTypeList, nullable: false })
     ActionType : EventActionType;
 
     @OneToOne(() => Node, (node) => node.DefaultAction, { nullable: true })
