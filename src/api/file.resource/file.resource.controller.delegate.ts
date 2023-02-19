@@ -1,4 +1,4 @@
-import { FileResourceService } from '../../database/repository.services/file.resource.service';
+import { FileResourceService } from '../../database/repository.services/general/file.resource.service';
 import { ErrorHandler } from '../../common/error.handler';
 import { Helper } from '../../common/helper';
 import { ApiError } from '../../common/api.error';
@@ -25,20 +25,20 @@ export class FileResourceControllerDelegate {
     //#endregion
 
     upload = async (request: express.Request) => {
-    
+
         var dateFolder = new Date().toISOString().split('T')[0];
         var originalFilename: string = request.headers['filename'] as string;
         var contentLength = request.headers['content-length'];
         var mimeType = request.headers['mime-type'] ?? mime.lookup(originalFilename);
         var publicResource = request.headers['public'] === 'true' ? true : false;
-    
+
         var timestamp = new Date().getTime().toString();
         var ext = Helper.getFileExtension(originalFilename);
         var filename = originalFilename.replace('.' + ext, "");
         filename = filename.replace(' ', "_");
         filename = filename + '_' + timestamp + '.' + ext;
         var storageKey = 'uploaded/' + dateFolder + '/' + filename;
-    
+
         var key = await this._storageService.upload(request, storageKey);
         if (!key) {
             ErrorHandler.throwInternalServerError(`Unable to upload the file!`);
@@ -69,7 +69,7 @@ export class FileResourceControllerDelegate {
         var storageKey = record.StorageKey;
         var originalFilename = record.OriginalFilename;
         var mimeType = mime.lookup(originalFilename);
-    
+
         response.setHeader('Content-type', mimeType as string);
         setResponseHeaders(response, originalFilename, disposition);
 

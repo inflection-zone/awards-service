@@ -7,7 +7,7 @@ import { RoleService } from '../database/repository.services/role.service';
 import { UserRoleService } from '../database/repository.services/user/user.role.service';
 import { RolePrivilegeService } from '../database/repository.services/role.privilege.service';
 import { UserService } from '../database/repository.services/user/user.service';
-import { ApiClientService } from '../database/repository.services/api.client.service';
+import { ApiClientService } from '../database/repository.services/client/client.service';
 import { RoleList } from '../domain.types/miscellaneous/role.types';
 import { UserCreateModel } from "../domain.types/user/user.domain.types";
 import { Gender } from "../domain.types/miscellaneous/system.types";
