@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Logger } from '../../logger/logger';
 import { AuthenticationResult } from '../../domain.types/auth.domain.types';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
-import { ApiClientService } from '../../database/repository.services/api.client.service';
+import { ApiClientService } from '../../database/repository.services/client/client.service';
 import { Loader } from '../../startup/loader';
 import { IAuthenticator } from '../authenticator.interface';
 

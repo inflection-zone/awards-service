@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Client } from "../client/client.model";
-import { Person } from "../user/person.model";
+import { Person } from "../person/person.model";
 
 ////////////////////////////////////////////////////////////////////////
 

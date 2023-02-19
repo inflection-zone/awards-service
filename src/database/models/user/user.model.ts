@@ -6,8 +6,11 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    JoinColumn,
+    ManyToOne,
 } from 'typeorm';
-import { Person } from "./person.model";
+import { Client } from "../client/client.model";
+import { Person } from "../person/person.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +19,10 @@ export class User extends Person {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
+
+    @ManyToOne(() => Client, { nullable: true })
+    @JoinColumn()
+    Client : Client;
 
     @Column({ type: 'string', length: 16, nullable: false })
     Username : string;

@@ -26,6 +26,7 @@ export interface UserUpdateModel {
     Email?      : string;
     Gender?     : Gender;
     BirthDate?  : Date;
+    ProfileImageUrl? : string;
 }
 
 export interface UserDto {
@@ -42,6 +43,7 @@ export interface UserDto {
 }
 
 export interface UserSearchFilters extends BaseSearchFilters {
+    ClientId? : string;
     FirstName?: string;
     LastName? : string;
     Phone?    : string;
