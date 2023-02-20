@@ -1,7 +1,7 @@
 import express from 'express';
 import {
-    ApiClientController
-} from './api.client.controller';
+    ClientController
+} from './client.controller';
 import {
     Loader
 } from '../../startup/loader';
@@ -12,7 +12,7 @@ export const register = (app: express.Application): void => {
 
     const router = express.Router();
     const authenticator = Loader.Authenticator;
-    const controller = new ApiClientController();
+    const controller = new ClientController();
 
     router.post('/', authenticator.authenticateUser, controller.create);
 

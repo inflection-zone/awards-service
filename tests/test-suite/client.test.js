@@ -23,14 +23,14 @@ describe('Client tests', function() {
                 //assert.exists(response.body.Data.Xyz, 'Xyz exists.');
                 expect(response.body.Data).to.have.property('id');
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('Phone');
                 expect(response.body.Data).to.have.property('Email');
 
                 expect(response.body.Data.id).to.equal(TestCache.ClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ClientCreateModel.Code);
                 expect(response.body.Data.Phone).to.equal(TestCache.ClientCreateModel.Phone);
                 expect(response.body.Data.Email).to.equal(TestCache.ClientCreateModel.Email);
 
@@ -46,14 +46,14 @@ describe('Client tests', function() {
             .set('Authorization', `Bearer ${TestCache.AdminJwt}`)
             .expect(response => {
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('Phone');
                 expect(response.body.Data).to.have.property('Email');
 
                 expect(response.body.Data.id).to.equal(TestCache.ClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ClientCreateModel.Code);
                 expect(response.body.Data.Phone).to.equal(TestCache.ClientCreateModel.Phone);
                 expect(response.body.Data.Email).to.equal(TestCache.ClientCreateModel.Email);
 
@@ -93,14 +93,14 @@ describe('Client tests', function() {
             .send(updateModel)
             .expect(response => {
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('Phone');
                 expect(response.body.Data).to.have.property('Email');
 
                 expect(response.body.Data.id).to.equal(TestCache.ClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ClientCreateModel.Code);
                 expect(response.body.Data.Phone).to.equal(TestCache.ClientCreateModel.Phone);
                 expect(response.body.Data.Email).to.equal(TestCache.ClientCreateModel.Email);
 
@@ -140,14 +140,14 @@ describe('Client tests', function() {
                 //assert.exists(response.body.Data.Xyz, 'Xyz exists.');
                 expect(response.body.Data).to.have.property('id');
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('Phone');
                 expect(response.body.Data).to.have.property('Email');
 
                 expect(response.body.Data.id).to.equal(TestCache.ClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ClientCreateModel.Code);
                 expect(response.body.Data.Phone).to.equal(TestCache.ClientCreateModel.Phone);
                 expect(response.body.Data.Email).to.equal(TestCache.ClientCreateModel.Email);
 
@@ -161,7 +161,7 @@ describe('Client tests', function() {
 
 function loadClientCreateModel() {
     const model = {
-        ClientName: "Deepak Kumar Jain",
+        Name: "Deepak Kumar Jain",
 
     };
     TestCache.ClientCreateModel = model;
@@ -169,8 +169,8 @@ function loadClientCreateModel() {
 
 function loadClientUpdateModel() {
     const model = {
-        ClientName: "Deepak Kumar Jain",
-        ClientCode: "BC456767",
+        Name: "Deepak Kumar Jain",
+        Code: "BC456767",
         Phone: "9876543210",
         Email: "john.doe@myapp.com",
 

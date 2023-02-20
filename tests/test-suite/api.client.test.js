@@ -23,8 +23,8 @@ describe('Api client tests', function() {
                 //assert.exists(response.body.Data.Xyz, 'Xyz exists.');
                 expect(response.body.Data).to.have.property('id');
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('ClientInterfaceType');
                 expect(response.body.Data).to.have.property('IsPrivileged');
                 expect(response.body.Data).to.have.property('CountryCode');
@@ -36,8 +36,8 @@ describe('Api client tests', function() {
                 expect(response.body.Data).to.have.property('ValidTill');
 
                 expect(response.body.Data.id).to.equal(TestCache.ApiClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ApiClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ApiClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ApiClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ApiClientCreateModel.Code);
                 expect(response.body.Data.ClientInterfaceType).to.equal(TestCache.ApiClientCreateModel.ClientInterfaceType);
                 expect(response.body.Data.IsPrivileged).to.equal(TestCache.ApiClientCreateModel.IsPrivileged);
                 expect(response.body.Data.CountryCode).to.equal(TestCache.ApiClientCreateModel.CountryCode);
@@ -60,8 +60,8 @@ describe('Api client tests', function() {
             .set('Authorization', `Bearer ${TestCache.AdminJwt}`)
             .expect(response => {
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('ClientInterfaceType');
                 expect(response.body.Data).to.have.property('IsPrivileged');
                 expect(response.body.Data).to.have.property('CountryCode');
@@ -73,8 +73,8 @@ describe('Api client tests', function() {
                 expect(response.body.Data).to.have.property('ValidTill');
 
                 expect(response.body.Data.id).to.equal(TestCache.ApiClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ApiClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ApiClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ApiClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ApiClientCreateModel.Code);
                 expect(response.body.Data.ClientInterfaceType).to.equal(TestCache.ApiClientCreateModel.ClientInterfaceType);
                 expect(response.body.Data.IsPrivileged).to.equal(TestCache.ApiClientCreateModel.IsPrivileged);
                 expect(response.body.Data.CountryCode).to.equal(TestCache.ApiClientCreateModel.CountryCode);
@@ -121,8 +121,8 @@ describe('Api client tests', function() {
             .send(updateModel)
             .expect(response => {
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('ClientInterfaceType');
                 expect(response.body.Data).to.have.property('IsPrivileged');
                 expect(response.body.Data).to.have.property('CountryCode');
@@ -134,8 +134,8 @@ describe('Api client tests', function() {
                 expect(response.body.Data).to.have.property('ValidTill');
 
                 expect(response.body.Data.id).to.equal(TestCache.ApiClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ApiClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ApiClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ApiClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ApiClientCreateModel.Code);
                 expect(response.body.Data.ClientInterfaceType).to.equal(TestCache.ApiClientCreateModel.ClientInterfaceType);
                 expect(response.body.Data.IsPrivileged).to.equal(TestCache.ApiClientCreateModel.IsPrivileged);
                 expect(response.body.Data.CountryCode).to.equal(TestCache.ApiClientCreateModel.CountryCode);
@@ -182,8 +182,8 @@ describe('Api client tests', function() {
                 //assert.exists(response.body.Data.Xyz, 'Xyz exists.');
                 expect(response.body.Data).to.have.property('id');
                 expect(response.body.Data).to.have.property('id');
-                expect(response.body.Data).to.have.property('ClientName');
-                expect(response.body.Data).to.have.property('ClientCode');
+                expect(response.body.Data).to.have.property('Name');
+                expect(response.body.Data).to.have.property('Code');
                 expect(response.body.Data).to.have.property('ClientInterfaceType');
                 expect(response.body.Data).to.have.property('IsPrivileged');
                 expect(response.body.Data).to.have.property('CountryCode');
@@ -195,8 +195,8 @@ describe('Api client tests', function() {
                 expect(response.body.Data).to.have.property('ValidTill');
 
                 expect(response.body.Data.id).to.equal(TestCache.ApiClientCreateModel.id);
-                expect(response.body.Data.ClientName).to.equal(TestCache.ApiClientCreateModel.ClientName);
-                expect(response.body.Data.ClientCode).to.equal(TestCache.ApiClientCreateModel.ClientCode);
+                expect(response.body.Data.Name).to.equal(TestCache.ApiClientCreateModel.Name);
+                expect(response.body.Data.Code).to.equal(TestCache.ApiClientCreateModel.Code);
                 expect(response.body.Data.ClientInterfaceType).to.equal(TestCache.ApiClientCreateModel.ClientInterfaceType);
                 expect(response.body.Data.IsPrivileged).to.equal(TestCache.ApiClientCreateModel.IsPrivileged);
                 expect(response.body.Data.CountryCode).to.equal(TestCache.ApiClientCreateModel.CountryCode);
@@ -217,7 +217,7 @@ describe('Api client tests', function() {
 
 function loadApiClientCreateModel() {
     const model = {
-        ClientName: "Rean Patient App",
+        Name: "Rean Patient App",
         ClientInterfaceType: "Educational",
         IsPrivileged: True,
         Password: "",
@@ -229,8 +229,8 @@ function loadApiClientCreateModel() {
 
 function loadApiClientUpdateModel() {
     const model = {
-        ClientName: "Rean Patient App",
-        ClientCode: "REANPAT",
+        Name: "Rean Patient App",
+        Code: "REANPAT",
         ClientInterfaceType: "Educational",
         IsPrivileged: True,
         CountryCode: "",

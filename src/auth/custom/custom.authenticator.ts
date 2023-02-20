@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Logger } from '../../logger/logger';
 import { AuthenticationResult } from '../../domain.types/auth.domain.types';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
-import { ApiClientService } from '../../database/repository.services/client/client.service';
+import { ClientService } from '../../database/repository.services/client/client.service';
 import { Loader } from '../../startup/loader';
 import { IAuthenticator } from '../authenticator.interface';
 
@@ -11,10 +11,10 @@ import { IAuthenticator } from '../authenticator.interface';
 
 export class CustomAuthenticator implements IAuthenticator {
 
-    _clientService: ApiClientService = null;
+    _clientService: ClientService = null;
 
     constructor() {
-        this._clientService = Loader.Container.resolve(ApiClientService);
+        this._clientService = Loader.Container.resolve(ClientService);
     }
 
     public authenticateUser = async (

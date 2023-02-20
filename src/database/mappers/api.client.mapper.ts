@@ -1,19 +1,19 @@
 import {
-    ApiClientDto
+    ClientDto
 } from '../../domain.types/api.client.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
 export class ApiClientMapper {
 
-    static toDto = (apiClient: any): ApiClientDto => {
+    static toDto = (apiClient: any): ClientDto => {
         if (apiClient == null) {
             return null;
         }
-        const dto: ApiClientDto = {
+        const dto: ClientDto = {
             id           : apiClient.id,
-            ClientName   : apiClient.ClientName,
-            ClientCode   : apiClient.ClientCode,
+            Name   : apiClient.Name,
+            Code   : apiClient.Code,
             IsPrivileged : apiClient.IsPrivileged,
             CountryCode  : apiClient.CountryCode,
             Phone        : apiClient.Phone,

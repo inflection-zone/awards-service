@@ -3,23 +3,24 @@ import {
     ResponseHandler
 } from '../../common/response.handler';
 import {
-    ApiClientControllerDelegate
-} from './api.client.controller.delegate';
+    ClientControllerDelegate
+} from './client.controller.delegate';
 import {
     BaseController
 } from '../base.controller';
+import { ClientApiKeyDto } from '../../domain.types/client.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-export class ApiClientController extends BaseController {
+export class ClientController extends BaseController {
 
     //#region member variables and constructors
 
-    _delegate: ApiClientControllerDelegate = null;
+    _delegate: ClientControllerDelegate = null;
 
     constructor() {
         super();
-        this._delegate = new ApiClientControllerDelegate();
+        this._delegate = new ClientControllerDelegate();
     }
 
     //#endregion
@@ -33,7 +34,7 @@ export class ApiClientController extends BaseController {
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
-    }
+    };
 
     getById = async (request: express.Request, response: express.Response): Promise < void > => {
         try {
@@ -44,7 +45,7 @@ export class ApiClientController extends BaseController {
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
-    }
+    };
 
     search = async (request: express.Request, response: express.Response): Promise < void > => {
         try {
@@ -55,7 +56,7 @@ export class ApiClientController extends BaseController {
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
-    }
+    };
 
     update = async (request: express.Request, response: express.Response): Promise < void > => {
         try {
@@ -66,7 +67,7 @@ export class ApiClientController extends BaseController {
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
-    }
+    };
 
     delete = async (request: express.Request, response: express.Response): Promise < void > => {
         try {
@@ -98,7 +99,7 @@ export class ApiClientController extends BaseController {
 
             await this.authorize('ApiClient.RenewApiKey',request, response, false);
 
-            const apiKeyDto = await this._delegate.renewApiKey(request);
+            const apiKeyDto: ClientApiKeyDto = await this._delegate.renewApiKey(request);
 
             ResponseHandler.success(request, response, 'Client api keys renewed successfully!', 200, {
                 ApiKeyDetails : apiKeyDto,

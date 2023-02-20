@@ -1,117 +1,117 @@
 import { Client } from '../../models/client/client.model';
-import { ApiClientCreateModel, ApiClientDto, ApiClientSearchFilters, ApiClientSearchResults, ApiClientUpdateModel, ApiClientVerificationDomainModel, ClientApiKeyDto } from '../../../domain.types/api.client.domain.types';
+import { ClientCreateModel, ClientDto, ClientSearchFilters, ClientSearchResults, ClientUpdateModel, ClientVerificationDomainModel, ClientApiKeyDto } from '../../../domain.types/api.client.domain.types';
 import logger from '../../../logger/logger';
 import { ApiError } from '../../../common/api.error';
 import { CurrentClient } from '../../../domain.types/miscellaneous/current.client';
 import { ErrorHandler } from '../../../common/error.handler';
 import { Helper } from '../../../common/helper';
 import * as apikeyGenerator from 'uuid-apikey';
+import Source from '../../../database/database.connector';
+import { FindManyOptions, LessThanOrEqual, Like, MoreThanOrEqual, Repository } from 'typeorm';
+import { uuid } from '../../../domain.types/miscellaneous/system.types';
 
 ///////////////////////////////////////////////////////////////////////
 
-export class ApiClientService {
+export class ClientService {
 
-    ApiClient = ApiClientModel.Model;
+    _clientRepository: Repository<Client> = Source.getRepository(Client);
 
-    create = async (clientDomainModel: ApiClientCreateModel): Promise<ApiClientDto> => {
+    create = async (createModel: ClientCreateModel): Promise<ClientDto> => {
         try {
-            const entity = {
-                ClientName   : clientDomainModel.ClientName,
-                ClientCode   : clientDomainModel.ClientCode,
-                IsPrivileged : clientDomainModel.IsPrivileged,
-                Phone        : clientDomainModel.Phone,
-                Email        : clientDomainModel.Email,
-                Password     : clientDomainModel.Password ?? null,
-                ApiKey       : clientDomainModel.ApiKey ?? apikeyGenerator.default.create().apiKey,
-                ValidFrom    : clientDomainModel.ValidFrom ?? null,
-                ValidTill    : clientDomainModel.ValidTill ?? null,
-            };
-            entity.Password = Helper.hash(clientDomainModel.Password);
-            const client = await this.ApiClient.create(entity);
-            const dto = await this.toDto(client);
-            return dto;
+            const password = createModel.Password ?? 'Test@123';
+            const client = this._clientRepository.create({
+                Name         : createModel.Name,
+                Code         : createModel.Code,
+                IsPrivileged : createModel.IsPrivileged,
+                CountryCode  : createModel.CountryCode,
+                Phone        : createModel.Phone,
+                Email        : createModel.Email,
+                Password     : Helper.hash(password),
+                ApiKey       : createModel.ApiKey ?? apikeyGenerator.default.create().apiKey,
+                ValidFrom    : createModel.ValidFrom ?? null,
+                ValidTill    : createModel.ValidTill ?? null,
+            });
+            var record = await this._clientRepository.save(client);
+            return this.toDto(record);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    getById = async (id: string): Promise<ApiClientDto> => {
+    getById = async (id: string): Promise<ClientDto> => {
         try {
-            const client = await this.ApiClient.findByPk(id);
-            const dto = await this.toDto(client);
-            return dto;
+            var client = await this._clientRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            return this.toDto(client);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    search = async (filters: ApiClientSearchFilters): Promise < ApiClientSearchResults > => {
+    search = async (filters: ClientSearchFilters): Promise < ClientSearchResults > => {
         try {
-
             var search = this.getSearchModel(filters);
-            var {
-                order,
-                orderByColumn
-            } = this.addSortingToSearch(search, filters);
-            var {
-                pageIndex,
-                limit
-            } = this.addPaginationToSearch(search, filters);
-
-            const foundResults = await this.ApiClient.findAndCountAll(search);
-            const searchResults: ApiClientSearchResults = {
-                TotalCount     : foundResults.count,
-                RetrievedCount : foundResults.rows.length,
+            var { search, pageIndex, limit, order, orderByColumn } = this.addSortingAndPagination(search, filters);
+            const [list, count] = await this._clientRepository.findAndCount(search);
+            const searchResults = {
+                TotalCount     : count,
+                RetrievedCount : list.length,
                 PageIndex      : pageIndex,
                 ItemsPerPage   : limit,
                 Order          : order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy      : orderByColumn,
-                Items          : foundResults.rows,
+                Items          : list.map(x => this.toDto(x)),
             };
-
             return searchResults;
-
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwDbAccessError('DB Error: Unable to search api client records!', error);
         }
     };
 
-    getByClientCode = async (clientCode: string): Promise<ApiClientDto> =>{
+    getByClientCode = async (clientCode: string): Promise<ClientDto> =>{
         try {
-            const client = await this.ApiClient.findOne({
+            var client = await this._clientRepository.findOne({
                 where : {
-                    ClientCode : clientCode
+                    Code : clientCode
                 }
             });
-            const dto = await this.toDto(client);
-            return dto;
+            return this.toDto(client);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to get client record!', error);
         }
     };
 
     getApiKeyByClientCode = async (clientCode: string): Promise<ClientApiKeyDto> =>{
         try {
-            const client = await this.ApiClient.findOne({
+            const client = await this._clientRepository.findOne({
                 where : {
-                    ClientCode : clientCode
+                    Code : clientCode
                 }
             });
-            const dto = await this.toClientSecretsDto(client);
-            return dto;
+            return this.toClientSecretsDto(client);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    getClientHashedPassword = async(id: string): Promise<string> => {
+    getClientHashedPassword = async(id: uuid): Promise<string> => {
         try {
-            const client = await this.ApiClient.findByPk(id);
+            const client = await this._clientRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            if (!client) {
+                ErrorHandler.throwNotFoundError('client not found!');
+            }
             return client.Password;
         } catch (error) {
             logger.error(error.message);
@@ -119,11 +119,11 @@ export class ApiClientService {
         }
     };
 
-    getApiKey = async(verificationModel: ApiClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
+    getApiKey = async(verificationModel: ClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
         try {
-            const client = await this.getApiKeyByClientCode(verificationModel.ClientCode);
+            const client = await this.getApiKeyByClientCode(verificationModel.Code);
             if (client == null) {
-                const message = 'Client does not exist with code (' + verificationModel.ClientCode + ')';
+                const message = 'Client does not exist with code (' + verificationModel.Code + ')';
                 throw new ApiError(message, 404);
             }
 
@@ -140,11 +140,11 @@ export class ApiClientService {
         }
     };
 
-    renewApiKey = async (verificationModel: ApiClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
+    renewApiKey = async (verificationModel: ClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
 
-        const client = await this.getByClientCode(verificationModel.ClientCode);
+        const client = await this.getByClientCode(verificationModel.Code);
         if (client == null) {
-            const message = 'Client does not exist for client code (' + verificationModel.ClientCode + ')';
+            const message = 'Client does not exist for client code (' + verificationModel.Code + ')';
             throw new ApiError(message, 404);
         }
 
@@ -167,13 +167,16 @@ export class ApiClientService {
 
     setApiKey = async(id: string, apiKey: string, validFrom: Date, validTill: Date): Promise<ClientApiKeyDto> => {
         try {
-            const client = await this.ApiClient.findByPk(id);
+            const client = await this._clientRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
             client.ApiKey = apiKey;
             client.ValidFrom = validFrom;
             client.ValidTill = validTill;
-            await client.save();
-            const dto = await this.toClientSecretsDto(client);
-            return dto;
+            var record = await this._clientRepository.save(client);
+            return this.toClientSecretsDto(record);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
@@ -182,19 +185,19 @@ export class ApiClientService {
 
     isApiKeyValid = async (apiKey: string): Promise<CurrentClient> => {
         try {
-            const client = await this.ApiClient.findOne({
+            const client = await this._clientRepository.findOne({
                 where : {
                     ApiKey    : apiKey,
-                    ValidFrom : { [Op.lte]: new Date() },
-                    ValidTill : { [Op.gte]: new Date() }
+                    ValidFrom : LessThanOrEqual(new Date()),
+                    ValidTill : MoreThanOrEqual(new Date())
                 }
             });
             if (client == null){
                 return null;
             }
             const currentClient: CurrentClient = {
-                ClientName   : client.ClientName,
-                ClientCode   : client.ClientCode,
+                Name   : client.Name,
+                Code   : client.Code,
                 IsPrivileged : client.IsPrivileged
             };
             return currentClient;
@@ -204,38 +207,45 @@ export class ApiClientService {
         }
     };
 
-    update = async (id: string, clientDomainModel: ApiClientUpdateModel): Promise<ApiClientDto> => {
+    update = async (id: string, updateModel: ClientUpdateModel): Promise<ClientDto> => {
         try {
-            const client = await this.ApiClient.findByPk(id);
-
+            const client = await this._clientRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            if (!client) {
+                ErrorHandler.throwNotFoundError('client not found!');
+            }
             //Client code is not modifiable
             //Use renew key to update ApiKey, ValidFrom and ValidTill
 
-            if (clientDomainModel.ClientName != null) {
-                client.ClientName = clientDomainModel.ClientName;
+            if (updateModel.Name != null) {
+                client.Name = updateModel.Name;
             }
-            if (clientDomainModel.Password != null) {
-                client.Password = Helper.hash(clientDomainModel.Password);
+            if (updateModel.Password != null) {
+                client.Password = Helper.hash(updateModel.Password);
             }
-            if (clientDomainModel.Phone != null) {
-                client.Phone = clientDomainModel.Phone;
+            if (updateModel.CountryCode != null) {
+                client.CountryCode = updateModel.CountryCode;
             }
-            if (clientDomainModel.IsPrivileged != null) {
-                client.IsPrivileged = clientDomainModel.IsPrivileged;
+            if (updateModel.Phone != null) {
+                client.Phone = updateModel.Phone;
             }
-            if (clientDomainModel.Email != null) {
-                client.Email = clientDomainModel.Email;
+            if (updateModel.IsPrivileged != null) {
+                client.IsPrivileged = updateModel.IsPrivileged;
             }
-            if (clientDomainModel.ValidFrom != null) {
-                client.ValidFrom = clientDomainModel.ValidFrom;
+            if (updateModel.Email != null) {
+                client.Email = updateModel.Email;
             }
-            if (clientDomainModel.ValidTill != null) {
-                client.ValidTill = clientDomainModel.ValidTill;
+            if (updateModel.ValidFrom != null) {
+                client.ValidFrom = updateModel.ValidFrom;
             }
-            await client.save();
-
-            const dto = await this.toDto(client);
-            return dto;
+            if (updateModel.ValidTill != null) {
+                client.ValidTill = updateModel.ValidTill;
+            }
+            var record = await this._clientRepository.save(client);
+            return this.toDto(record);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
@@ -244,15 +254,20 @@ export class ApiClientService {
 
     delete = async (id: string): Promise<boolean> => {
         try {
-            const result = await this.ApiClient.destroy({ where: { id: id } });
-            return result === 1;
+            var record = await this._clientRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            var result = await this._clientRepository.remove(record);
+            return result != null;
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    toDto = (client): ApiClientDto => {
+    toDto = (client: Client): ClientDto => {
         if (client == null){
             return null;
         }
@@ -260,10 +275,10 @@ export class ApiClientService {
         if (client.ValidFrom < new Date() && client.ValidTill > new Date()) {
             active = true;
         }
-        const dto: ApiClientDto = {
+        const dto: ClientDto = {
             id           : client.id,
-            ClientName   : client.ClientName,
-            ClientCode   : client.ClientCode,
+            Name         : client.Name,
+            Code         : client.Code,
             Phone        : client.Phone,
             Email        : client.Email,
             IsActive     : active,
@@ -278,34 +293,41 @@ export class ApiClientService {
             return null;
         }
         const dto: ClientApiKeyDto = {
-            id         : client.id,
-            ClientName : client.ClientName,
-            ClientCode : client.ClientCode,
-            ApiKey     : client.ApiKey,
-            ValidFrom  : client.ValidFrom,
-            ValidTill  : client.ValidTill,
+            id        : client.id,
+            Name      : client.Name,
+            Code      : client.Code,
+            ApiKey    : client.ApiKey,
+            ValidFrom : client.ValidFrom,
+            ValidTill : client.ValidTill,
         };
         return dto;
     };
 
     //#region Privates
 
-    private getSearchModel = (filters) => {
+    private getSearchModel = (filters: ClientSearchFilters) => {
 
-        var search = {
-            where   : {},
-            include : []
+        var search : FindManyOptions<Client> = {
+            relations : {
+            },
+            where : {
+            },
+            select : {
+                id           : true,
+                Name         : true,
+                Code         : true,
+                Phone        : true,
+                Email        : true,
+                CountryCode  : true,
+                IsPrivileged : true,
+            }
         };
 
-        if (filters.ClientName) {
-            search.where['ClientName'] = {
-                [Op.like] : '%' + filters.ClientName + '%'
-            };
+        if (filters.Name) {
+            search.where['Name'] = Like(`%${filters.Name}%`);
         }
-        if (filters.ClientCode) {
-            search.where['ClientCode'] = {
-                [Op.like] : '%' + filters.ClientCode + '%'
-            };
+        if (filters.Code) {
+            search.where['Code'] = Like(`%${filters.Code}%`);
         }
         if (filters.IsPrivileged) {
             search.where['IsPrivileged'] = filters.IsPrivileged;
@@ -319,18 +341,14 @@ export class ApiClientService {
         if (filters.Email) {
             search.where['Email'] = filters.Email;
         }
-        if (filters.ValidFrom) {
-            search.where['ValidFrom'] = filters.ValidFrom;
-        }
-        if (filters.ValidTill) {
-            search.where['ValidTill'] = filters.ValidTill;
-        }
 
         return search;
     };
 
-    private addSortingToSearch = (search, filters) => {
+    private addSortingAndPagination = (
+        search: FindManyOptions<Client>, filters: ClientSearchFilters) => {
 
+        //Sorting
         let orderByColumn = 'CreatedAt';
         if (filters.OrderBy) {
             orderByColumn = filters.OrderBy;
@@ -339,22 +357,10 @@ export class ApiClientService {
         if (filters.Order === 'descending') {
             order = 'DESC';
         }
-        search['order'] = [
-            [orderByColumn, order]
-        ];
+        search['order'] = {};
+        search['order'][orderByColumn] = order;
 
-        if (filters.OrderBy) {
-            //In case the 'order-by attribute' is on associated model
-            //search['order'] = [[ '<AssociatedModel>', filters.OrderBy, order]];
-        }
-        return {
-            order,
-            orderByColumn
-        };
-    };
-
-    private addPaginationToSearch = (search, filters) => {
-
+        //Pagination
         let limit = 25;
         if (filters.ItemsPerPage) {
             limit = filters.ItemsPerPage;
@@ -365,13 +371,10 @@ export class ApiClientService {
             pageIndex = filters.PageIndex < 0 ? 0 : filters.PageIndex;
             offset = pageIndex * limit;
         }
-        search['limit'] = limit;
-        search['offset'] = offset;
+        search['take'] = limit;
+        search['skip'] = offset;
 
-        return {
-            pageIndex,
-            limit
-        };
+        return { search, pageIndex, limit, order, orderByColumn };
     };
 
     //#endregion
