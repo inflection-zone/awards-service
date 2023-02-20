@@ -1,18 +1,16 @@
 import { UserService } from '../../database/repository.services/user/user.service';
-import { UserOtpService } from '../../database/repository.services/user/user.otp.service';
 import { ErrorHandler } from '../../common/error.handler';
 import { Helper } from '../../common/helper';
 import { ApiError } from '../../common/api.error';
 import { UserValidator as validator } from './user.validator';
 import {
-    UserDto,
+    UserResponseDto,
     UserSearchFilters,
     UserSearchResults,
     UserUpdateModel
 } from '../../domain.types/user/user.domain.types';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { Loader } from '../../startup/loader';
-import { UserHelper } from '../user.helper';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -23,11 +21,8 @@ export class UserControllerDelegate {
 
     _service: UserService = null;
 
-    _otpService: UserOtpService = null;
-
     constructor() {
         this._service = new UserService();
-        this._otpService = new UserOtpService();
     }
 
     //#endregion
@@ -38,9 +33,9 @@ export class UserControllerDelegate {
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { userCreateModel, password } =
-            await UserHelper.getValidUserCreateModel(requestBody);
+            await validator.getValidUserCreateModel(requestBody);
 
-        const record: UserDto = await this._service.create(userCreateModel);
+        const record: UserResponseDto = await this._service.create(userCreateModel);
         if (record === null) {
             throw new ApiError('Unable to create user!', 400);
         }
@@ -50,15 +45,15 @@ export class UserControllerDelegate {
         // }
 
         return this.getEnrichedDto(record);
-    }
+    };
 
     getById = async (id: uuid) => {
-        const record: UserDto = await this._service.getById(id);
+        const record: UserResponseDto = await this._service.getById(id);
         if (record === null) {
             ErrorHandler.throwNotFoundError('User with id ' + id.toString() + ' cannot be found!');
         }
         return this.getEnrichedDto(record);
-    }
+    };
 
     search = async (query) => {
         await validator.validateSearchRequest(query);
@@ -67,24 +62,24 @@ export class UserControllerDelegate {
         var items = searchResults.Items.map(x => this.getPublicDto(x));
         searchResults.Items = items;
         return searchResults;
-    }
+    };
 
     update = async (id: uuid, requestBody: any) => {
         await validator.validateUpdateRequest(requestBody);
-        const record: UserDto = await this._service.getById(id);
+        const record: UserResponseDto = await this._service.getById(id);
         if (record === null) {
             ErrorHandler.throwNotFoundError('User with id ' + id.toString() + ' cannot be found!');
         }
-        const updateModel: UserUpdateModel = await UserHelper.getValidUserUpdateModel(record, requestBody);
-        const updated: UserDto = await this._service.update(id, updateModel);
+        const updateModel: UserUpdateModel = await validator.getValidUserUpdateModel(record, requestBody);
+        const updated: UserResponseDto = await this._service.update(id, updateModel);
         if (updated == null) {
             throw new ApiError('Unable to update user!', 400);
         }
         return this.getEnrichedDto(updated);
-    }
+    };
 
     delete = async (id: uuid) => {
-        const record: UserDto = await this._service.getById(id);
+        const record: UserResponseDto = await this._service.getById(id);
         if (record == null) {
             ErrorHandler.throwNotFoundError('User with id ' + id.toString() + ' cannot be found!');
         }
@@ -92,7 +87,7 @@ export class UserControllerDelegate {
         return {
             Deleted : userDeleted
         };
-    }
+    };
 
     loginWithPassword = async (requestBody) => {
         await validator.validateLoginWithPasswordRequest(requestBody);
@@ -103,7 +98,7 @@ export class UserControllerDelegate {
         if (!validPassword) {
             ErrorHandler.throwUnauthorizedUserError('Invalid password.');
         }
-        const user: UserDto = await this._service.getById(loginModel.User.id);
+        const user: UserResponseDto = await this._service.getById(loginModel.User.id);
         const loginSession = await this._service.createUserLoginSession(user.id);
         const currentUser: CurrentUser = this.constructCurrentUser(user, loginSession.id);
         const accessToken = await Loader.Authorizer.generateUserSessionToken(currentUser);
@@ -111,7 +106,7 @@ export class UserControllerDelegate {
             User        : currentUser,
             AccessToken : accessToken
         };
-    }
+    };
 
     // loginWithOtp = async (requestBody) => {
     //     await validator.validateLoginWithOtpRequest(requestBody);
@@ -153,7 +148,7 @@ export class UserControllerDelegate {
         const hashedPassword = Helper.generateHashedPassword(passwordResetModel.NewPassword);
 
         return await this._service.resetPassword(passwordResetModel.User.id, hashedPassword);
-    }
+    };
 
     // sendOtp = async (requestBody) => {
     //     await validator.validateSendOtpRequest(requestBody);
@@ -180,7 +175,7 @@ export class UserControllerDelegate {
 
     logout = async (userId, sessionId) => {
         await this._service.invalidateUserLoginSession(sessionId);
-    }
+    };
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -231,7 +226,7 @@ export class UserControllerDelegate {
             filters['LastUpdatedByUserId'] = lastUpdatedByUserId;
         }
         return filters;
-    }
+    };
 
     //This function returns a response DTO which is enriched with available resource data
 
@@ -258,7 +253,7 @@ export class UserControllerDelegate {
             AddedByUserId       : record.AddedByUserId,
             LastUpdatedByUserId : record.LastUpdatedByUserId
         };
-    }
+    };
 
     //This function returns a response DTO which has only public parameters
 
@@ -279,7 +274,7 @@ export class UserControllerDelegate {
             Gender      : record.Gender,
             BirthDate   : record.BirthDate,
         };
-    }
+    };
 
     getLoginModel = async (requestBody) => {
 
@@ -296,12 +291,11 @@ export class UserControllerDelegate {
         }
 
         return {
-            User      : user,
-            LoginRole : user.Role.RoleName,
-            Password  : password,
-            Otp       : otp
+            User     : user,
+            Password : password,
+            Otp      : otp
         };
-    }
+    };
 
     getPasswordChangeModel = async (requestBody) => {
         const oldPassword = requestBody.OldPassword;
@@ -315,7 +309,7 @@ export class UserControllerDelegate {
             OldPassword : oldPassword,
             NewPassword : newPassword,
         };
-    }
+    };
 
     constructCurrentUser = (user, sessionId): CurrentUser => {
         return {
@@ -327,6 +321,6 @@ export class UserControllerDelegate {
             Phone         : user.CountryCode + '-' + user.Phone,
             Email         : user.Email
         };
-    }
+    };
 
 }

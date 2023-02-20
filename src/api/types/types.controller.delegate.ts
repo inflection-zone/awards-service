@@ -1,19 +1,19 @@
-import { RoleService } from "../../database/repository.services/role.service";
+// import { RoleService } from "../../database/repository.services/role.service";
 
-export class TypesControllerDelegate {
-    
-    //#region member variables and constructors
+// export class TypesControllerDelegate {
 
-    _roleService: RoleService = null;
+//     //#region member variables and constructors
 
-    constructor() {
-        this._roleService = new RoleService();
-    }
+//     _roleService: RoleService = null;
 
-    //#endregion
+//     constructor() {
+//         this._roleService = new RoleService();
+//     }
 
-    getRoleTypes = async () => {
-        return await this._roleService.getAllRoles();
-    }
+//     //#endregion
 
-}
+//     getRoleTypes = async () => {
+//         return await this._roleService.getAllRoles();
+//     }
+
+// }

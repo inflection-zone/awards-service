@@ -15,7 +15,11 @@ import { ClientMapper } from '../../mappers/client/client.mapper';
 
 export class ClientService {
 
+    //#region Repositories
+
     _clientRepository: Repository<Client> = Source.getRepository(Client);
+
+    //#endregion
 
     public create = async (createModel: ClientCreateModel): Promise<ClientResponseDto> => {
         try {

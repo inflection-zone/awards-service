@@ -25,7 +25,7 @@ export class User extends Person {
     Client : Client;
 
     @Column({ type: 'string', length: 16, nullable: false })
-    Username : string;
+    UserName : string;
 
     @Column({ type: 'string', length: 1024, nullable: true })
     Password : string;
