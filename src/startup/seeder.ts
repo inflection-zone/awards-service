@@ -7,7 +7,7 @@ import { RoleService } from '../database/repository.services/role.service';
 import { UserRoleService } from '../database/repository.services/user/user.role.service';
 import { RolePrivilegeService } from '../database/repository.services/role.privilege.service';
 import { UserService } from '../database/repository.services/user/user.service';
-import { ApiClientService } from '../database/repository.services/client/client.service';
+import { ClientService } from '../database/repository.services/client/client.service';
 import { RoleList } from '../domain.types/miscellaneous/role.types';
 import { UserCreateModel } from "../domain.types/user/user.domain.types";
 import { Gender } from "../domain.types/miscellaneous/system.types";
@@ -17,7 +17,7 @@ import { UserRoleCreateModel } from "../domain.types/user/user.role.domain.types
 
 export class Seeder {
 
-    _apiClientService: ApiClientService = new ApiClientService();
+    _apiClientService: ClientService = new ClientService();
 
     _userService: UserService = new UserService();
 
@@ -132,11 +132,11 @@ export class Seeder {
 
         for (let i = 0; i < arr.length; i++) {
             var c = arr[i];
-            let client = await this._apiClientService.getByClientCode(c.ClientCode);
+            let client = await this._apiClientService.getByClientCode(c.Code);
             if (client == null) {
                 const model = {
-                    ClientName   : c['ClientName'],
-                    ClientCode   : c['ClientCode'],
+                    Name   : c['Name'],
+                    Code   : c['Code'],
                     IsPrivileged : c['IsPrivileged'],
                     Email        : c['Email'],
                     Password     : c['Password'],

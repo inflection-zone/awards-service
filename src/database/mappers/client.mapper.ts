@@ -12,8 +12,8 @@ export class ClientMapper {
         }
         const dto: ClientDto = {
             id: client.id,
-            ClientName: client.ClientName,
-            ClientCode: client.ClientCode,
+            Name: client.Name,
+            Code: client.Code,
             Phone: client.Phone,
             Email: client.Email,
 

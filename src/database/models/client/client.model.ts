@@ -37,7 +37,7 @@ export class Client {
     Password : string;
 
     @Column({ type: 'boolean', nullable: false, default: false })
-    IsPrivileged : string;
+    IsPrivileged : boolean;
 
     @Column({ type: 'string', length: 256, nullable: false })
     ApiKey : string;

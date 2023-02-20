@@ -1,6 +1,5 @@
 import Source from '../../database.connector';
 import { User } from '../../models/user/user.model';
-import { Person } from '../../models/person/person.model';
 import { UserLoginSession } from '../../models/user/user.login.session.model';
 import { ErrorHandler } from '../../../common/error.handler';
 import { passwordStrength } from 'check-password-strength';
@@ -10,6 +9,7 @@ import { DurationType } from '../../../domain.types/miscellaneous/time.types';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { UserCreateModel, UserSearchFilters, UserUpdateModel } from '../../../domain.types/user/user.domain.types';
 import logger from '../../../logger/logger';
+import { uuid } from '../../../domain.types/miscellaneous/system.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,12 +32,12 @@ export class UserService {
 
     getById = async (id) => {
         try {
-            var record = await this._userRepository.findOne({
+            var user = await this._userRepository.findOne({
                 where : {
                     id : id
                 }
             });
-            return record;
+            return user;
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to retrieve user!', error);
         }
@@ -133,7 +133,7 @@ export class UserService {
             search['take'] = limit;
             search['skip'] = offset;
 
-            const [list, count] = await this._userRepository.findAndCount();
+            const [list, count] = await this._userRepository.findAndCount(search);
             const searchResults = {
                 TotalCount     : count,
                 RetrievedCount : list.length,
@@ -182,10 +182,10 @@ export class UserService {
 
     getUserWithPhone = async (countryCode, phone) => {
         try {
-            const record = await this.User.findOne({
+            const record = await this._userRepository.findOne({
                 where : {
-                    CountryCode : countryCode,
                     Phone       : phone,
+                    CountryCode : countryCode
                 }
             });
             return record;
@@ -196,7 +196,7 @@ export class UserService {
 
     getUserWithEmail = async (email) => {
         try {
-            const record = await this.User.findOne({
+            const record = await this._userRepository.findOne({
                 where : {
                     Email : email
                 }
@@ -209,9 +209,9 @@ export class UserService {
 
     getUserWithUserName = async (username) => {
         try {
-            const record = await this.User.findOne({
+            const record = await this._userRepository.findOne({
                 where : {
-                    UserName : username
+                    Username : username
                 }
             });
             return record;
@@ -306,12 +306,21 @@ export class UserService {
         try {
             var now = new Date();
             var till = TimeHelper.addDuration(now, 3, DurationType.Day);
-            var record = await this.UserLoginSession.create({
-                UserId    : userId,
+            var user = await this._userRepository.findOne({
+                where : {
+                    id : userId
+                }
+            });
+            if (!user) {
+                ErrorHandler.throwNotFoundError('User not found!');
+            }
+            var session = await this._userLoginSessionRepository.create({
+                User      : user,
                 IsActive  : true,
                 StartedAt : now,
                 ValidTill : till
             });
+            var record = await this._userLoginSessionRepository.save(session);
             return record;
         } catch (error) {
             ErrorHandler.throwDbAccessError('Unable to create user login session!', error);
@@ -320,9 +329,17 @@ export class UserService {
 
     invalidateUserLoginSession = async (sessionId) => {
         try {
-            var record = await this.UserLoginSession.findByPk(sessionId);
-            record.IsActive = false;
-            await record.save();
+            var session = await this._userLoginSessionRepository.findOne({
+                where : {
+                    id : sessionId
+                }
+            });
+            if (!session) {
+                ErrorHandler.throwNotFoundError('User login session not found!');
+            }
+            session.IsActive = false;
+            session.ValidTill = new Date();
+            var record = await this._userLoginSessionRepository.save(session);
             return record;
         } catch (error) {
             ErrorHandler.throwDbAccessError('Unable to invalidate user login session!', error);
@@ -331,14 +348,18 @@ export class UserService {
 
     isValidUserLoginSession = async (sessionId) => {
         try {
-            var record = await this.UserLoginSession.findByPk(sessionId);
-            if (record == null) {
+            var session = await this._userLoginSessionRepository.findOne({
+                where : {
+                    id : sessionId
+                }
+            });
+            if (session == null) {
                 return false;
             }
-            if (record.ValidTill < new Date()) {
+            if (session.ValidTill < new Date()) {
                 return false;
             }
-            if (record.IsActive === false) {
+            if (session.IsActive === false) {
                 return false;
             }
             return true;
@@ -347,17 +368,18 @@ export class UserService {
         }
     };
 
-    resetPassword = async (userId, hashedPassword) => {
+    resetPassword = async (userId: uuid, hashedPassword: string) => {
         try {
-            var res = await this.User.update(
-                { Password: hashedPassword },
-                { where: { id: userId } }
-            );
-            if (res.length !== 1) {
-                throw new Error('Unable to reset password!');
+            var user = await this._userRepository.findOne({
+                where : {
+                    id : userId
+                }
+            });
+            if (!user) {
+                ErrorHandler.throwNotFoundError('User not found!');
             }
-
-            return true;
+            user.Password = hashedPassword;
+            return await this._userRepository.save(user);
         } catch (error) {
             ErrorHandler.throwDbAccessError('Unable to reset password!', error);
         }
