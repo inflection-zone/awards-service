@@ -32,23 +32,38 @@ export interface ClientUpdateModel {
     ValidTill   ?: Date;
 }
 
-export interface ClientDto {
-    id: uuid;
-    Name: string;
-    Code: string;
-    Phone: string;
-    Email: string;
-
+export interface ClientResponseDto {
+    id          : uuid;
+    Name        : string;
+    Code        : string;
+    IsPrivileged: boolean;
+    CountryCode : string;
+    Phone       : string;
+    Email       : string;
+    ValidFrom   : Date;
+    ValidTill   : Date;
+    IsActive    : boolean;
 }
 
-export interface ClientVerificationDomainModel {
+export interface ClientSearchResponseDto {
+    id          : uuid;
+    Name        : string;
+    Code        : string;
+    IsPrivileged: boolean;
+    CountryCode : string;
+    Phone       : string;
+    Email       : string;
+    IsActive    : boolean;
+}
+
+export interface ClientVerificationModel {
     Code     : string;
     Password : string;
     ValidFrom: Date;
     ValidTill: Date;
 }
 
-export interface ClientApiKeyDto {
+export interface ClientApiKeyResponseDto {
     id       : string;
     Name     : string;
     Code     : string;
@@ -58,10 +73,14 @@ export interface ClientApiKeyDto {
 }
 
 export interface ClientSearchFilters extends BaseSearchFilters {
-    Name ? : string;
-    Code ? : string;
+    Name ?            : string;
+    Code ?            : string;
+    IsPrivileged?     : boolean;
+    CountryCode?      : string;
+    Phone?            : string;
+    Email?            : string;
 }
 
 export interface ClientSearchResults extends BaseSearchResults {
-    Items: ClientDto[];
+    Items: ClientSearchResponseDto[];
 }

@@ -8,7 +8,7 @@ import {
 import {
     BaseController
 } from '../base.controller';
-import { ClientApiKeyDto } from '../../domain.types/client.domain.types';
+import { ClientApiKeyResponseDto } from '../../domain.types/client.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,7 +99,7 @@ export class ClientController extends BaseController {
 
             await this.authorize('ApiClient.RenewApiKey',request, response, false);
 
-            const apiKeyDto: ClientApiKeyDto = await this._delegate.renewApiKey(request);
+            const apiKeyDto: ClientApiKeyResponseDto = await this._delegate.renewApiKey(request);
 
             ResponseHandler.success(request, response, 'Client api keys renewed successfully!', 200, {
                 ApiKeyDetails : apiKeyDto,
