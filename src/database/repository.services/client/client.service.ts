@@ -1,5 +1,5 @@
 import { Client } from '../../models/client/client.model';
-import { ClientCreateModel, ClientDto, ClientSearchFilters, ClientSearchResults, ClientUpdateModel, ClientVerificationDomainModel, ClientApiKeyDto } from '../../../domain.types/api.client.domain.types';
+import { ClientCreateModel, ClientResponseDto, ClientSearchFilters, ClientSearchResults, ClientUpdateModel, ClientVerificationModel, ClientApiKeyResponseDto } from '../../../domain.types/client.domain.types';
 import logger from '../../../logger/logger';
 import { ApiError } from '../../../common/api.error';
 import { CurrentClient } from '../../../domain.types/miscellaneous/current.client';
@@ -9,6 +9,7 @@ import * as apikeyGenerator from 'uuid-apikey';
 import Source from '../../../database/database.connector';
 import { FindManyOptions, LessThanOrEqual, Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import { ClientMapper } from '../../mappers/client/client.mapper';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -16,7 +17,7 @@ export class ClientService {
 
     _clientRepository: Repository<Client> = Source.getRepository(Client);
 
-    create = async (createModel: ClientCreateModel): Promise<ClientDto> => {
+    public create = async (createModel: ClientCreateModel): Promise<ClientResponseDto> => {
         try {
             const password = createModel.Password ?? 'Test@123';
             const client = this._clientRepository.create({
@@ -32,28 +33,28 @@ export class ClientService {
                 ValidTill    : createModel.ValidTill ?? null,
             });
             var record = await this._clientRepository.save(client);
-            return this.toDto(record);
+            return ClientMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    getById = async (id: string): Promise<ClientDto> => {
+    public getById = async (id: string): Promise<ClientResponseDto> => {
         try {
             var client = await this._clientRepository.findOne({
                 where : {
                     id : id
                 }
             });
-            return this.toDto(client);
+            return ClientMapper.toResponseDto(client);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    search = async (filters: ClientSearchFilters): Promise < ClientSearchResults > => {
+    public search = async (filters: ClientSearchFilters): Promise<ClientSearchResults> => {
         try {
             var search = this.getSearchModel(filters);
             var { search, pageIndex, limit, order, orderByColumn } = this.addSortingAndPagination(search, filters);
@@ -65,7 +66,7 @@ export class ClientService {
                 ItemsPerPage   : limit,
                 Order          : order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy      : orderByColumn,
-                Items          : list.map(x => this.toDto(x)),
+                Items          : list.map(x => ClientMapper.toSearchResponseDto(x)),
             };
             return searchResults;
         } catch (error) {
@@ -74,35 +75,35 @@ export class ClientService {
         }
     };
 
-    getByClientCode = async (clientCode: string): Promise<ClientDto> =>{
+    public getByClientCode = async (clientCode: string): Promise<ClientResponseDto> =>{
         try {
             var client = await this._clientRepository.findOne({
                 where : {
                     Code : clientCode
                 }
             });
-            return this.toDto(client);
+            return ClientMapper.toResponseDto(client);
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwDbAccessError('DB Error: Unable to get client record!', error);
         }
     };
 
-    getApiKeyByClientCode = async (clientCode: string): Promise<ClientApiKeyDto> =>{
+    public getApiKeyByClientCode = async (clientCode: string): Promise<ClientApiKeyResponseDto> =>{
         try {
             const client = await this._clientRepository.findOne({
                 where : {
                     Code : clientCode
                 }
             });
-            return this.toClientSecretsDto(client);
+            return ClientMapper.toClientSecretsResponseDto(client);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    getClientHashedPassword = async(id: uuid): Promise<string> => {
+    public getClientHashedPassword = async(id: uuid): Promise<string> => {
         try {
             const client = await this._clientRepository.findOne({
                 where : {
@@ -119,28 +120,32 @@ export class ClientService {
         }
     };
 
-    getApiKey = async(verificationModel: ClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
+    public getApiKey = async(verificationModel: ClientVerificationModel): Promise<ClientApiKeyResponseDto> => {
         try {
-            const client = await this.getApiKeyByClientCode(verificationModel.Code);
-            if (client == null) {
+            const apiKeyDto = await this.getApiKeyByClientCode(verificationModel.Code);
+            if (apiKeyDto == null) {
                 const message = 'Client does not exist with code (' + verificationModel.Code + ')';
                 throw new ApiError(message, 404);
             }
 
-            const hashedPassword = await this.getClientHashedPassword(client.id);
+            const hashedPassword = await this.getClientHashedPassword(apiKeyDto.id);
             const isPasswordValid = Helper.compareHashedPassword(verificationModel.Password, hashedPassword);
             if (!isPasswordValid) {
                 throw new ApiError('Invalid password!', 401);
             }
-            const dto = await this.toClientSecretsDto(client);
-            return dto;
+            const client = await this._clientRepository.findOne({
+                where : {
+                    id : apiKeyDto.id
+                }
+            });
+            return await ClientMapper.toClientSecretsResponseDto(client);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    renewApiKey = async (verificationModel: ClientVerificationDomainModel): Promise<ClientApiKeyDto> => {
+    public renewApiKey = async (verificationModel: ClientVerificationModel): Promise<ClientApiKeyResponseDto> => {
 
         const client = await this.getByClientCode(verificationModel.Code);
         if (client == null) {
@@ -165,7 +170,8 @@ export class ClientService {
         return clientApiKeyDto;
     };
 
-    setApiKey = async(id: string, apiKey: string, validFrom: Date, validTill: Date): Promise<ClientApiKeyDto> => {
+    public setApiKey = async(id: string, apiKey: string, validFrom: Date, validTill: Date)
+        : Promise<ClientApiKeyResponseDto> => {
         try {
             const client = await this._clientRepository.findOne({
                 where : {
@@ -176,14 +182,14 @@ export class ClientService {
             client.ValidFrom = validFrom;
             client.ValidTill = validTill;
             var record = await this._clientRepository.save(client);
-            return this.toClientSecretsDto(record);
+            return ClientMapper.toClientSecretsResponseDto(record);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    isApiKeyValid = async (apiKey: string): Promise<CurrentClient> => {
+    public isApiKeyValid = async (apiKey: string): Promise<CurrentClient> => {
         try {
             const client = await this._clientRepository.findOne({
                 where : {
@@ -196,8 +202,8 @@ export class ClientService {
                 return null;
             }
             const currentClient: CurrentClient = {
-                Name   : client.Name,
-                Code   : client.Code,
+                Name         : client.Name,
+                Code         : client.Code,
                 IsPrivileged : client.IsPrivileged
             };
             return currentClient;
@@ -207,7 +213,7 @@ export class ClientService {
         }
     };
 
-    update = async (id: string, updateModel: ClientUpdateModel): Promise<ClientDto> => {
+    public update = async (id: string, updateModel: ClientUpdateModel): Promise<ClientResponseDto> => {
         try {
             const client = await this._clientRepository.findOne({
                 where : {
@@ -245,14 +251,14 @@ export class ClientService {
                 client.ValidTill = updateModel.ValidTill;
             }
             var record = await this._clientRepository.save(client);
-            return this.toDto(record);
+            return ClientMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
     };
 
-    delete = async (id: string): Promise<boolean> => {
+    public delete = async (id: string): Promise<boolean> => {
         try {
             var record = await this._clientRepository.findOne({
                 where : {
@@ -265,42 +271,6 @@ export class ClientService {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
         }
-    };
-
-    toDto = (client: Client): ClientDto => {
-        if (client == null){
-            return null;
-        }
-        let active = false;
-        if (client.ValidFrom < new Date() && client.ValidTill > new Date()) {
-            active = true;
-        }
-        const dto: ClientDto = {
-            id           : client.id,
-            Name         : client.Name,
-            Code         : client.Code,
-            Phone        : client.Phone,
-            Email        : client.Email,
-            IsActive     : active,
-            CountryCode  : client.CountryCode,
-            IsPrivileged : client.IsPrivileged,
-        };
-        return dto;
-    };
-
-    toClientSecretsDto = (client): ClientApiKeyDto => {
-        if (client == null){
-            return null;
-        }
-        const dto: ClientApiKeyDto = {
-            id        : client.id,
-            Name      : client.Name,
-            Code      : client.Code,
-            ApiKey    : client.ApiKey,
-            ValidFrom : client.ValidFrom,
-            ValidTill : client.ValidTill,
-        };
-        return dto;
     };
 
     //#region Privates

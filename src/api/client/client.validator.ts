@@ -1,5 +1,7 @@
 import z from 'zod';
-import { ClientCreateModel, ClientUpdateModel, ClientVerificationDomainModel } from '../../domain.types/client.domain.types';
+import express from 'express';
+import * as apikeyGenerator from 'uuid-apikey';
+import { ClientCreateModel, ClientUpdateModel, ClientVerificationModel } from '../../domain.types/client.domain.types';
 import {
     ErrorHandler
 } from '../../common/error.handler';
@@ -7,7 +9,6 @@ import { Helper } from '../../common/helper';
 import { TimeHelper } from '../../common/time.helper';
 import { DurationType } from '../../domain.types/miscellaneous/time.types';
 import { ClientSearchFilters } from '../../domain.types/client.domain.types';
-import express from 'express';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +34,15 @@ export class ClientValidator {
                 ValidTill : z.date().optional()
             });
             const parsed = await schema.parseAsync(requestBody) as ClientCreateModel;
+            if (!parsed.ApiKey) {
+                parsed.ApiKey = apikeyGenerator.default.create().apiKey;
+            }
+            if (!parsed.ValidFrom) {
+                parsed.ValidFrom = new Date();
+            }
+            if (!parsed.ValidTill) {
+                parsed.ValidTill = TimeHelper.addDuration(new Date(), 180, DurationType.Day);
+            }
             return parsed;
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -123,7 +133,7 @@ export class ClientValidator {
     };
 
     static getOrRenewApiKey = async ( request: express.Request
-    ): Promise<ClientVerificationDomainModel> => {
+    ): Promise<ClientVerificationModel> => {
         try {
             const authHeader = request.headers['authorization'].toString();
             let tokens = authHeader.split(' ');
@@ -153,9 +163,9 @@ export class ClientValidator {
     };
 
     static getVerificationDomainModel = async (body: any, clientCode: string, password: string):
-        Promise<ClientVerificationDomainModel> => {
+        Promise<ClientVerificationModel> => {
 
-        let model: ClientVerificationDomainModel = null;
+        let model: ClientVerificationModel = null;
         model = {
             Code      : clientCode,
             Password  : password,

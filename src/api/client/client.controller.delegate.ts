@@ -22,9 +22,6 @@ import {
     ClientSearchFilters,
     ClientSearchResults
 } from '../../domain.types/client.domain.types';
-import * as apikeyGenerator from 'uuid-apikey';
-import { TimeHelper } from '../../common/time.helper';
-import { DurationType } from '../../domain.types/miscellaneous/time.types';
 import { generate } from 'generate-password';
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -166,23 +163,6 @@ export class ClientControllerDelegate {
         }
 
         return updateModel;
-    };
-
-    getCreateModel = (requestBody): ClientCreateModel => {
-
-        return {
-            Name         : requestBody.Name ? requestBody.Name : null,
-            Code         : requestBody.Code ? requestBody.Code : null,
-            IsPrivileged : requestBody.IsPrivileged ? requestBody.IsPrivileged : false,
-            CountryCode  : requestBody.CountryCode ? requestBody.CountryCode : null,
-            Phone        : requestBody.Phone ? requestBody.Phone : null,
-            Email        : requestBody.Email ? requestBody.Email : null,
-            Password     : requestBody.Password ? requestBody.Password : null,
-            ApiKey       : requestBody.ApiKey ? requestBody.ApiKey : apikeyGenerator.default.create().apiKey,
-            ValidFrom    : requestBody.ValidFrom ? requestBody.ValidFrom : new Date(),
-            ValidTill    : requestBody.ValidTill ?
-                requestBody.ValidTill : TimeHelper.addDuration(new Date(), 180, DurationType.Day)
-        };
     };
 
     getEnrichedDto = (record) => {
