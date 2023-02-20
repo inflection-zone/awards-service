@@ -29,7 +29,7 @@ export interface UserUpdateModel {
     ProfileImageUrl? : string;
 }
 
-export interface UserDto {
+export interface UserResponseDto {
     id         : uuid;
     UserName   : string;
     Prefix     : string;
@@ -51,5 +51,5 @@ export interface UserSearchFilters extends BaseSearchFilters {
 }
 
 export interface UserSearchResults extends BaseSearchResults {
-    Items: UserDto[];
+    Items: UserResponseDto[];
 }

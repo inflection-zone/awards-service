@@ -15,9 +15,13 @@ import { uuid } from '../../../domain.types/miscellaneous/system.types';
 
 export class UserService {
 
+    //#region Repositories
+
     _userRepository: Repository<User> = Source.getRepository(User);
 
     _userLoginSessionRepository: Repository<UserLoginSession> = Source.getRepository(UserLoginSession);
+
+    //#endregion
 
     create = async (createModel: UserCreateModel) => {
         try {
@@ -70,7 +74,7 @@ export class UserService {
                     FirstName       : true,
                     LastName        : true,
                     Gender          : true,
-                    Username        : true,
+                    UserName        : true,
                     CreatedAt       : true,
                     ProfileImageUrl : true,
                     BirthDate       : true,
@@ -211,7 +215,7 @@ export class UserService {
         try {
             const record = await this._userRepository.findOne({
                 where : {
-                    Username : username
+                    UserName : username
                 }
             });
             return record;
@@ -260,7 +264,7 @@ export class UserService {
         else if (userName !== null) {
             const user = await this._userRepository.findOne({
                 where : {
-                    Username : userName,
+                    UserName : userName,
                 }
             });
             if (user != null) {
