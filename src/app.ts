@@ -4,12 +4,10 @@ import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
 import "reflect-metadata";
 import { Router } from './startup/router';
-import { Logger } from './logger/logger';
+import logger from './logger/logger';
 import { ConfigurationManager } from "./config/configuration.manager";
 import { Loader } from './startup/loader';
 import { Scheduler } from './startup/scheduler';
-import { DatabaseModelManager } from './database/database.model.manager';
-import * as db from './database/database.connector';
 import { DbClient } from './database/db.client';
 import { Seeder } from './startup/seeder';
 
@@ -53,13 +51,11 @@ export default class Application {
             await Scheduler.instance().schedule();
         }
         catch (error) {
-            logger.log('An error occurred while warming up.' + error.message);
+            logger.error('An error occurred while warming up.' + error.message);
         }
     };
 
     setupDatabaseConnection = async () => {
-
-        const sequelize = db.default.sequelize;
 
         await DbClient.createDatabase();
 
@@ -68,27 +64,19 @@ export default class Application {
             //Drop all tables in db
             await DbClient.dropDatabase();
         }
-
-        await DatabaseModelManager.setupAssociations(); //set associations
-
-        await sequelize.sync({ alter: true });
-
     };
 
     public start = async(): Promise<void> => {
         try {
             await this.warmUp();
-
             process.on('exit', code => {
-                logger.log(`Process exited with code: ${code}`);
+                logger.error(`Process exited with code: ${code}`);
             });
-
             //Start listening
             await this.listen();
-
         }
         catch (error){
-            logger.log('An error occurred while starting reancare-api service.' + error.message);
+            logger.error('An error occurred while starting reancare-api service.' + error.message);
         }
     };
 
@@ -125,7 +113,7 @@ export default class Application {
                 const port = process.env.PORT;
                 const server = this._app.listen(port, () => {
                     const serviceName = 'Careplan service api' + '-' + process.env.NODE_ENV;
-                    logger.log(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
+                    logger.info(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
                     this._app.emit("server_started");
                 });
                 module.exports.server = server;

@@ -4,7 +4,7 @@ import { IAuthenticator } from './authenticator.interface';
 import { injectable, inject } from "tsyringe";
 
 import { ResponseHandler } from '../common/response.handler';
-import { Logger } from '../logger/logger';
+import logger from '../logger/logger';
 import { ApiError } from '../common/api.error';
 
 ////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ export class Authenticator {
             }
             next();
         } catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             ResponseHandler.failure(request, response, 'User authentication error: ' + error.message, 401);
         }
     };
@@ -52,7 +52,7 @@ export class Authenticator {
             }
             next();
         } catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             ResponseHandler.failure(request, response, 'Client authentication error: ' + error.message, 401);
         }
     };

@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { Logger } from '../../logger/logger';
+import logger from '../../logger/logger';
 import { AuthenticationResult } from '../../domain.types/auth.domain.types';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
 import { ClientService } from '../../database/repository.services/client/client.service';
@@ -59,7 +59,7 @@ export class CustomAuthenticator implements IAuthenticator {
             });
 
         } catch (err) {
-            logger.log(JSON.stringify(err, null, 2));
+            logger.error(JSON.stringify(err, null, 2));
             res = {
                 Result        : false,
                 Message       : 'Error authenticating user',
@@ -103,7 +103,7 @@ export class CustomAuthenticator implements IAuthenticator {
             request.currentClient = client;
 
         } catch (err) {
-            logger.log(JSON.stringify(err, null, 2));
+            logger.error(JSON.stringify(err, null, 2));
             res = {
                 Result        : false,
                 Message       : 'Error authenticating client',

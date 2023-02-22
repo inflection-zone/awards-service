@@ -8,10 +8,10 @@ export interface FileResourceCreateModel {
     Size             ?: number;
     Public           ?: boolean;
     DownloadCount    ?: number;
-    Tags             ?: string;
+    Tags             ?: string[];
 }
 
-export interface FileResourceDto {
+export interface FileResourceResponseDto {
     id              : uuid;
     MimeType        : string;
     OriginalFilename: string;
@@ -20,4 +20,7 @@ export interface FileResourceDto {
     Public          : boolean;
     DownloadCount   : number;
     Tags            : string[];
+    UploadedBy      : uuid;
+    CreatedAt       : Date;
+    UpdatedAt       : Date;
 }
