@@ -3,7 +3,7 @@ import { ResponseDto } from '../domain.types/miscellaneous/response.dto';
 import { ActivityRecorder } from './activity.recorder';
 import { ApiError } from './api.error';
 import { InputValidationError } from './input.validation.error';
-import { Logger } from '../logger/logger';
+import logger from '../logger/logger';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -48,7 +48,7 @@ export class ResponseHandler {
         };
 
         if (process.env.NODE_ENV !== 'test') {
-            logger.log(JSON.stringify(responseObject, null, 2));
+            logger.info(JSON.stringify(responseObject, null, 2));
         }
 
         ActivityRecorder.record(responseObject);
@@ -98,7 +98,7 @@ export class ResponseHandler {
             if (!logDataObject) {
                 responseObject.Data = null;
             }
-            logger.log(JSON.stringify(responseObject, null, 2));
+            logger.info(JSON.stringify(responseObject, null, 2));
         }
 
         ActivityRecorder.record(responseObject);

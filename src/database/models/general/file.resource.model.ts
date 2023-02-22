@@ -8,6 +8,8 @@ import {
     DeleteDateColumn,
 } from 'typeorm';
 
+import { User } from './../user/user.model';
+
 ////////////////////////////////////////////////////////////////////////
 
 @Entity({ name: 'file_resources' })
@@ -35,7 +37,7 @@ export class FileResource {
     DownloadCount : number;
 
     @Column({ type: 'uuid', nullable: true })
-    UploadedBy : string;
+    UploadedBy : User;
 
     @Column('simple_array')
     Tags : string[];

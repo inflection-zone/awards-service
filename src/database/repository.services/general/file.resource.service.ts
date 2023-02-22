@@ -1,8 +1,11 @@
-import { FileResourceModel } from '../../models/general/file.resource.model';
-import { UserModel } from '../../models/person/person.model';
+import { FileResource } from '../../models/general/file.resource.model';
+import { User } from '../../models/user/user.model';
 import { ErrorHandler } from '../../../common/error.handler';
-import { FileResourceCreateModel } from '../../../domain.types/file.resource.domain.types';
-import { Op } from 'sequelize';
+import { FileResourceCreateModel, FileResourceResponseDto } from '../../../domain.types/file.resource.domain.types';
+import Source from '../../../database/database.connector';
+import { Repository } from 'typeorm';
+import { FileResourceMapper } from '../../mappers/general/file.resource.mapper';
+import { uuid } from '../../domain.types/miscellaneous/system.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -10,28 +13,49 @@ export class FileResourceService {
 
     //#region Models
 
-    FileResource = FileResourceModel.Model;
+    _fileResourceRepository : Repository<FileResource> = Source.getRepository(FileResource);
 
-    User = UserModel.Model;
+    _userRepository : Repository<User> = Source.getRepository(User);
 
     //#endregion
 
     //#region Publics
 
-    create = async (createModel: FileResourceCreateModel) => {
+    create = async (createModel: FileResourceCreateModel): Promise<FileResourceResponseDto> => {
         try {
-            var record = await this.FileResource.create(createModel);
-            return await this.getById(record.id);
+            var fileResource = new FileResource();
+            var uploadedBy = null;
+            if (createModel.UserId) {
+                uploadedBy = await this._userRepository.findOne({
+                    where : {
+                        id : createModel.UserId
+                    }
+                });
+            }
+
+            fileResource.OriginalFilename = createModel.OriginalFilename;
+            fileResource.MimeType         = createModel.MimeType;
+            fileResource.Public           = createModel.Public;
+            fileResource.Size             = createModel.Size;
+            fileResource.StorageKey       = createModel.StorageKey;
+            fileResource.Tags             = createModel.Tags;
+            fileResource.UploadedBy       = uploadedBy;
+
+            var record = await this._fileResourceRepository.save(fileResource);
+            return FileResourceMapper.toResponseDto(record);
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to create file resource!', error);
         }
-    }
+    };
 
     getById = async (id) => {
         try {
-            const record = await this.FileResource.findOne({
+            const record = await this._fileResourceRepository.findOne({
                 where : {
                     id : id
+                },
+                relations : {
+                    UploadedBy : true
                 },
                 include : [{
                     model    : this.User,
@@ -46,21 +70,22 @@ export class FileResourceService {
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to retrieve file resource!', error);
         }
-    }
+    };
 
-    incrementDownloadCount = async (id) => {
+    incrementDownloadCount = async (id: uuid) => {
         try {
-            var record = await this.FileResource.findOne({
+            var record =  await this._fileResourceRepository.findOne({
                 where : {
                     id : id
                 }
             });
+
             record.DownloadCount = record.DownloadCount + 1;
             await record.save();
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to update download count for file resource!', error);
         }
-    }
+    };
 
     exists = async (id): Promise<boolean> => {
         try {
@@ -69,7 +94,7 @@ export class FileResourceService {
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to determine existance of file resource!', error);
         }
-    }
+    };
 
     search = async (filters): Promise<any> => {
         try {
@@ -100,7 +125,7 @@ export class FileResourceService {
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to search file resource records!', error);
         }
-    }
+    };
 
     update = async (id, updateModel) => {
         try {
@@ -118,7 +143,7 @@ export class FileResourceService {
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to update file resource!', error);
         }
-    }
+    };
 
     delete = async (id) => {
         try {
@@ -131,7 +156,7 @@ export class FileResourceService {
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to delete file resource!', error);
         }
-    }
+    };
 
     //#endregion
 
@@ -174,7 +199,7 @@ export class FileResourceService {
         search.include.push(includeUserAsUser);
 
         return search;
-    }
+    };
 
     private addSortingToSearch = (search, filters) => {
 
@@ -198,7 +223,7 @@ export class FileResourceService {
             order,
             orderByColumn
         };
-    }
+    };
 
     private addPaginationToSearch = (search, filters) => {
 
@@ -219,7 +244,7 @@ export class FileResourceService {
             pageIndex,
             limit
         };
-    }
+    };
 
     //#endregion
 
