@@ -1,3 +1,4 @@
+import { BaseSearchFilters, BaseSearchResults } from "./miscellaneous/base.search.types";
 import { uuid } from "./miscellaneous/system.types";
 
 export interface FileResourceCreateModel {
@@ -15,7 +16,6 @@ export interface FileResourceResponseDto {
     id              : uuid;
     MimeType        : string;
     OriginalFilename: string;
-    UserId          : uuid;
     Size            : number;
     Public          : boolean;
     DownloadCount   : number;
@@ -23,4 +23,14 @@ export interface FileResourceResponseDto {
     UploadedBy      : uuid;
     CreatedAt       : Date;
     UpdatedAt       : Date;
+}
+
+export interface FileResourceSearchFilters extends BaseSearchFilters {
+    Filename?: string;
+    UserId?  : uuid;
+    Tags?    : string;
+}
+
+export interface FileResourceSearchResults extends BaseSearchResults {
+    Items: FileResourceResponseDto[];
 }
