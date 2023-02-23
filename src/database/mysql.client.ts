@@ -13,6 +13,7 @@ export class MysqlClient {
             //var query = `CREATE DATABASE ${config.database} CHARACTER SET utf8 COLLATE utf8_general_ci;`;
             const query = `CREATE DATABASE ${Config.database}`;
             await MysqlClient.executeQuery(query);
+            logger.info(`Database ${Config.database} created successfully!`);
         } catch (error) {
             logger.error(error.message);
         }

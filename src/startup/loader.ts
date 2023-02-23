@@ -2,10 +2,10 @@ import 'reflect-metadata';
 import { container, DependencyContainer } from 'tsyringe';
 import { Authenticator } from '../auth/authenticator';
 import { Authorizer } from '../auth/authorizer';
-import { Logger } from '../logger/logger';
+import logger from '../logger/logger';
 import { Injector } from './injector';
 import { Scheduler } from './scheduler';
-import { Seeder } from './seeder';
+// import { Seeder } from './seeder';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
