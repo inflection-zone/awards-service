@@ -1,6 +1,6 @@
 import * as aws from 'aws-sdk';
 import fs from 'fs';
-import { Logger } from '../../../logger/logger';
+import logger from '../../../logger/logger';
 import { IFileStorageService } from '../interfaces/file.storage.service.interface';
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -18,12 +18,12 @@ export class AWSS3FileStorageService implements IFileStorageService {
             };
             var stored = await s3.headObject(params).promise();
 
-            logger.log(JSON.stringify(stored, null, 2));
+            logger.info(JSON.stringify(stored, null, 2));
 
             return storageKey;
         }
         catch (error) {
-            logger.log(JSON.stringify(error, null, 2));
+            logger.error(JSON.stringify(error, null, 2));
             return null;
         }
     };
@@ -37,11 +37,11 @@ export class AWSS3FileStorageService implements IFileStorageService {
                 Body   : inputStream //Request stream piped directly
             };
             var stored = await s3.upload(params).promise();
-            logger.log(JSON.stringify(stored, null, 2));
+            logger.info(JSON.stringify(stored, null, 2));
             return storageKey;
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
         }
     };
 
@@ -58,12 +58,12 @@ export class AWSS3FileStorageService implements IFileStorageService {
             };
             var stored = await s3.upload(params).promise();
 
-            logger.log(JSON.stringify(stored, null, 2));
+            logger.info(JSON.stringify(stored, null, 2));
 
             return storageKey;
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
         }
     };
 
@@ -77,7 +77,7 @@ export class AWSS3FileStorageService implements IFileStorageService {
             return s3.getObject(params).createReadStream();
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             return null;
         }
     };

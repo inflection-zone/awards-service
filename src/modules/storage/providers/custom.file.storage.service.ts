@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Logger } from '../../../logger/logger';
+import logger from '../../../logger/logger';
 import { Helper } from '../../../common/helper';
 import { IFileStorageService } from '../interfaces/file.storage.service.interface';
 
@@ -22,7 +22,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return storageKey;
         }
         catch (error) {
-            logger.log(JSON.stringify(error, null, 2));
+            logger.error(JSON.stringify(error, null, 2));
             return null;
         }
     };
@@ -38,15 +38,14 @@ export class CustomFileStorageService implements IFileStorageService {
                 }
                 const writeStream = fs.createWriteStream(fileLocation);
                 inputStream.pipe(writeStream);
-
                 writeStream.on('finish', async () => {
-                    logger.log('wrote all data to file');
+                    logger.info('wrote all data to file');
                     writeStream.end();
                     resolve(storageKey);
                 });
             }
             catch (error) {
-                logger.log(error.message);
+                logger.error(error.message);
                 reject("Unable to create file resource!");
             }
         });
@@ -64,7 +63,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return storageKey;
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             return null;
         }
     };
@@ -77,7 +76,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return stream;
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             return null;
         }
     };
@@ -94,7 +93,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return localFilePath;
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             return null;
         }
     };
@@ -112,7 +111,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return true;
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             return false;
         }
     };
@@ -124,7 +123,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return true;
         }
         catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             return false;
         }
     };

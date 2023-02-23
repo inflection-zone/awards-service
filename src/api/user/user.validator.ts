@@ -171,7 +171,7 @@ export class UserValidator {
         const birthDate = requestBody.BirthDate ? Date.parse(requestBody.BirthDate) : null;
 
         return {
-            RoleId      : requestBody.RoleId ? requestBody.RoleId : null,
+            //RoleId      : requestBody.RoleId ? requestBody.RoleId : null,
             Prefix      : requestBody.Prefix ? requestBody.Prefix : 'Mr',
             UserName    : requestBody.UserName ? requestBody.UserName : null,
             FirstName   : requestBody.FirstName ? requestBody.FirstName : null,

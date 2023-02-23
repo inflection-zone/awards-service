@@ -3,7 +3,7 @@ import { BaseSearchFilters, BaseSearchResults } from "../miscellaneous/base.sear
 import { Gender, uuid } from "../miscellaneous/system.types";
 
 export interface UserCreateModel {
-    RoleId     : number;
+    // RoleId     : number;
     UserName   : string;
     Prefix     : string;
     FirstName  : string;

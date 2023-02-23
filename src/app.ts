@@ -56,14 +56,12 @@ export default class Application {
     };
 
     setupDatabaseConnection = async () => {
-
-        await DbClient.createDatabase();
-
         if (process.env.NODE_ENV === 'test') {
             //Note: This is only for test environment
             //Drop all tables in db
             await DbClient.dropDatabase();
         }
+        await DbClient.createDatabase();
     };
 
     public start = async(): Promise<void> => {

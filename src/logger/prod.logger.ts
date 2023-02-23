@@ -27,7 +27,7 @@ const productionLogger: Logger = createLogger({
     ),
     transports : [
         new transports.Console(),
-        //new transports.File({ filename: '../../logs/prod.log', level: 'warn' })
+        new transports.File({ filename: '../../logs/prod.log', level: 'warn' })
         //dailyRotateFileTransport
     ]
 });

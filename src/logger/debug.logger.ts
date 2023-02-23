@@ -27,7 +27,7 @@ const debugLogger: Logger = createLogger({
     ),
     transports : [
         new transports.Console(),
-        //new transports.File({ filename: '../../logs/debug.log', level: 'debug' }),
+        new transports.File({ filename: '../../logs/debug.log', level: 'debug' }),
         //dailyRotateFileTransport
     ]
 });

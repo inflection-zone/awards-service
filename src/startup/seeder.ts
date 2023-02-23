@@ -1,31 +1,31 @@
 import fs from "fs";
 import path from "path";
 import { Helper } from "../common/helper";
-import { Logger } from "../logger/logger";
-import * as RolePrivilegesList from '../../seed.data/role.privileges.json';
-import { RoleService } from '../database/repository.services/role.service';
-import { UserRoleService } from '../database/repository.services/user/user.role.service';
-import { RolePrivilegeService } from '../database/repository.services/role.privilege.service';
+import logger from "../logger/logger";
+//import * as RolePrivilegesList from '../../seed.data/role.privileges.json';
+// import { RoleService } from '../database/repository.services/role.service';
+// import { UserRoleService } from '../database/repository.services/user/user.role.service';
+// import { RolePrivilegeService } from '../database/repository.services/role.privilege.service';
 import { UserService } from '../database/repository.services/user/user.service';
 import { ClientService } from '../database/repository.services/client/client.service';
-import { RoleList } from '../domain.types/miscellaneous/role.types';
+//import { RoleList } from '../domain.types/miscellaneous/role.types';
 import { UserCreateModel } from "../domain.types/user/user.domain.types";
 import { Gender } from "../domain.types/miscellaneous/system.types";
-import { UserRoleCreateModel } from "../domain.types/user/user.role.domain.types";
+// import { UserRoleCreateModel } from "../domain.types/user/user.role.domain.types";
 
 //////////////////////////////////////////////////////////////////////////////
 
 export class Seeder {
 
-    _apiClientService: ClientService = new ClientService();
+    _clientService: ClientService = new ClientService();
 
     _userService: UserService = new UserService();
 
-    _roleService: RoleService = new RoleService();
+    // _roleService: RoleService = new RoleService();
 
-    _rolePrivilegeService: RolePrivilegeService = new RolePrivilegeService();
+    // _rolePrivilegeService: RolePrivilegeService = new RolePrivilegeService();
 
-    _userRoleService: UserRoleService = new UserRoleService();
+    // _userRoleService: UserRoleService = new UserRoleService();
 
     //_careplanCategoryService: CareplanCategoryService = new CareplanCategoryService();
 
@@ -34,11 +34,10 @@ export class Seeder {
     public seed = async (): Promise<void> => {
         try {
             await this.createTempFolders();
-            await this.seedDefaultRoles();
-            await this.seedRolePrivileges();
+            // await this.seedDefaultRoles();
+            // await this.seedRolePrivileges();
             await this.seedInternalClients();
             await this.seedDefaultUsers();
-            await this.seedDefaultCareplanCategories();
         } catch (error) {
             logger.log(error.message);
         }
@@ -49,34 +48,34 @@ export class Seeder {
         await Helper.createTempUploadFolder();
     };
 
-    private seedRolePrivileges = async () => {
-        try {
-            const arr = RolePrivilegesList['default'];
-            for (let i = 0; i < arr.length; i++) {
-                const rp = arr[i];
-                const roleName = rp['Role'];
-                const privileges = rp['Privileges'];
+    // private seedRolePrivileges = async () => {
+    //     try {
+    //         const arr = RolePrivilegesList['default'];
+    //         for (let i = 0; i < arr.length; i++) {
+    //             const rp = arr[i];
+    //             const roleName = rp['Role'];
+    //             const privileges = rp['Privileges'];
 
-                const role = await this._roleService.getByName(roleName);
-                if (role == null) {
-                    continue;
-                }
-                for (const privilege of privileges) {
-                    const exists = await this._rolePrivilegeService.hasPrivilegeForRole(role.id, privilege);
-                    if (!exists) {
-                        await this._rolePrivilegeService.create({
-                            RoleId    : role.id,
-                            RoleName  : role.RoleName,
-                            Privilege : privilege,
-                        });
-                    }
-                }
-            }
-        } catch (error) {
-            logger.log('Error occurred while seeding role-privileges!');
-        }
-        logger.log('Seeded role-privileges successfully!');
-    };
+    //             const role = await this._roleService.getByName(roleName);
+    //             if (role == null) {
+    //                 continue;
+    //             }
+    //             for (const privilege of privileges) {
+    //                 const exists = await this._rolePrivilegeService.hasPrivilegeForRole(role.id, privilege);
+    //                 if (!exists) {
+    //                     await this._rolePrivilegeService.create({
+    //                         RoleId    : role.id,
+    //                         RoleName  : role.RoleName,
+    //                         Privilege : privilege,
+    //                     });
+    //                 }
+    //             }
+    //         }
+    //     } catch (error) {
+    //         logger.log('Error occurred while seeding role-privileges!');
+    //     }
+    //     logger.log('Seeded role-privileges successfully!');
+    // };
 
     private seedDefaultUsers = async () => {
 
@@ -84,20 +83,20 @@ export class Seeder {
 
         for await (var u of defaultUsers) {
 
-            const role = await this._roleService.getByName(u.Role);
+            // const role = await this._roleService.getByName(u.Role);
 
             const existingUser = await this._userService.getUser(null, null, null, u.UserName);
             if (existingUser) {
                 continue;
             }
 
-            const userDomainModel : UserCreateModel = {
+            const createModel : UserCreateModel = {
                 Phone       : u.Phone,
                 FirstName   : u.FirstName,
                 LastName    : u.LastName,
                 UserName    : u.UserName,
                 Password    : u.Password,
-                RoleId      : role.id,
+                //RoleId      : role.id,
                 CountryCode : u.CountryCode,
                 Email       : u.Email,
                 Gender      : Gender.Male,
@@ -105,16 +104,18 @@ export class Seeder {
                 Prefix      : ""
             };
 
-            userDomainModel.Password = Helper.generateHashedPassword(u.Password);
-            const user = await this._userService.create(userDomainModel);
-            const userRole: UserRoleCreateModel = {
-                UserId : user.id,
-                RoleId : role.id,
-            };
-            await this._userRoleService.create(userRole);
+            createModel.Password = Helper.generateHashedPassword(u.Password);
+            const user = await this._userService.create(createModel);
+            logger.info(JSON.stringify(user, null, 2));
+
+            // const userRole: UserRoleCreateModel = {
+            //     UserId : user.id,
+            //     RoleId : role.id,
+            // };
+            // await this._userRoleService.create(userRole);
         }
 
-        logger.log('Seeded admin and moderator successfully!');
+        logger.info('Seeded admin and moderator successfully!');
     };
 
     private loadJSONSeedFile(file: string): any {
@@ -126,74 +127,46 @@ export class Seeder {
 
     private seedInternalClients = async () => {
 
-        logger.log('Seeding internal clients...');
+        logger.info('Seeding internal clients...');
 
         const arr = this.loadJSONSeedFile('internal.clients.seed.json');
 
         for (let i = 0; i < arr.length; i++) {
             var c = arr[i];
-            let client = await this._apiClientService.getByClientCode(c.Code);
+            let client = await this._clientService.getByClientCode(c.Code);
             if (client == null) {
                 const model = {
-                    Name   : c['Name'],
-                    Code   : c['Code'],
+                    Name         : c['Name'],
+                    Code         : c['Code'],
                     IsPrivileged : c['IsPrivileged'],
+                    CountryCode  : '+91',
+                    Phone        : '1000000000',
                     Email        : c['Email'],
                     Password     : c['Password'],
                     ValidFrom    : new Date(),
                     ValidTill    : new Date(2030, 12, 31),
                     ApiKey       : c['ApiKey'],
                 };
-                client = await this._apiClientService.create(model);
-                var str = JSON.stringify(client, null, '  ');
-                logger.log(str);
+                client = await this._clientService.create(model);
+                logger.info(JSON.stringify(client, null, 2));
             }
         }
 
     };
 
-    private seedDefaultRoles = async () => {
+    // private seedDefaultRoles = async () => {
 
-        for await (var role of RoleList) {
+    //     for await (var role of RoleList) {
 
-            var r = await this._roleService.getByName(role);
-            if (!r) {
-                await this._roleService.create({
-                    RoleName : role
-                });
-            }
-        }
+    //         var r = await this._roleService.getByName(role);
+    //         if (!r) {
+    //             await this._roleService.create({
+    //                 RoleName : role
+    //             });
+    //         }
+    //     }
 
-        logger.log('Seeded default roles successfully!');
-    };
-
-    private seedDefaultCareplanCategories = async () => {
-
-        const defaultCareplanCategories = [
-            {
-                Type        : "Heart",
-                Description : "Category representing all heart related careplans"
-            },
-            {
-                Type        : "Maternity and Neonatal",
-                Description : "Category representing all maternity and neonatal related careplans"
-            },
-            {
-                Type        : "Post Injury Rehab",
-                Description : "Category representing all careplans which involve rehabilitation post injury/trauma."
-            },
-        ];
-
-        for await (var cc of defaultCareplanCategories) {
-
-            // //var exists = await this._careplanCategoryService.existsByName(cc.Type);
-            // if (exists) {
-            //     continue;
-            // }
-            // //await this._careplanCategoryService.create(cc);
-        }
-
-        logger.log('Seeded default careplan categories successfully!');
-    };
+    //     logger.log('Seeded default roles successfully!');
+    // };
 
 }
