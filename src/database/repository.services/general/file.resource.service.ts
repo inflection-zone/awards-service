@@ -1,11 +1,17 @@
 import { FileResource } from '../../models/general/file.resource.model';
 import { User } from '../../models/user/user.model';
 import { ErrorHandler } from '../../../common/error.handler';
-import { FileResourceCreateModel, FileResourceResponseDto } from '../../../domain.types/file.resource.domain.types';
+import {
+    FileResourceCreateModel,
+    FileResourceResponseDto,
+    FileResourceSearchFilters,
+    FileResourceSearchResults
+} from '../../../domain.types/file.resource.domain.types';
 import Source from '../../../database/database.connector';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { FileResourceMapper } from '../../mappers/general/file.resource.mapper';
-import { uuid } from '../../domain.types/miscellaneous/system.types';
+import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import logger from '../../../logger/logger';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +54,7 @@ export class FileResourceService {
         }
     };
 
-    getById = async (id) => {
+    getById = async (id: uuid): Promise<FileResourceResponseDto> => {
         try {
             const record = await this._fileResourceRepository.findOne({
                 where : {
@@ -57,67 +63,140 @@ export class FileResourceService {
                 relations : {
                     UploadedBy : true
                 },
-                include : [{
-                    model    : this.User,
-                    required : false,
-                    as       : 'User',
-                    //through: { attributes: [] }
+                select : {
+                    id               : true,
+                    OriginalFilename : true,
+                    CreatedAt        : true,
+                    UpdatedAt        : true,
+                    DownloadCount    : true,
+                    MimeType         : true,
+                    Public           : true,
+                    Size             : true,
+                    StorageKey       : true,
+                    Tags             : true,
+                    UploadedBy       : {
+                        id     : true,
+                        Client : {
+                            Name : true
+                        },
+                        FirstName : true,
+                        LastName  : true,
+                        Prefix    : true
+                    },
                 },
-
-                ]
             });
-            return record;
+            return FileResourceMapper.toResponseDto(record);
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to retrieve file resource!', error);
         }
     };
 
-    incrementDownloadCount = async (id: uuid) => {
+    incrementDownloadCount = async (id: uuid): Promise<boolean> => {
         try {
             var record =  await this._fileResourceRepository.findOne({
                 where : {
                     id : id
                 }
             });
-
             record.DownloadCount = record.DownloadCount + 1;
-            await record.save();
+            await this._fileResourceRepository.save(record);
+            return true;
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to update download count for file resource!', error);
         }
     };
 
-    exists = async (id): Promise<boolean> => {
+    exists = async (id: uuid): Promise<boolean> => {
         try {
-            const record = await this.FileResource.findByPk(id);
+            var record =  await this._fileResourceRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
             return record !== null;
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to determine existance of file resource!', error);
         }
     };
 
-    search = async (filters): Promise<any> => {
+    search = async (filters: FileResourceSearchFilters): Promise<any> => {
         try {
 
-            var search = this.getSearchModel(filters);
-            var {
-                order,
-                orderByColumn
-            } = this.addSortingToSearch(search, filters);
-            var {
-                pageIndex,
-                limit
-            } = this.addPaginationToSearch(search, filters);
+            var search : FindManyOptions<FileResource> = {
+                relations : {
+                },
+                where : {
+                },
+                select : {
+                    id               : true,
+                    OriginalFilename : true,
+                    CreatedAt        : true,
+                    UpdatedAt        : true,
+                    DownloadCount    : true,
+                    MimeType         : true,
+                    Public           : true,
+                    Size             : true,
+                    StorageKey       : true,
+                    Tags             : true,
+                    UploadedBy       : {
+                        id     : true,
+                        Client : {
+                            Name : true
+                        },
+                        FirstName : true,
+                        LastName  : true,
+                        Prefix    : true
+                    },
+                }
+            };
+            if (filters.UserId) {
+                search.relations['UploadedBy'] = true;
+                search.where['UploadedBy'] = {
+                    id : filters.UserId
+                };
+            }
+            if (filters.Filename) {
+                search.where['OriginalFilename'] =  Like(`%${filters.Filename}%`);
+            }
+            if (filters.Tags) {
+                search.where['Tags'] =  Like(`%${filters.Tags}%`);
+            }
 
-            const foundResults = await this.FileResource.findAndCountAll(search);
-            const searchResults = {
-                TotalCount     : foundResults.count,
-                RetrievedCount : foundResults.rows.length,
+            //Sorting
+            let orderByColumn = 'CreatedAt';
+            if (filters.OrderBy) {
+                orderByColumn = filters.OrderBy;
+            }
+            let order = 'ASC';
+            if (filters.Order === 'descending') {
+                order = 'DESC';
+            }
+            search['order'] = {};
+            search['order'][orderByColumn] = order;
+
+            //Pagination
+            let limit = 25;
+            if (filters.ItemsPerPage) {
+                limit = filters.ItemsPerPage;
+            }
+            let offset = 0;
+            let pageIndex = 0;
+            if (filters.PageIndex) {
+                pageIndex = filters.PageIndex < 0 ? 0 : filters.PageIndex;
+                offset = pageIndex * limit;
+            }
+            search['take'] = limit;
+            search['skip'] = offset;
+
+            const [list, count] = await this._fileResourceRepository.findAndCount(search);
+            const searchResults: FileResourceSearchResults = {
+                TotalCount     : count,
+                RetrievedCount : list.length,
                 PageIndex      : pageIndex,
                 ItemsPerPage   : limit,
                 Order          : order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy      : orderByColumn,
-                Items          : foundResults.rows,
+                Items          : list.map(x => FileResourceMapper.toResponseDto(x)),
             };
 
             return searchResults;
@@ -127,17 +206,13 @@ export class FileResourceService {
         }
     };
 
-    update = async (id, updateModel) => {
+    update = async (id: uuid, updateModel) => {
         try {
             if (Object.keys(updateModel).length > 0) {
-                var res = await this.FileResource.update(updateModel, {
-                    where : {
-                        id : id
-                    }
-                });
-                if (res.length !== 1) {
-                    throw new Error('Unable to update file resource!');
-                }
+                var res = await this._fileResourceRepository.update({
+                    id : id
+                }, updateModel);
+                logger.info(`Update SQL Query : ${res.raw}`);
             }
             return await this.getById(id);
         } catch (error) {
@@ -145,105 +220,18 @@ export class FileResourceService {
         }
     };
 
-    delete = async (id) => {
+    delete = async (id: uuid) => {
         try {
-            var result = await this.FileResource.destroy({
+            var record = await this._fileResourceRepository.findOne({
                 where : {
                     id : id
                 }
             });
-            return result === 1;
+            var result = await this._fileResourceRepository.remove(record);
+            return result != null;
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to delete file resource!', error);
         }
-    };
-
-    //#endregion
-
-    //#region Privates
-
-    private getSearchModel = (filters) => {
-
-        var search = {
-            where   : {},
-            include : []
-        };
-
-        if (filters.FileName) {
-            search.where['FileName'] = {
-                [Op.like] : '%' + filters.FileName + '%'
-            };
-        }
-        if (filters.IsPublicResource) {
-            search.where['IsPublicResource'] = filters.IsPublicResource;
-        }
-        if (filters.Tags) {
-            search.where['Tags'] = {
-                [Op.like] : '%' + filters.Tags + '%'
-            };
-        }
-        if (filters.MimeType) {
-            search.where['MimeType'] = {
-                [Op.like] : '%' + filters.MimeType + '%'
-            };
-        }
-        const includeUserAsUser = {
-            model    : this.User,
-            required : false,
-            as       : 'User',
-            where    : {}
-        };
-        //if (filters.Xyz != undefined) {
-        //    includeUser.where['Xyz'] = filters.Xyz;
-        //}
-        search.include.push(includeUserAsUser);
-
-        return search;
-    };
-
-    private addSortingToSearch = (search, filters) => {
-
-        let orderByColumn = 'CreatedAt';
-        if (filters.OrderBy) {
-            orderByColumn = filters.OrderBy;
-        }
-        let order = 'ASC';
-        if (filters.Order === 'descending') {
-            order = 'DESC';
-        }
-        search['order'] = [
-            [orderByColumn, order]
-        ];
-
-        if (filters.OrderBy) {
-            //In case the 'order-by attribute' is on associated model
-            //search['order'] = [[ '<AssociatedModel>', filters.OrderBy, order]];
-        }
-        return {
-            order,
-            orderByColumn
-        };
-    };
-
-    private addPaginationToSearch = (search, filters) => {
-
-        let limit = 25;
-        if (filters.ItemsPerPage) {
-            limit = filters.ItemsPerPage;
-        }
-        let offset = 0;
-        let pageIndex = 0;
-        if (filters.PageIndex) {
-            pageIndex = filters.PageIndex < 0 ? 0 : filters.PageIndex;
-            offset = pageIndex * limit;
-        }
-        search['limit'] = limit;
-        search['offset'] = offset;
-
-        return {
-            pageIndex,
-            limit
-        };
     };
 
     //#endregion
