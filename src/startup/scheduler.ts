@@ -1,6 +1,6 @@
 import * as cron from 'node-cron';
 import * as CronSchedules from '../../seed.data/cron.schedules.json';
-import logger from '../logger/logger';
+import { logger } from '../logger/logger';
 
 ///////////////////////////////////////////////////////////////////////////
 

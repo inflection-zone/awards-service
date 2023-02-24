@@ -33,7 +33,9 @@ export class ConfigurationManager {
                 CleanupFolderBeforeMinutes : configuration.TemporaryFolders.CleanupFolderBeforeMinutes as number,
             },
             MaxUploadFileSize : configuration.MaxUploadFileSize,
-            JwtExpiresIn      : configuration.JwtExpiresIn
+            JwtExpiresIn      : configuration.JwtExpiresIn,
+            Logger            : configuration.Logger,
+            HTTPLogger        : configuration.HTTPLogger,
         };
     };
 
@@ -57,9 +59,17 @@ export class ConfigurationManager {
         return ConfigurationManager._config.MaxUploadFileSize;
     };
 
+    public static Logger = (): string => {
+        return ConfigurationManager._config?.Logger;
+    };
+
+    public static HTTPLogger = (): string => {
+        return ConfigurationManager._config?.HTTPLogger;
+    };
+
     public static JwtExpiresIn = (): number => {
         return ConfigurationManager._config.JwtExpiresIn;
-    }
+    };
 
     public static FileStorageProvider = (): FileStorageProvider => {
         return ConfigurationManager._config.FileStorage.Provider;
@@ -80,3 +90,5 @@ export class ConfigurationManager {
     };
 
 }
+
+ConfigurationManager.loadConfigurations();

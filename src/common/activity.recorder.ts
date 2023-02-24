@@ -1,7 +1,7 @@
 
 ///////////////////////////////////////////////////////////////////////
 
-//import logger from "./logger";
+//import { logger } from "./logger";
 
 export class ActivityRecorder {
 

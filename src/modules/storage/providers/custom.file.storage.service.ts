@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import logger from '../../../logger/logger';
+import { logger } from '../../../logger/logger';
 import { Helper } from '../../../common/helper';
 import { IFileStorageService } from '../interfaces/file.storage.service.interface';
 

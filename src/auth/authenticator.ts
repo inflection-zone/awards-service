@@ -4,7 +4,7 @@ import { IAuthenticator } from './authenticator.interface';
 import { injectable, inject } from "tsyringe";
 
 import { ResponseHandler } from '../common/response.handler';
-import logger from '../logger/logger';
+import { logger } from '../logger/logger';
 import { ApiError } from '../common/api.error';
 
 ////////////////////////////////////////////////////////////////////////

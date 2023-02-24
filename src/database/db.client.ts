@@ -1,5 +1,5 @@
 import { MysqlClient as client } from './mysql.client';
-import logger from '../logger/logger';
+import { logger } from '../logger/logger';
 import { execSync } from 'child_process';
 
 ////////////////////////////////////////////////////////////////////////
@@ -43,8 +43,8 @@ export class DbClient {
         try {
             const output = execSync('npx sequelize-cli db:migrate');
             const str = output.toString();
-            logger.log('info', 'Database migrated successfully!');
-            logger.log('info', str);
+            logger.info('Database migrated successfully!');
+            logger.info(str);
             return true;
         } catch (error) {
             logger.error(error.message);

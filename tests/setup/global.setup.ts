@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 
 import * as path from 'path';
 
-import logger from "../../../../common/logger";
+import { logger } from "../../../../common/logger";
 import { TestLoader } from '../test.loader';
 import {} from 'jest';
 
