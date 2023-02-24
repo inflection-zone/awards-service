@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Helper } from "../common/helper";
-import logger from "../logger/logger";
+import { logger } from "../logger/logger";
 //import * as RolePrivilegesList from '../../seed.data/role.privileges.json';
 // import { RoleService } from '../database/repository.services/role.service';
 // import { UserRoleService } from '../database/repository.services/user/user.role.service';
@@ -39,7 +39,7 @@ export class Seeder {
             await this.seedInternalClients();
             await this.seedDefaultUsers();
         } catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
         }
     };
 

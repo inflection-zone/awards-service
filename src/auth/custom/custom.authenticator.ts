@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import logger from '../../logger/logger';
+import { logger } from '../../logger/logger';
 import { AuthenticationResult } from '../../domain.types/auth.domain.types';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
 import { ClientService } from '../../database/repository.services/client/client.service';

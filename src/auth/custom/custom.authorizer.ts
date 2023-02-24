@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import logger from '../../logger/logger';
+import { logger } from '../../logger/logger';
 import { IAuthorizer } from '../authorizer.interface';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
 import { ConfigurationManager } from '../../config/configuration.manager';
@@ -32,7 +32,7 @@ export class CustomAuthorizer implements IAuthorizer {
 
             return true;
         } catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
         }
         return false;
     };

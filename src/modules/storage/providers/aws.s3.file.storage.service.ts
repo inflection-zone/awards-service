@@ -1,6 +1,6 @@
 import * as aws from 'aws-sdk';
 import fs from 'fs';
-import logger from '../../../logger/logger';
+import { logger } from '../../../logger/logger';
 import { IFileStorageService } from '../interfaces/file.storage.service.interface';
 
 ///////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import logger from "../logger/logger";
+import { logger } from "../logger/logger";
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -27,12 +27,12 @@ if (typeof process.env.NODE_ENV === 'undefined') {
 }
 
 if (process.env.NODE_ENV === 'test') {
-    logger.log('info', '================================================');
-    logger.log('info', 'Environment   : ' + process.env.NODE_ENV);
-    logger.log('info', 'Database name : ' + process.env.DB_NAME);
-    logger.log('info', 'Database user : ' + process.env.DB_USER_NAME);
-    logger.log('info', 'Database host : ' + process.env.DB_HOST);
-    logger.log('info', '================================================');
+    logger.info('================================================');
+    logger.info('Environment   : ' + process.env.NODE_ENV);
+    logger.info('Database name : ' + process.env.DB_NAME);
+    logger.info('Database user : ' + process.env.DB_USER_NAME);
+    logger.info('Database host : ' + process.env.DB_HOST);
+    logger.info('================================================');
 }
 
 export const Config : DatabaseConfig = {

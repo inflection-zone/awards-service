@@ -69,4 +69,6 @@ export interface Configurations {
     TemporaryFolders    : TemporaryFoldersConfig;
     MaxUploadFileSize   : number;
     JwtExpiresIn        : number;
+    Logger              : string; //'Custom' | 'Winston' | 'Pino' | 'Bunyan',
+    HTTPLogger          : string; //'Custom' | 'Winston' | 'Pino' | 'Morgan',
 }

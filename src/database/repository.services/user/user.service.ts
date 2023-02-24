@@ -1,4 +1,4 @@
-import Source from '../../database.connector';
+import { Source } from '../../database.connector';
 import { User } from '../../models/user/user.model';
 import { UserLoginSession } from '../../models/user/user.login.session.model';
 import { ErrorHandler } from '../../../common/error.handler';
@@ -8,7 +8,7 @@ import { TimeHelper } from '../../../common/time.helper';
 import { DurationType } from '../../../domain.types/miscellaneous/time.types';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { UserCreateModel, UserSearchFilters, UserUpdateModel } from '../../../domain.types/user/user.domain.types';
-import logger from '../../../logger/logger';
+import { logger } from '../../../logger/logger';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

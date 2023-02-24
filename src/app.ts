@@ -1,15 +1,16 @@
 //import cors from 'cors';
+import "reflect-metadata";
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
-import "reflect-metadata";
 import { Router } from './startup/router';
-import logger from './logger/logger';
+import { logger } from './logger/logger';
 import { ConfigurationManager } from "./config/configuration.manager";
 import { Loader } from './startup/loader';
 import { Scheduler } from './startup/scheduler';
 import { DbClient } from './database/db.client';
 import { Seeder } from './startup/seeder';
+import { DBConnector } from "./database/database.connector";
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +42,7 @@ export default class Application {
     warmUp = async () => {
         try {
 
-            ConfigurationManager.loadConfigurations();
+            // ConfigurationManager.loadConfigurations();
             await this.setupDatabaseConnection();
             await Loader.init();
             await this.setupMiddlewares();
@@ -62,15 +63,12 @@ export default class Application {
             await DbClient.dropDatabase();
         }
         await DbClient.createDatabase();
+        await DBConnector.initialize();
     };
 
     public start = async(): Promise<void> => {
         try {
             await this.warmUp();
-            process.on('exit', code => {
-                logger.error(`Process exited with code: ${code}`);
-            });
-            //Start listening
             await this.listen();
         }
         catch (error){
@@ -124,3 +122,21 @@ export default class Application {
     };
 
 }
+
+// process.on('exit', () => {
+//     logger.info("process.exit() method is fired");
+// });
+
+[
+    `exit`,
+    `SIGINT`,
+    `SIGUSR1`,
+    `SIGUSR2`,
+    `uncaughtException`,
+    `SIGTERM`
+].forEach((terminationEvent) => {
+    process.on(terminationEvent, () => {
+        logger.info(`Received ${terminationEvent} signal`);
+        process.exit(0);
+    });
+});

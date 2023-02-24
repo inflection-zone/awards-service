@@ -1,12 +1,12 @@
 import { Client } from '../../models/client/client.model';
 import { ClientCreateModel, ClientResponseDto, ClientSearchFilters, ClientSearchResults, ClientUpdateModel, ClientVerificationModel, ClientApiKeyResponseDto } from '../../../domain.types/client.domain.types';
-import logger from '../../../logger/logger';
+import { logger } from '../../../logger/logger';
 import { ApiError } from '../../../common/api.error';
 import { CurrentClient } from '../../../domain.types/miscellaneous/current.client';
 import { ErrorHandler } from '../../../common/error.handler';
 import { Helper } from '../../../common/helper';
 import * as apikeyGenerator from 'uuid-apikey';
-import Source from '../../../database/database.connector';
+import { Source } from '../../../database/database.connector';
 import { FindManyOptions, LessThanOrEqual, Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { ClientMapper } from '../../mappers/client/client.mapper';

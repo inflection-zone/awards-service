@@ -7,11 +7,11 @@ import {
     FileResourceSearchFilters,
     FileResourceSearchResults
 } from '../../../domain.types/file.resource.domain.types';
-import Source from '../../../database/database.connector';
+import { Source } from '../../../database/database.connector';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { FileResourceMapper } from '../../mappers/general/file.resource.mapper';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import logger from '../../../logger/logger';
+import { logger } from '../../../logger/logger';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

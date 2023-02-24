@@ -1,5 +1,5 @@
 import { ApiError } from './api.error';
-import logger from '../logger/logger';
+import { logger } from '../logger/logger';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +48,7 @@ export class ErrorHandler {
 
     static handleValidationError = (error) => {
         if (error.isJoi === true) {
-            logger.log(error.message);
+            logger.error(error.message);
             const errorMessages = error.details.map(x => x.message);
             ErrorHandler.throwInputValidationError(errorMessages);
         }

@@ -3,7 +3,7 @@ import { ResponseDto } from '../domain.types/miscellaneous/response.dto';
 import { ActivityRecorder } from './activity.recorder';
 import { ApiError } from './api.error';
 import { InputValidationError } from './input.validation.error';
-import logger from '../logger/logger';
+import { logger } from '../logger/logger';
 
 ///////////////////////////////////////////////////////////////////////
 

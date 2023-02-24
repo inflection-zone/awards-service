@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { container, DependencyContainer } from 'tsyringe';
 import { Authenticator } from '../auth/authenticator';
 import { Authorizer } from '../auth/authorizer';
-import logger from '../logger/logger';
+import { logger } from '../logger/logger';
 import { Injector } from './injector';
 import { Scheduler } from './scheduler';
 // import { Seeder } from './seeder';
@@ -51,7 +51,7 @@ export class Loader {
             return true;
 
         } catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
             return false;
         }
     };

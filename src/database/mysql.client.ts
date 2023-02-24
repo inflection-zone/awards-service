@@ -1,7 +1,6 @@
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
-import logger from '../logger/logger';
+import { logger } from '../logger/logger';
 import { Config } from './database.config';
 
 ////////////////////////////////////////////////////////////////
@@ -24,7 +23,7 @@ export class MysqlClient {
             const query = `DROP DATABASE IF EXISTS ${Config.database}`;
             await MysqlClient.executeQuery(query);
         } catch (error) {
-            logger.log(error.message);
+            logger.error(error.message);
         }
     };
 
@@ -41,13 +40,14 @@ export class MysqlClient {
 
                 connection.connect(function (err) {
                     if (err) {
-                        throw err;
+                        logger.error(err.message);
+                        reject(err);
                     }
 
                     //logger.log('Connected!');
                     connection.query(query, function (err, result) {
                         if (err) {
-                            logger.log(err.message);
+                            logger.error(err.message);
 
                             var str = (result !== undefined && result !== null) ? result.toString() : null;
                             if (str != null) {
@@ -56,13 +56,15 @@ export class MysqlClient {
                             else {
                                 logger.error(`Query: ${query}`);
                             }
+                            reject(err);
                         }
                         resolve(true);
                     });
                 });
 
-            } catch (error) {
-                logger.log(error.message);
+            }
+            catch (error) {
+                logger.error(error.message);
             }
         });
 
