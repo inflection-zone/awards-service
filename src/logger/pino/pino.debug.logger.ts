@@ -1,5 +1,8 @@
-import winston from 'winston';
+import pino from 'pino';
 import { AbstrctPinoLogger } from './abstract.pino.logger';
+
+//Please refer for further customization:
+// https://betterstack.com/community/guides/logging/how-to-install-setup-and-use-pino-to-log-node-js-applications/
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -8,23 +11,28 @@ export class PinoDebugLogger extends AbstrctPinoLogger {
     constructor() {
         super();
 
-        this._logger = winston.createLogger({
-            levels : this._logLevels,
-            level  : 'debug',
-            format : winston.format.combine(
-                winston.format.colorize(),
-                //timestamp(),
-                //this._customFormat,
-                winston.format.json()
-            ),
-            transports : [
-                // new winston.transports.File({ filename: logFile, level: 'silly' }),
-                // new winston.transports.Console({
-                //     handleExceptions : true,
-                // }),
-                this._dailyRotateFile,
-            ]
-        });
+        this._logger = pino({
+            level     : 'debug',
+            transport : {
+                target : 'pino-pretty',
+                //target : this._logFile
+            },
+            // formatters : {
+            //     level : (label) => {
+            //         return { level: label };
+            //     },
+            // },
+            options : {
+                append          : true,
+                colorizeObjects : true,
+                colorize        : true,
+                //translateTime   : false,
+                //timestampKey    : 'time',
+                ignore          : 'pid',
+            }
+        }
+        //, pino.destination(this._logFile) // Another way to specify logfile
+        );
     }
 
     info = (str: string) => {

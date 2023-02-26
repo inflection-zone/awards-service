@@ -11,6 +11,7 @@ import { Scheduler } from './startup/scheduler';
 import { DbClient } from './database/db.client';
 import { Seeder } from './startup/seeder';
 import { DBConnector } from "./database/database.connector";
+import { HttpLogger } from "./logger/HttpLogger";
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -41,8 +42,6 @@ export default class Application {
 
     warmUp = async () => {
         try {
-
-            // ConfigurationManager.loadConfigurations();
             await this.setupDatabaseConnection();
             await Loader.init();
             await this.setupMiddlewares();
@@ -84,8 +83,11 @@ export default class Application {
                 this._app.use(express.json());
                 this._app.use(helmet());
                 //this._app.use(cors());
+                if (ConfigurationManager.UseHTTPLogging) {
+                    HttpLogger.use(this._app);
+                }
 
-                const MAX_UPLOAD_FILE_SIZE = ConfigurationManager.MaxUploadFileSize();
+                const MAX_UPLOAD_FILE_SIZE = ConfigurationManager.MaxUploadFileSize;
 
                 this._app.use(fileUpload({
                     limits            : { fileSize: MAX_UPLOAD_FILE_SIZE },
@@ -108,7 +110,7 @@ export default class Application {
             try {
                 const port = process.env.PORT;
                 const server = this._app.listen(port, () => {
-                    const serviceName = 'Careplan service api' + '-' + process.env.NODE_ENV;
+                    const serviceName = `${process.env.SERVICE_NAME} api' + '-' + ${process.env.NODE_ENV}`;
                     logger.info(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
                     this._app.emit("server_started");
                 });

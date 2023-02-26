@@ -11,7 +11,7 @@ import { WinstonProdLogger } from "./winston/winston.prod.logger";
 
 ///////////////////////////////////////////////////////////
 
-const provider = ConfigurationManager.Logger();
+const provider = ConfigurationManager.Logger;
 
 class Logger {
 
