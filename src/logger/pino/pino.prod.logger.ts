@@ -1,4 +1,4 @@
-import winston from 'winston';
+import pino from 'pino';
 import { AbstrctPinoLogger } from './abstract.pino.logger';
 
 ///////////////////////////////////////////////////////////////////////
@@ -8,23 +8,35 @@ export class PinoProdLogger extends AbstrctPinoLogger {
     constructor() {
         super();
 
-        this._logger = winston.createLogger({
-            levels : this._logLevels,
-            level  : 'warn',
-            format : winston.format.combine(
-                winston.format.colorize(),
-                //winston.format.timestamp(),
-                //this._customFormat,
-                winston.format.json()
-            ),
-            transports : [
-                // new winston.transports.File({ filename: logFile, level: 'silly' }),
-                // new winston.transports.Console({
-                //     handleExceptions : true,
-                // }),
-                this._dailyRotateFile,
-            ]
-        });
+        this._logger = pino({
+            transport : {
+                target : 'pino-pretty',
+                //target : this._logFile
+            },
+            options : {
+                translateTime : 'SYS:dd-mm-yyyy HH:MM:ss',
+                ignore        : 'pid',
+            }
+        }
+        //, pino.destination(this._logFile) // Another way to specify logfile
+        );
+        this._logger = pino({
+            level   : 'warn',
+            // transport : {
+            //     target : 'pino-pretty',
+            //     //target : this._logFile
+            // },
+            options : {
+                append          : true,
+                colorizeObjects : true,
+                colorize        : true,
+                //translateTime   : false,
+                //timestampKey    : 'time',
+                ignore          : 'pid',
+            }
+        }
+        //, pino.destination(this._logFile) // Another way to specify logfile
+        );
     }
 
     info = (str: string) => {

@@ -1,4 +1,4 @@
-import winston from 'winston';
+import bunyan from 'bunyan';
 import { AbstrctBunyanLogger } from './abstract.bunyan.logger';
 
 ///////////////////////////////////////////////////////////////////////
@@ -8,21 +8,19 @@ export class BunyanDebugLogger extends AbstrctBunyanLogger {
     constructor() {
         super();
 
-        this._logger = winston.createLogger({
-            levels : this._logLevels,
-            level  : 'debug',
-            format : winston.format.combine(
-                winston.format.colorize(),
-                //timestamp(),
-                //this._customFormat,
-                winston.format.json()
-            ),
-            transports : [
-                // new winston.transports.File({ filename: logFile, level: 'silly' }),
-                // new winston.transports.Console({
-                //     handleExceptions : true,
-                // }),
-                this._dailyRotateFile,
+        this._logger = bunyan.createLogger({
+            name    : `[${process.env.NODE_ENV}-${process.env.SERVICE_NAME}]`,
+            streams : [
+                // {
+                //     level : 'debug',
+                //     path  : this._logFile,
+                // },
+                {
+                    level  : 'info',
+                    //stream : process.stdout,
+                    stream : this._consolePrettyStream,
+                    format : '[@time $level] $msg'
+                }
             ]
         });
     }

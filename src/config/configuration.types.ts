@@ -70,5 +70,5 @@ export interface Configurations {
     MaxUploadFileSize   : number;
     JwtExpiresIn        : number;
     Logger              : string; //'Custom' | 'Winston' | 'Pino' | 'Bunyan',
-    HTTPLogger          : string; //'Custom' | 'Winston' | 'Pino' | 'Morgan',
+    UseHTTPLogging      : boolean;
 }

@@ -30,10 +30,10 @@ export class Helper {
         }
         return null;
     };
-    
+
     static getStoragePath = () => {
         return path.join(process.env.STORAGE, process.env.NODE_ENV);
-    }
+    };
 
     static compareHashedPassword = (password, hash) => {
         if (!password) {
@@ -41,21 +41,21 @@ export class Helper {
         }
         // returns Boolean
         return bcrypt.compareSync(password.toString(), hash);
-    }
-    
+    };
+
     static generateHashedPassword = (password) => {
         if (!password) {
             return null;
         }
         // hash password with bcrypt algorithm
         return bcrypt.hashSync(password.toString(), 10);
-    }
+    };
 
     static generateCryptoToken = async () => {
         const { randomBytes } = await import('crypto');
         const buffer = randomBytes(30);
         return buffer.toString('hex');
-    }
+    };
 
     static generateUserName = () => {
         return genpass.generate({
@@ -65,12 +65,12 @@ export class Helper {
             uppercase : false,
             symbols   : false
         });
-    }
+    };
 
     static hasProperty = (obj, prop) => {
         return Object.prototype.hasOwnProperty.call(obj, prop);
-    }
-    
+    };
+
     static isUrl = (str) => {
         if (!str) {
             return false;
@@ -81,13 +81,13 @@ export class Helper {
         } catch (err) {
             return false;
         }
-    }
+    };
 
     static dumpJson(obj, filename) {
         const txt = JSON.stringify(obj, null, '    ');
         fs.writeFileSync(filename, txt);
     }
-    
+
     static jsonToObj = (jsonPath) => {
 
         if (!fs.existsSync(jsonPath)) {
@@ -365,7 +365,7 @@ export class Helper {
         }
         return Promise.resolve();
     }
-    
+
     public static sleep = (miliseconds) => {
         return new Promise((resolve) => {
             setTimeout(resolve, miliseconds);
@@ -424,7 +424,7 @@ export class Helper {
         if (phone == null) {
             return [];
         }
-        
+
         let phoneTemp = phone;
         phoneTemp = phoneTemp.trim();
         const countryCodes = Countries.map(x => x.PhoneCode);
@@ -440,12 +440,12 @@ export class Helper {
                 phoneTemp = phoneTemp.replace('-', '');
             }
         }
-    
+
         if (phonePrefix) {
             possiblePhoneNumbers.push(phonePrefix + phoneTemp);
             possiblePhoneNumbers.push(phonePrefix + "-" + phoneTemp);
             possiblePhoneNumbers.push(phoneTemp);
-    
+
         } else {
 
             var possibles = Countries.map(x => {
@@ -502,25 +502,25 @@ export class Helper {
     public static generateDownloadFolderPath = async() => {
 
         var timestamp = TimeHelper.timestamp(new Date());
-        var tempDownloadFolder = ConfigurationManager.DownloadTemporaryFolder();
+        var tempDownloadFolder = ConfigurationManager.DownloadTemporaryFolder;
         var downloadFolderPath = path.join(tempDownloadFolder, timestamp);
 
         await fs.promises.mkdir(downloadFolderPath, { recursive: true });
 
         return downloadFolderPath;
     };
-    
+
     public static createTempDownloadFolder = async() => {
-        var tempDownloadFolder = ConfigurationManager.DownloadTemporaryFolder();
+        var tempDownloadFolder = ConfigurationManager.DownloadTemporaryFolder;
         if (fs.existsSync(tempDownloadFolder)) {
             return tempDownloadFolder;
         }
         await fs.promises.mkdir(tempDownloadFolder, { recursive: true });
         return tempDownloadFolder;
     };
-    
+
     public static createTempUploadFolder = async() => {
-        var tempUploadFolder = ConfigurationManager.UploadTemporaryFolder();
+        var tempUploadFolder = ConfigurationManager.UploadTemporaryFolder;
         if (fs.existsSync(tempUploadFolder)) {
             return tempUploadFolder;
         }
@@ -534,7 +534,7 @@ export class Helper {
         var ext = extension.startsWith('.') ? extension : '.' + extension;
         return tmp + ext;
     };
-    
+
     public static getMimeType = (pathOrExtension: string) => {
         var mimeType = mime.lookup(pathOrExtension);
         if (!mimeType) {
@@ -542,7 +542,7 @@ export class Helper {
         }
         return mimeType;
     };
-    
+
     public static getValueForEitherKeys = (obj: any, keys: string[]): string => {
         const existingKeys = Object.keys(obj);
         for (var key of keys) {
