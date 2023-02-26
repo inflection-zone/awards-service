@@ -28,10 +28,11 @@ if (typeof process.env.NODE_ENV === 'undefined') {
 
 if (process.env.NODE_ENV === 'test') {
     logger.info('================================================');
-    logger.info('Environment   : ' + process.env.NODE_ENV);
-    logger.info('Database name : ' + process.env.DB_NAME);
-    logger.info('Database user : ' + process.env.DB_USER_NAME);
-    logger.info('Database host : ' + process.env.DB_HOST);
+    logger.info('Environment        : ' + process.env.NODE_ENV);
+    logger.info('Database Dialect   : ' + process.env.DB_DIALECT);
+    logger.info('Database name      : ' + process.env.DB_NAME);
+    logger.info('Database user      : ' + process.env.DB_USER_NAME);
+    logger.info('Database host      : ' + process.env.DB_HOST);
     logger.info('================================================');
 }
 
