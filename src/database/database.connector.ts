@@ -64,15 +64,20 @@ class DatabaseConnector {
         cache       : true,
     });
 
-    static initialize = () => {
-        this._source
-            .initialize()
-            .then(() => {
-                logger.info('Database connection has been established successfully.');
-            })
-            .catch(error => {
-                logger.error('Unable to connect to the database:' + error.message);
-            });
+    static initialize = (): Promise<boolean> => {
+        return new Promise((resolve, reject) => {
+            this._source
+                .initialize()
+                .then(() => {
+                    logger.info('Database connection has been established successfully.');
+                    resolve(true);
+                })
+                .catch(error => {
+                    logger.error('Unable to connect to the database:' + error.message);
+                    reject(false);
+                });
+        });
+
     };
 
 }

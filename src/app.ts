@@ -110,7 +110,7 @@ export default class Application {
             try {
                 const port = process.env.PORT;
                 const server = this._app.listen(port, () => {
-                    const serviceName = `${process.env.SERVICE_NAME} api' + '-' + ${process.env.NODE_ENV}`;
+                    const serviceName = `${process.env.SERVICE_NAME}-[${process.env.NODE_ENV}]`;
                     logger.info(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
                     this._app.emit("server_started");
                 });
@@ -126,7 +126,7 @@ export default class Application {
 }
 
 // process.on('exit', () => {
-//     logger.info("process.exit() method is fired");
+//     logger.info("process.exit() is called.");
 // });
 
 [
