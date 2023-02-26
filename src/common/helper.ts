@@ -10,7 +10,6 @@ import { Gender } from '../domain.types/miscellaneous/system.types';
 import { InputValidationError } from './input.validation.error';
 import { TimeHelper } from './time.helper';
 import Countries from './misc/countries';
-
 import genpass from 'generate-password';
 import bcrypt from 'bcryptjs';
 
@@ -366,11 +365,11 @@ export class Helper {
         return Promise.resolve();
     }
 
-    public static sleep = (miliseconds) => {
-        return new Promise((resolve) => {
-            setTimeout(resolve, miliseconds);
-        });
-    };
+    // public static sleep = (miliseconds) => {
+    //     return new Promise((resolve) => {
+    //         setTimeout(resolve, miliseconds);
+    //     });
+    // };
 
     public static isEmptyObject = (obj) => {
         return Object.keys(obj).length === 0 && obj.constructor === Object;

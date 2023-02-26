@@ -1,4 +1,5 @@
-import { MysqlClient as client } from './mysql.client';
+//import { MysqlClient as client } from './mysql.client';
+import { PostgresqlClient as client } from './postgresql.client';
 import { logger } from '../logger/logger';
 import { execSync } from 'child_process';
 
