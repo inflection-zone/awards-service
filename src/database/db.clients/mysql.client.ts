@@ -1,33 +1,33 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
-import { logger } from '../logger/logger';
-import { Config } from './database.config';
+import { logger } from '../../logger/logger';
+import { Config } from '../database.config';
 
 ////////////////////////////////////////////////////////////////
 
 export class MysqlClient {
 
-    public static createDb = async () => {
+    public createDb = async () => {
         try {
             //var query = `CREATE DATABASE ${config.database} CHARACTER SET utf8 COLLATE utf8_general_ci;`;
             const query = `CREATE DATABASE ${Config.database}`;
-            await MysqlClient.executeQuery(query);
+            await this.executeQuery(query);
             logger.info(`Database ${Config.database} created successfully!`);
         } catch (error) {
             logger.error(error.message);
         }
     };
 
-    public static dropDb = async () => {
+    public dropDb = async () => {
         try {
             const query = `DROP DATABASE IF EXISTS ${Config.database}`;
-            await MysqlClient.executeQuery(query);
+            await this.executeQuery(query);
         } catch (error) {
             logger.error(error.message);
         }
     };
 
-    public static executeQuery = (query): Promise<boolean> => {
+    public executeQuery = (query): Promise<unknown> => {
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return new Promise((resolve, reject) => {

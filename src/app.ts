@@ -8,7 +8,7 @@ import { logger } from './logger/logger';
 import { ConfigurationManager } from "./config/configuration.manager";
 import { Loader } from './startup/loader';
 import { Scheduler } from './startup/scheduler';
-import { DbClient } from './database/db.client';
+import { DbClient } from './database/db.clients/db.client';
 import { Seeder } from './startup/seeder';
 import { DBConnector } from "./database/database.connector";
 import { HttpLogger } from "./logger/HttpLogger";
