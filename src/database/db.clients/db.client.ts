@@ -1,16 +1,19 @@
-//import { MysqlClient as client } from './mysql.client';
-import { PostgresqlClient as client } from './postgresql.client';
-import { logger } from '../logger/logger';
+import { MysqlClient } from './mysql.client';
+import { PostgresqlClient } from './postgresql.client';
+import { logger } from '../../logger/logger';
 import { execSync } from 'child_process';
+import IDbClient from './db.client.interface';
 
 ////////////////////////////////////////////////////////////////////////
 
 export class DbClient {
 
+    static _client: IDbClient = process.env.DB_DIALECT === 'postgres' ? new PostgresqlClient() : new MysqlClient();
+
     //Creates DB if does not exist
     public static createDatabase = async () => {
         try {
-            await client.createDb();
+            await this._client.createDb();
             return true;
         } catch (error) {
             logger.error(error.message);
@@ -21,7 +24,7 @@ export class DbClient {
     //Drops DB if exists
     public static dropDatabase = async () => {
         try {
-            await client.dropDb();
+            await this._client.dropDb();
             return true;
         } catch (error) {
             logger.error(error.message);
@@ -32,7 +35,7 @@ export class DbClient {
     //Drops DB if exists
     public static executeQuery = async (query: string) => {
         try {
-            await client.executeQuery(query);
+            await this._client.executeQuery(query);
             return true;
         } catch (error) {
             logger.error(error.message);
