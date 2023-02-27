@@ -26,10 +26,10 @@ export class AwardPointRedemption {
     @Column({ type: 'integer', nullable: false, default: 0 })
     RedeemedPoints : number;
 
-    @Column({ type: 'string', length: 512, nullable: false })
+    @Column({ type: 'varchar', length: 512, nullable: false })
     Purpose : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Message : string;
 
     @Column({ type: 'date', nullable: false })

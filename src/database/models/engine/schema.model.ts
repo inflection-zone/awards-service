@@ -19,10 +19,10 @@ export class Schema {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
-    @Column({ type: 'string', length: 512, nullable: true })
+    @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
 
     @ManyToOne(() => Client, { nullable: true })

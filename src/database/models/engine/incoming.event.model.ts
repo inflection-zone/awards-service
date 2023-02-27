@@ -19,7 +19,7 @@ export class IncomingEvent {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
     @ManyToOne(() => IncomingEventType, (EventType) => EventType.Events)

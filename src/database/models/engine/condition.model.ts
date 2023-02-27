@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { LogicalOperator, CompositionOperator, MathematicalOperator, CompositionOperatorList, LogicalOperatorList, MathematicalOperatorList, ConditionOperandDataTypeList, OperandDataType } from "../../../domain.types/engine/enums";
+import { LogicalOperator, CompositionOperator, MathematicalOperator, OperandDataType } from "../../../domain.types/engine/enums";
 import {
     Column,
     Entity,
@@ -21,7 +21,7 @@ export class Condition {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
     @OneToOne(() => Rule, (rule) => rule.Condition)
@@ -30,13 +30,19 @@ export class Condition {
     @Column({ type: 'boolean', nullable: false, default: false })
     IsComposite : boolean;
 
-    @Column({ type: 'string', length: 256, nullable: true })
+    @Column({ type: 'varchar', length: 256, nullable: true })
     Fact : string;
 
-    @Column({ type: 'enum', enum: [...CompositionOperatorList, ...LogicalOperatorList, ...MathematicalOperatorList], nullable: false })
-    Operator : LogicalOperator | MathematicalOperator | CompositionOperator;
+    @Column({ type: 'enum', enum: LogicalOperator, nullable: false })
+    LogicalOperator : LogicalOperator;
 
-    @Column({ type: 'enum', enum: ConditionOperandDataTypeList, nullable: false })
+    @Column({ type: 'enum', enum: MathematicalOperator, nullable: false })
+    MathematicalOperator : MathematicalOperator;
+
+    @Column({ type: 'enum', enum: CompositionOperator, nullable: false })
+    CompositionOperator : CompositionOperator;
+
+    @Column({ type: 'enum', enum: OperandDataType, nullable: false })
     DataType : OperandDataType;
 
     @Column({ type: 'json', nullable: true })

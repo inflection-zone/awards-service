@@ -24,10 +24,10 @@ export class User extends Person {
     @JoinColumn()
     Client : Client;
 
-    @Column({ type: 'string', length: 16, nullable: false })
+    @Column({ type: 'varchar', length: 16, nullable: false })
     UserName : string;
 
-    @Column({ type: 'string', length: 1024, nullable: true })
+    @Column({ type: 'varchar', length: 1024, nullable: true })
     Password : string;
 
     @Column({ type: 'date', nullable: true })
