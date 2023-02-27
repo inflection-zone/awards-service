@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ContextType, ContextTypeList } from "../../../domain.types/engine/enums";
+import { ContextType } from "../../../domain.types/engine/enums";
 import {
     Column,
     Entity,
@@ -18,7 +18,7 @@ export class Context {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'enum', enum: ContextTypeList, nullable: false, default: ContextType.Person })
+    @Column({ type: 'enum', enum: ContextType, nullable: false, default: ContextType.Person })
     Type : ContextType;
 
     @Column({ type: 'uuid', nullable: true })

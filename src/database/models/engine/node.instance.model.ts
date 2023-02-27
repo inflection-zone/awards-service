@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ExecutionStatus, ExecutionStatusList } from "../../../domain.types/engine/enums";
+import { ExecutionStatus } from "../../../domain.types/engine/enums";
 import {
     Column,
     Entity,
@@ -7,6 +7,7 @@ import {
     OneToOne,
 } from 'typeorm';
 import { Rule } from "./rule.model";
+import { Node } from './node.model';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -16,13 +17,13 @@ export class NodeInstance extends Node {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
-    @Column({ type: 'string', length: 512, nullable: true })
+    @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
 
-    @Column({ type: 'enum', enum: ExecutionStatusList, nullable: false, default: ExecutionStatus.Pending })
+    @Column({ type: 'enum', enum: ExecutionStatus, nullable: false, default: ExecutionStatus.Pending })
     ExecutionStatus : ExecutionStatus;
 
     @Column({ type: 'uuid', nullable: false })
@@ -34,7 +35,7 @@ export class NodeInstance extends Node {
     @Column({ type: 'uuid', nullable: false })
     ContextId: string;
 
-    @Column({ type: 'datetime', nullable: true })
+    @Column({ type: 'timestamp', nullable: true })
     StatusUpdateTimestamp : Date;
 
     @OneToOne(() => Rule, { nullable: true })

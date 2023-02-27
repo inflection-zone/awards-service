@@ -8,7 +8,7 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
 } from 'typeorm';
-import { EventActionType, EventActionTypeList } from "../../../domain.types/engine/enums";
+import { EventActionType } from "../../../domain.types/engine/enums";
 import { Rule } from "./rule.model";
 import { EventActionParams } from "../../../domain.types/engine/event.action.params";
 
@@ -20,16 +20,16 @@ export class RuleAction {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'enum', enum: EventActionTypeList, nullable: false })
+    @Column({ type: 'enum', enum: EventActionType, nullable: false })
     ActionType : EventActionType;
 
     @OneToOne(() => Rule, (rule) => rule.Action, { nullable: true })
     ParentRule: Rule;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
-    @Column({ type: 'string', length: 512, nullable: true })
+    @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
 
     @Column({ type: 'simple-json', nullable: true })

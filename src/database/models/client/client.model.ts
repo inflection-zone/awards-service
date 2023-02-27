@@ -17,29 +17,29 @@ export class Client {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Code : string;
 
-    @Column({ type: 'string', length: 10, nullable: false, default: '+91' })
+    @Column({ type: 'varchar', length: 10, nullable: false, default: '+91' })
     CountryCode : string;
 
-    @Column({ type: 'string', length: 16, nullable: true })
+    @Column({ type: 'varchar', length: 16, nullable: true })
     Phone : string;
 
-    @Column({ type: 'string', length: 256, nullable: true })
+    @Column({ type: 'varchar', length: 256, nullable: true })
     @IsEmail()
     Email : string;
 
-    @Column({ type: 'string', length: 512, nullable: true })
+    @Column({ type: 'varchar', length: 512, nullable: true })
     Password : string;
 
     @Column({ type: 'boolean', nullable: false, default: false })
     IsPrivileged : boolean;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     ApiKey : string;
 
     @Column({ type: 'date', nullable: true })

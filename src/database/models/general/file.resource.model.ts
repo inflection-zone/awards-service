@@ -18,13 +18,13 @@ export class FileResource {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'string', length: 1024, nullable: false })
+    @Column({ type: 'varchar', length: 1024, nullable: false })
     StorageKey : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     OriginalFilename : string;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     MimeType : string;
 
     @Column({ type: 'boolean', nullable: false, default: false })
@@ -39,7 +39,7 @@ export class FileResource {
     @Column({ type: 'uuid', nullable: true })
     UploadedBy : User;
 
-    @Column('simple_array')
+    @Column('simple-json')
     Tags : string[];
 
     @CreateDateColumn()

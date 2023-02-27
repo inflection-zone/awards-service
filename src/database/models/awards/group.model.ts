@@ -27,13 +27,13 @@ export class Group {
     @JoinColumn()
     Client : Client;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
-    @Column({ type: 'string', length: 512, nullable: true })
+    @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
 
-    @Column({ type: 'string', length: 1024, nullable: true })
+    @Column({ type: 'varchar', length: 1024, nullable: true })
     @IsUrl()
     ProfileImageUrl : string;
 

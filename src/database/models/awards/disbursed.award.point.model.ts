@@ -41,7 +41,7 @@ export class DisbursedAwardPoint {
     @Column({ type: 'date', nullable: false })
     AwardedDate : Date;
 
-    @Column({ type: 'string', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: false })
     Message : string;
 
     @CreateDateColumn()
