@@ -6,37 +6,26 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
-    JoinColumn,
-    ManyToOne,
     ManyToMany,
 } from 'typeorm';
-import { Client } from "../client/client.model";
-import { Person } from "../person/person.model";
-import { Role } from "./role.model";
+import { Role } from "../user/role.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-@Entity({ name: 'users' })
-export class User extends Person {
+@Entity({ name: 'privileges' })
+export class Privilege {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @ManyToOne(() => Client, { nullable: true })
-    @JoinColumn()
-    Client : Client;
-
-    @Column({ type: 'varchar', length: 16, nullable: false })
-    UserName : string;
+    @Column({ type: 'varchar', length: 32, nullable: false, unique: true })
+    Name : string;
 
     @Column({ type: 'varchar', length: 1024, nullable: true })
-    Password : string;
+    Description : string;
 
-    @ManyToMany(() => Role, (role) => role.Users)
+    @ManyToMany(() => Role, (role) => role.Privileges)
     Roles: Role[];
-
-    @Column({ type: 'date', nullable: true })
-    LastLogin : Date;
 
     @CreateDateColumn()
     CreatedAt : Date;
