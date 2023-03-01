@@ -28,6 +28,8 @@ import { Schema } from './models/engine/schema.model';
 import { FileResource } from "./models/general/file.resource.model";
 import { Person } from './models/person/person.model';
 import { UserLoginSession } from "./models/user/user.login.session.model";
+import { Role } from "./models/user/role.model";
+import { Privilege } from "./models/user/privilege.model";
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -72,7 +74,7 @@ class DBLogger implements Logger {
 class DatabaseConnector {
 
     static _basePath = path.join(process.cwd(), 'src/database/models').replace(/\\/g, '/');
-    
+
     // static _folders = this.getFoldersRecursively(this._basePath)
     //     .map(y => y.replace(/\\/g, '/'))
     //     .map(x => '"' + x + '/*.js"');
@@ -113,6 +115,8 @@ class DatabaseConnector {
             Person,
             User,
             UserLoginSession,
+            Role,
+            Privilege,
         ],
         migrations  : [],
         subscribers : [],
