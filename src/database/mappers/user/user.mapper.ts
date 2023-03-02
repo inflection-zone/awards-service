@@ -22,7 +22,7 @@ export class UserMapper {
             Email       : user.Email,
             Gender      : user.Gender,
             BirthDate   : user.BirthDate,
-            Role        : RoleMapper.toResponseDto(user.Roles.length > 0 ? user.Roles[0] : null),
+            Role        : RoleMapper.toResponseDto(user.Roles?.length > 0 ? user.Roles[0] : null),
             Client      : ClientMapper.toResponseDto(user.Client),
             CreatedAt   : user.CreatedAt,
             UpdatedAt   : user.UpdatedAt
