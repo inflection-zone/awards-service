@@ -147,8 +147,8 @@ export class Seeder {
                 };
                 client = await this._clientService.create(model);
                 logger.info(JSON.stringify(client, null, 2));
-                clients.push(client);
             }
+            clients.push(client);
         }
         return clients;
 
