@@ -3,9 +3,8 @@ import { BaseSearchFilters, BaseSearchResults } from "../miscellaneous/base.sear
 import { uuid } from "../miscellaneous/system.types";
 
 export interface PrivilegeCreateModel {
-    id         : uuid;
-    Name       : string;
-    Description: string;
+    Name        : string;
+    Description?: string;
 }
 
 export interface PrivilegeUpdateModel {

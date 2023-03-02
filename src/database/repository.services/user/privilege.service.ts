@@ -8,6 +8,7 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { BaseService } from '../base.service';
 import { PrivilegeMapper } from '../../mappers/user/privilege.mapper';
+import { Role } from '../../models/user/role.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -16,6 +17,8 @@ export class PrivilegeService extends BaseService {
     //#region Repositories
 
     _privilegeRepository: Repository<Privilege> = Source.getRepository(Privilege);
+
+    _roleRepository: Repository<Role> = Source.getRepository(Role);
 
     //#endregion
 
@@ -41,6 +44,27 @@ export class PrivilegeService extends BaseService {
                 }
             });
             return PrivilegeMapper.toResponseDto(role);
+        } catch (error) {
+            logger.error(error.message);
+            throw new ApiError(error.message, 500);
+        }
+    };
+
+    public addToRole = async (privilegeId: uuid, roleId: number): Promise<PrivilegeResponseDto> => {
+        try {
+            var privilege = await this._privilegeRepository.findOne({
+                where : {
+                    id : privilegeId
+                }
+            });
+            var role = await this._roleRepository.findOne({
+                where : {
+                    id : roleId
+                }
+            });
+            privilege.Roles.push(role);
+            const privilege_ = await this._privilegeRepository.save(privilege);
+            return PrivilegeMapper.toResponseDto(privilege_);
         } catch (error) {
             logger.error(error.message);
             throw new ApiError(error.message, 500);
