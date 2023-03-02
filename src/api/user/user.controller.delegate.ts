@@ -59,8 +59,6 @@ export class UserControllerDelegate {
         await validator.validateSearchRequest(query);
         var filters: UserSearchFilters = this.getSearchFilters(query);
         var searchResults: UserSearchResults = await this._service.search(filters);
-        var items = searchResults.Items.map(x => this.getPublicDto(x));
-        searchResults.Items = items;
         return searchResults;
     };
 
@@ -139,15 +137,15 @@ export class UserControllerDelegate {
     changePassword = async (requestBody) => {
         await validator.validatePasswordChangeRequest(requestBody);
         const passwordResetModel = await this.getPasswordChangeModel(requestBody);
+        const existingHashedPassword = await this._service.getUserHashedPassword(requestBody.CurrentUserId);
         const validPassword = Helper.compareHashedPassword(
             passwordResetModel.OldPassword,
-            passwordResetModel.User.Password);
+            existingHashedPassword);
         if (!validPassword) {
             ErrorHandler.throwUnauthorizedUserError('Invalid old password!');
         }
-        const hashedPassword = Helper.generateHashedPassword(passwordResetModel.NewPassword);
-
-        return await this._service.resetPassword(passwordResetModel.User.id, hashedPassword);
+        const newHashedPassword = Helper.generateHashedPassword(passwordResetModel.NewPassword);
+        return await this._service.resetPassword(passwordResetModel.User.id, newHashedPassword);
     };
 
     // sendOtp = async (requestBody) => {

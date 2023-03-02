@@ -1,14 +1,14 @@
 import z from 'zod';
 import express from 'express';
 import * as apikeyGenerator from 'uuid-apikey';
-import { ClientCreateModel, ClientUpdateModel, ClientVerificationModel } from '../../domain.types/client.domain.types';
+import { ClientCreateModel, ClientUpdateModel, ClientVerificationModel } from '../../domain.types/client/client.domain.types';
 import {
     ErrorHandler
 } from '../../common/error.handler';
 import { Helper } from '../../common/helper';
 import { TimeHelper } from '../../common/time.helper';
 import { DurationType } from '../../domain.types/miscellaneous/time.types';
-import { ClientSearchFilters } from '../../domain.types/client.domain.types';
+import { ClientSearchFilters } from '../../domain.types/client/client.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

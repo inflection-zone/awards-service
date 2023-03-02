@@ -16,7 +16,7 @@ export class RoleMapper {
             id          : role.id,
             Name        : role.Name,
             Description : role.Description,
-            Privileges  : role.Privileges.map(x => PrivilegeMapper.toResponseDto(x)),
+            Privileges  : role.Privileges?.map(x => PrivilegeMapper.toResponseDto(x)),
             CreatedAt   : role.CreatedAt,
             UpdatedAt   : role.UpdatedAt
         };

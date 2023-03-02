@@ -11,7 +11,7 @@ import { RoleService } from "../database/repository.services/user/role.service";
 import { FileResourceService } from "../database/repository.services/general/file.resource.service";
 import { PrivilegeService } from "../database/repository.services/user/privilege.service";
 import { RoleCreateModel } from "../domain.types/user/role.domain.types";
-import { ClientResponseDto } from "../domain.types/client.domain.types";
+import { ClientResponseDto } from "../domain.types/client/client.domain.types";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -162,7 +162,7 @@ export class Seeder {
                 Description : 'Administrator of the Awards service'
             },
             {
-                Name        : 'ClientModerator',
+                Name        : 'ContentModerator',
                 Description : 'The content moderator representing a particular client.'
             }
         ];
