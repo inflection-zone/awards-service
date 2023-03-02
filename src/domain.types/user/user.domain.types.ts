@@ -1,9 +1,11 @@
 
 import { BaseSearchFilters, BaseSearchResults } from "../miscellaneous/base.search.types";
 import { Gender, uuid } from "../miscellaneous/system.types";
+import { RoleResponseDto } from "./role.domain.types";
 
 export interface UserCreateModel {
-    // RoleId     : number;
+    RoleId     : number;
+    ClientId?  : uuid;
     UserName   : string;
     Prefix     : string;
     FirstName  : string;
@@ -31,6 +33,8 @@ export interface UserUpdateModel {
 
 export interface UserResponseDto {
     id         : uuid;
+    ClientId   : uuid;
+    Role      ?: RoleResponseDto;
     UserName   : string;
     Prefix     : string;
     FirstName  : string;

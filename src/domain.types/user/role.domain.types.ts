@@ -3,7 +3,6 @@ import { BaseSearchFilters, BaseSearchResults } from "../miscellaneous/base.sear
 import { PrivilegeResponseDto } from "./privilege.domain.types";
 
 export interface RoleCreateModel {
-    id         : number;
     Name       : string;
     Description: string;
 }
