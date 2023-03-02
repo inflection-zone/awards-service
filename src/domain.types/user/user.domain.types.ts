@@ -1,4 +1,5 @@
 
+import { ClientResponseDto } from "../client/client.domain.types";
 import { BaseSearchFilters, BaseSearchResults } from "../miscellaneous/base.search.types";
 import { Gender, uuid } from "../miscellaneous/system.types";
 import { RoleResponseDto } from "./role.domain.types";
@@ -33,7 +34,7 @@ export interface UserUpdateModel {
 
 export interface UserResponseDto {
     id         : uuid;
-    ClientId   : uuid;
+    Client    ?: ClientResponseDto;
     Role      ?: RoleResponseDto;
     UserName   : string;
     Prefix     : string;
@@ -44,6 +45,8 @@ export interface UserResponseDto {
     Email      : string;
     Gender     : Gender;
     BirthDate  : Date;
+    CreatedAt  : Date;
+    UpdatedAt  : Date;
 }
 
 export interface UserSearchFilters extends BaseSearchFilters {

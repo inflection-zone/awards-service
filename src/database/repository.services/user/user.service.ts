@@ -7,9 +7,12 @@ import { Helper } from '../../../common/helper';
 import { TimeHelper } from '../../../common/time.helper';
 import { DurationType } from '../../../domain.types/miscellaneous/time.types';
 import { FindManyOptions, Like, Repository } from 'typeorm';
-import { UserCreateModel, UserSearchFilters, UserUpdateModel } from '../../../domain.types/user/user.domain.types';
+import { UserCreateModel, UserResponseDto, UserSearchFilters, UserSearchResults, UserUpdateModel } from '../../../domain.types/user/user.domain.types';
 import { logger } from '../../../logger/logger';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import { Client } from '../../../database/models/client/client.model';
+import { UserMapper } from '../../../database/mappers/user/user.mapper';
+import { Role } from '../../../database/models/user/role.model';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,35 +22,72 @@ export class UserService {
 
     _userRepository: Repository<User> = Source.getRepository(User);
 
+    _clientRepository: Repository<Client> = Source.getRepository(Client);
+
+    _roleRepository: Repository<Role> = Source.getRepository(Role);
+
     _userLoginSessionRepository: Repository<UserLoginSession> = Source.getRepository(UserLoginSession);
 
     //#endregion
 
-    create = async (createModel: UserCreateModel) => {
+    create = async (createModel: UserCreateModel): Promise<UserResponseDto> => {
         try {
             const user = new User();
+            var client : Client = null;
+            if (createModel.ClientId) {
+                client = await this._clientRepository.findOne({
+                    where : {
+                        id : createModel.ClientId
+                    }
+                });
+                delete createModel.ClientId;
+            }
+            var role : Role = null;
+            if (createModel.RoleId) {
+                role = await this._roleRepository.findOne({
+                    where : {
+                        id : createModel.RoleId
+                    }
+                });
+                delete createModel.RoleId;
+            }
             Object.assign(user, createModel);
+            user.Client = client;
+            user.Roles = [role];
             var record = await this._userRepository.save(user);
-            return await this.getById(record.id);
+            return UserMapper.toResponseDto(record);
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to create user!', error);
         }
     };
 
-    getById = async (id) => {
+    getById = async (id): Promise<UserResponseDto> => {
         try {
-            var user = await this._userRepository.findOne({
+            var record = await this._userRepository.findOne({
                 where : {
                     id : id
                 }
             });
-            return user;
+            return UserMapper.toResponseDto(record);
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to retrieve user!', error);
         }
     };
 
-    exists = async (id) => {
+    getUserHashedPassword = async (id: uuid): Promise<string> => {
+        try {
+            var record = await this._userRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            return record.Password;
+        } catch (error) {
+            ErrorHandler.throwDbAccessError('DB Error: Unable to retrieve user!', error);
+        }
+    };
+
+    exists = async (id: uuid): Promise<boolean> => {
         try {
             const record = await this._userRepository.findOne({
                 where : {
@@ -60,7 +100,7 @@ export class UserService {
         }
     };
 
-    search = async (filters: UserSearchFilters) => {
+    search = async (filters: UserSearchFilters): Promise<UserSearchResults> => {
         try {
 
             var search : FindManyOptions<User> = {
@@ -75,15 +115,20 @@ export class UserService {
                     LastName        : true,
                     Gender          : true,
                     UserName        : true,
-                    CreatedAt       : true,
                     ProfileImageUrl : true,
                     BirthDate       : true,
                     CountryCode     : true,
                     Phone           : true,
                     Email           : true,
+                    CreatedAt       : true,
+                    UpdatedAt       : true,
                     Client          : {
                         id   : true,
                         Code : true,
+                        Name : true,
+                    },
+                    Roles : {
+                        id   : true,
                         Name : true,
                     }
                 }
@@ -145,7 +190,7 @@ export class UserService {
                 ItemsPerPage   : limit,
                 Order          : order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy      : orderByColumn,
-                Items          : list,
+                Items          : list.map(x => UserMapper.toResponseDto(x)),
             };
 
             return searchResults;

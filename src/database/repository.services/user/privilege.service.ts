@@ -55,6 +55,12 @@ export class PrivilegeService extends BaseService {
             var privilege = await this._privilegeRepository.findOne({
                 where : {
                     id : privilegeId
+                },
+                select : {
+                    id          : true,
+                    Name        : true,
+                    Description : true,
+                    Roles       : true,
                 }
             });
             var role = await this._roleRepository.findOne({
@@ -62,6 +68,9 @@ export class PrivilegeService extends BaseService {
                     id : roleId
                 }
             });
+            if (!privilege.Roles) {
+                privilege.Roles = [];
+            }
             privilege.Roles.push(role);
             const privilege_ = await this._privilegeRepository.save(privilege);
             return PrivilegeMapper.toResponseDto(privilege_);

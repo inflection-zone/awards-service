@@ -1,10 +1,10 @@
 import {
     BaseSearchFilters,
     BaseSearchResults
-} from "./miscellaneous/base.search.types";
+} from "../miscellaneous/base.search.types";
 import {
     uuid
-} from "./miscellaneous/system.types";
+} from "../miscellaneous/system.types";
 
 export interface ClientCreateModel {
     Name         : string;

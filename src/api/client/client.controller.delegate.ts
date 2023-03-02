@@ -21,7 +21,7 @@ import {
     ClientUpdateModel,
     ClientSearchFilters,
     ClientSearchResults
-} from '../../domain.types/client.domain.types';
+} from '../../domain.types/client/client.domain.types';
 import { generate } from 'generate-password';
 
 ///////////////////////////////////////////////////////////////////////////////////////

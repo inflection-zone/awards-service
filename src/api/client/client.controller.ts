@@ -8,7 +8,7 @@ import {
 import {
     BaseController
 } from '../base.controller';
-import { ClientApiKeyResponseDto } from '../../domain.types/client.domain.types';
+import { ClientApiKeyResponseDto } from '../../domain.types/client/client.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 

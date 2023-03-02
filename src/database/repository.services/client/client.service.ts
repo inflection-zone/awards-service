@@ -1,5 +1,5 @@
 import { Client } from '../../models/client/client.model';
-import { ClientCreateModel, ClientResponseDto, ClientSearchFilters, ClientSearchResults, ClientUpdateModel, ClientVerificationModel, ClientApiKeyResponseDto } from '../../../domain.types/client.domain.types';
+import { ClientCreateModel, ClientResponseDto, ClientSearchFilters, ClientSearchResults, ClientUpdateModel, ClientVerificationModel, ClientApiKeyResponseDto } from '../../../domain.types/client/client.domain.types';
 import { logger } from '../../../logger/logger';
 import { ApiError } from '../../../common/api.error';
 import { CurrentClient } from '../../../domain.types/miscellaneous/current.client';
