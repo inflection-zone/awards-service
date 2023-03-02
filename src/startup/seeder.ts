@@ -56,16 +56,15 @@ export class Seeder {
                 if (role == null) {
                     continue;
                 }
-                // for (const privilege of privileges) {
-                //     const exists = await this._privilegeService.hasPrivilegeForRole(role.id, privilege);
-                //     if (!exists) {
-                //         await this._privilegeService.create({
-                //             RoleId    : role.id,
-                //             RoleName  : role.RoleName,
-                //             Privilege : privilege,
-                //         });
-                //     }
-                // }
+                for (const privilege of privileges) {
+                    var privilegeDto = await this._privilegeService.getByPrivilegeName(privilege);
+                    if (!privilegeDto) {
+                        privilegeDto = await this._privilegeService.create({
+                            Name : privilege,
+                        });
+                    }
+                    await this._privilegeService.addToRole(privilegeDto.id, role.id);
+                }
             }
         } catch (error) {
             logger.info('Error occurred while seeding role-privileges!');
