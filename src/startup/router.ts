@@ -1,5 +1,7 @@
 import express from "express";
 import { logger } from "../logger/logger";
+import { register as registerUserRoutes } from "../api/user/user.routes";
+import { register as registerClientRoutes } from "../api/client/client.routes";
 
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +23,9 @@ export class Router {
                         message : `Careplan Service API [Version ${process.env.API_VERSION}]`,
                     });
                 });
+
+                registerUserRoutes(this._app);
+                registerClientRoutes(this._app);
 
                 resolve(true);
 

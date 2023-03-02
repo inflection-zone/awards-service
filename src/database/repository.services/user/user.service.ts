@@ -30,6 +30,31 @@ export class UserService {
 
     //#endregion
 
+    _selectAll = {
+        id              : true,
+        Prefix          : true,
+        FirstName       : true,
+        LastName        : true,
+        Gender          : true,
+        UserName        : true,
+        ProfileImageUrl : true,
+        BirthDate       : true,
+        CountryCode     : true,
+        Phone           : true,
+        Email           : true,
+        CreatedAt       : true,
+        UpdatedAt       : true,
+        Client          : {
+            id   : true,
+            Code : true,
+            Name : true,
+        },
+        Roles : {
+            id   : true,
+            Name : true,
+        }
+    };
+
     create = async (createModel: UserCreateModel): Promise<UserResponseDto> => {
         try {
             const user = new User();
@@ -66,7 +91,12 @@ export class UserService {
             var record = await this._userRepository.findOne({
                 where : {
                     id : id
-                }
+                },
+                relations : {
+                    Client : true,
+                    Roles  : true
+                },
+                select : this._selectAll
             });
             return UserMapper.toResponseDto(record);
         } catch (error) {
@@ -108,30 +138,7 @@ export class UserService {
                 },
                 where : {
                 },
-                select : {
-                    id              : true,
-                    Prefix          : true,
-                    FirstName       : true,
-                    LastName        : true,
-                    Gender          : true,
-                    UserName        : true,
-                    ProfileImageUrl : true,
-                    BirthDate       : true,
-                    CountryCode     : true,
-                    Phone           : true,
-                    Email           : true,
-                    CreatedAt       : true,
-                    UpdatedAt       : true,
-                    Client          : {
-                        id   : true,
-                        Code : true,
-                        Name : true,
-                    },
-                    Roles : {
-                        id   : true,
-                        Name : true,
-                    }
-                }
+                select : this._selectAll
             };
 
             if (filters.ClientId) {
