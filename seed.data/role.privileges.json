@@ -28,7 +28,7 @@
         ]
     },
     {
-        "Role": "Moderator",
+        "Role": "ContentModerator",
         "Privileges": [
             "User.Create",
             "User.GetById",
