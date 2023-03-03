@@ -82,6 +82,16 @@ export class RoleService extends BaseService {
         }
     };
 
+    public getAll = async (): Promise<RoleResponseDto[]> =>{
+        try {
+            var roles = await this._roleRepository.find();
+            return roles.map(x => RoleMapper.toResponseDto(x));
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to get role record!', error);
+        }
+    };
+
     public update = async (id: number, updateModel: RoleUpdateModel): Promise<RoleResponseDto> => {
         try {
             const role = await this._roleRepository.findOne({

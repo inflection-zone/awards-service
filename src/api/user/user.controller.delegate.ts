@@ -12,6 +12,7 @@ import {
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { Loader } from '../../startup/loader';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
+import { RoleService } from '../../database/repository.services/user/role.service';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,8 +22,11 @@ export class UserControllerDelegate {
 
     _service: UserService = null;
 
+    _roleService: RoleService = null;
+
     constructor() {
         this._service = new UserService();
+        this._roleService = new RoleService();
     }
 
     //#endregion
@@ -175,6 +179,11 @@ export class UserControllerDelegate {
         await this._service.invalidateUserLoginSession(sessionId);
     };
 
+    getRoleTypes = async () => {
+        const roles = await this._roleService.getAll();
+        return roles;
+    };
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     getSearchFilters = (query) => {
@@ -194,10 +203,6 @@ export class UserControllerDelegate {
         var lastName = query.lastName ? query.lastName : null;
         if (lastName != null) {
             filters['LastName'] = lastName;
-        }
-        var biocubeId = query.biocubeId ? query.biocubeId : null;
-        if (biocubeId != null) {
-            filters['BiocubeId'] = biocubeId;
         }
         var gender = query.gender ? query.gender : null;
         if (gender != null) {

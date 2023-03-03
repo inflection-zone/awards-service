@@ -35,7 +35,6 @@ export class UserValidator {
     static validateSearchRequest = async (query) => {
         try {
             const schema = z.object({
-                biocubeId           : z.string().max(16).optional(),
                 prefix              : z.string().max(16).optional(),
                 firstName           : z.string().max(64).optional(),
                 lastName            : z.string().max(64).optional(),
@@ -198,7 +197,6 @@ export class UserValidator {
         }
         requestBody.Password = Helper.generateHashedPassword(password);
 
-        //NOTE: please note that we are keeping user-name same as that of biocube id
         var userName = requestBody.UserName;
         if (!userName) {
             userName = await userService.generateUserNameIfDoesNotExist(requestBody.UserName);
@@ -213,7 +211,7 @@ export class UserValidator {
 
         var userWithUserName = await userService.getUserWithUserName(requestBody.UserName);
         if (userWithUserName) {
-            ErrorHandler.throwDuplicateUserError(`User with user-name/biocube-id ${requestBody.UserName} already exists!`);
+            ErrorHandler.throwDuplicateUserError(`User with user-name ${requestBody.UserName} already exists!`);
         }
 
         var userWithEmail = await userService.getUserWithEmail(requestBody.Email);
@@ -273,7 +271,7 @@ export class UserValidator {
             var userName = requestBody.BiocubeId ?? requestBody.UserName;
             var userWithUserName = await userService.getUserWithUserName(userName);
             if (userWithUserName && user.id !== userWithUserName.id) {
-                ErrorHandler.throwDuplicateUserError(`Other user with user-name/biocube-id ${requestBody.UserName} already exists!`);
+                ErrorHandler.throwDuplicateUserError(`Other user with user-name ${requestBody.UserName} already exists!`);
             }
             updateModel.BiocubeId = requestBody.BiocubeId;
             updateModel.UserName = requestBody.UserName;

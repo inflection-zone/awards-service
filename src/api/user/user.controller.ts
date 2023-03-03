@@ -130,4 +130,15 @@ export class UserController extends BaseController {
         }
     };
 
+    getRoleTypes = async (request: express.Request, response: express.Response): Promise <void> => {
+        try {
+            await this.authorize('User.GetRoleTypes', request, response, false);
+            const roleTypes = await this._delegate.getRoleTypes();
+            const message = 'Role types retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, roleTypes);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
 }
