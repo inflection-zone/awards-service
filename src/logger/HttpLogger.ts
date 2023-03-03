@@ -11,18 +11,27 @@ const expressLoggerFunc = (
     next: express.NextFunction) => {
 
     const start = Date.now();
-
+    const ips = [
+        request.header('x-forwarded-for') || request.socket.remoteAddress
+    ];
     response.on('finish', () => {
         const elapsed = Date.now() - start;
         const txt = {
-            method   : request.method,
-            url      : request.originalUrl,
-            status   : response.statusCode,
-            duration : `${elapsed}ms`,
-            headers  : request.headers,
-            body     : request.body,
-            response : response.json(),
-            ips      : request.ip,
+            method        : request.method,
+            url           : request.originalUrl,
+            params        : request.params,
+            query         : request.query,
+            client        : request ? request.currentClient : null,
+            user          : request ? request.currentUser : null,
+            context       : request ? request.context : null,
+            status        : response.statusCode,
+            statusMessage : response.statusMessage,
+            duration      : `${elapsed}ms`,
+            headers       : request.headers,
+            requestBody   : request.body,
+            ips           : request && request.ips.length > 0 ? request.ips : ips,
+            contentType   : response.contentType,
+            statusCode    : response.statusCode,
         };
         logger.info(JSON.stringify(txt, null, 2));
     });
