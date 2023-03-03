@@ -67,6 +67,138 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get user role types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {\r",
+							"    var jsonRes = pm.response.json();\r",
+							"    const data = jsonRes.Data;\r",
+							"    for(var i = 0; i < data.length; i++)\r",
+							"    {\r",
+							"        var role = data[i];\r",
+							"        const role_id = role.Name.toUpperCase() + \"_ROLE_ID\";\r",
+							"        pm.environment.set(role_id, role.id);\r",
+							"    }\r",
+							"}\r",
+							"catch (error) {\r",
+							"    console.log(error.message);\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Request is successfull\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonRes = pm.response.json();\r",
+							"    pm.expect(jsonRes.Status).to.eql('success');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{X_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/users/role-types",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"users",
+						"role-types"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {\r",
+							"    var jsonRes = pm.response.json();\r",
+							"    pm.environment.set(\"USER_ID\", jsonRes.Data.id);\r",
+							"}\r",
+							"catch (error) {\r",
+							"    console.log(error.message);\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Request is successfull\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    var jsonRes = pm.response.json();\r",
+							"    pm.expect(jsonRes.Status).to.eql('success');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{X_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"RoleId\"      : {{CONTENTMODERATOR_ROLE_ID}},\r\n            \"Prefix\"      : \"Mr.\",\r\n            \"UserName\"    : \"kk123400\",\r\n            \"FirstName\"   : \"Kiran\",\r\n            \"LastName\"    : \"Kharade\",\r\n            \"CountryCode\" : \"+91\",\r\n            \"Phone\"       : \"9876543212\",\r\n            \"Email\"       : \"kiran.a.kharade@inflectionzone.com\",\r\n            \"Gender\"      : \"Male\",\r\n            \"BirthDate\"   : \"01-01-1975\",\r\n            \"Password\"    : \"Test@123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/users",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -24,14 +24,13 @@ const expressLoggerFunc = (
             client        : request ? request.currentClient : null,
             user          : request ? request.currentUser : null,
             context       : request ? request.context : null,
-            status        : response.statusCode,
+            statusCode    : response.statusCode,
             statusMessage : response.statusMessage,
             duration      : `${elapsed}ms`,
             headers       : request.headers,
             requestBody   : request.body,
             ips           : request && request.ips.length > 0 ? request.ips : ips,
-            contentType   : response.contentType,
-            statusCode    : response.statusCode,
+            contentType   : response.type,
         };
         logger.info(JSON.stringify(txt, null, 2));
     });
