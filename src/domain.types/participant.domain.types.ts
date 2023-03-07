@@ -7,45 +7,48 @@ import {
 } from "./miscellaneous/system.types";
 type Gender = "male" | "female";
 export interface ParticipantCreateModel {
-    ClientId ? : uuid;
-    FirstName ? : string;
-    LastName ? : string;
-    Phone ? : string;
-    Email ? : string;
-    Gender: Gender;
-    BirthDate ? : Date;
+    ClientId        : uuid;
+    ReferenceId     : string | number;
+    FirstName ?     : string;
+    LastName  ?     : string;
+    Phone     ?     : string;
+    Email     ?     : string;
+    Gender          : Gender;
+    BirthDate ?     : Date;
 }
 
 export interface ParticipantUpdateModel {
-    ClientId ? : uuid;
-    FirstName ? : string;
-    LastName ? : string;
-    Phone ? : string;
-    Email ? : string;
-    Gender ? : Gender;
-    BirthDate ? : Date;
+    ClientId       ?: uuid;
+    ReferenceId    ?: string | number;
+    FirstName ?: string;
+    LastName  ?: string;
+    Phone     ?: string;
+    Email     ?: string;
+    Gender    ?: Gender;
+    BirthDate ?: Date;
 }
 
-export interface ParticipantDto {
-    id: uuid;
-    ClientId: uuid;
-    FirstName: string;
-    LastName: string;
-    Phone: string;
-    Email: string;
-    Gender: Gender;
-    BirthDate: Date;
-
+export interface ParticipantResponseDto {
+    id         : uuid;
+    ClientId   : uuid;
+    ReferenceId: string | number;
+    FirstName  : string;
+    LastName   : string;
+    Phone      : string;
+    Email      : string;
+    Gender     : Gender;
+    BirthDate  : Date;
 }
 
 export interface ParticipantSearchFilters extends BaseSearchFilters {
-    ClientId ? : uuid;
-    FirstName ? : string;
-    LastName ? : string;
-    Gender ? : Gender;
-    BirthDate ? : Date;
+    ClientId    ?: uuid;
+    ReferenceId ?: string | number;
+    FirstName   ?: string;
+    LastName    ?: string;
+    Gender      ?: Gender;
+    BirthDate   ?: Date;
 }
 
 export interface ParticipantSearchResults extends BaseSearchResults {
-    Items: ParticipantDto[];
+    Items: ParticipantResponseDto[];
 }

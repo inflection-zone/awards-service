@@ -2,13 +2,11 @@ import z from 'zod';
 import express from 'express';
 import * as apikeyGenerator from 'uuid-apikey';
 import { ClientCreateModel, ClientUpdateModel, ClientVerificationModel } from '../../domain.types/client/client.domain.types';
-import {
-    ErrorHandler
-} from '../../common/error.handler';
-import { Helper } from '../../common/helper';
-import { TimeHelper } from '../../common/time.helper';
+import { ErrorHandler } from '../../common/handlers/error.handler';
+import { TimeUtils } from '../../common/utilities/time.utils';
 import { DurationType } from '../../domain.types/miscellaneous/time.types';
 import { ClientSearchFilters } from '../../domain.types/client/client.domain.types';
+import { StringUtils } from '../../common/utilities/string.utils';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +39,7 @@ export class ClientValidator {
                 parsed.ValidFrom = new Date();
             }
             if (!parsed.ValidTill) {
-                parsed.ValidTill = TimeHelper.addDuration(new Date(), 180, DurationType.Day);
+                parsed.ValidTill = TimeUtils.addDuration(new Date(), 180, DurationType.Day);
             }
             return parsed;
         } catch (error) {
@@ -143,7 +141,7 @@ export class ClientValidator {
             if (tokens[0].toLowerCase() !== 'basic') {
                 throw new Error('Invalid auth header formatting. Should be basic authorization.');
             }
-            const load = Helper.decodeFromBase64(tokens[1]);
+            const load = StringUtils.decodeFromBase64(tokens[1]);
             tokens = load.split(':');
             if (tokens.length < 2) {
                 throw new Error("Basic auth formatting error.");
@@ -170,7 +168,7 @@ export class ClientValidator {
             Code      : clientCode,
             Password  : password,
             ValidFrom : body.ValidFrom ?? new Date(),
-            ValidTill : body.ValidTill ?? TimeHelper.addDuration(new Date(), 180, DurationType.Day),
+            ValidTill : body.ValidTill ?? TimeUtils.addDuration(new Date(), 180, DurationType.Day),
         };
 
         return model;

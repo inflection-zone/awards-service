@@ -1,16 +1,16 @@
 import {
-    ParticipantDto
+    ParticipantResponseDto
 } from '../../domain.types/participant.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
 export class ParticipantMapper {
 
-    static toDto = (participant: any): ParticipantDto => {
+    static toDto = (participant: any): ParticipantResponseDto => {
         if (participant == null) {
             return null;
         }
-        const dto: ParticipantDto = {
+        const dto: ParticipantResponseDto = {
             id: participant.id,
             ClientId: participant.ClientId,
             FirstName: participant.FirstName,
