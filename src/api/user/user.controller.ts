@@ -1,5 +1,5 @@
 import express from 'express';
-import { ResponseHandler } from '../../common/response.handler';
+import { ResponseHandler } from '../../common/handlers/response.handler';
 import { UserControllerDelegate } from './user.controller.delegate';
 import { BaseController } from '../base.controller';
 

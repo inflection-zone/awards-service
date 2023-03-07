@@ -3,7 +3,7 @@ import express from 'express';
 import { IAuthenticator } from './authenticator.interface';
 import { injectable, inject } from "tsyringe";
 
-import { ResponseHandler } from '../common/response.handler';
+import { ResponseHandler } from '../common/handlers/response.handler';
 import { logger } from '../logger/logger';
 import { ApiError } from '../common/api.error';
 

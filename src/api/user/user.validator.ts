@@ -1,9 +1,10 @@
 import z from 'zod';
-import { Helper } from '../../common/helper';
-import { ErrorHandler } from '../../common/error.handler';
+import { ErrorHandler } from '../../common/handlers/error.handler';
 import { UserCreateModel } from '../../domain.types/user/user.domain.types';
 import { Gender } from '../../domain.types/miscellaneous/system.types';
 import { UserService } from '../../database/repository.services/user/user.service';
+import { StringUtils } from '../../common/utilities/string.utils';
+import { TypeUtils } from '../../common/utilities/type.utils';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -190,12 +191,12 @@ export class UserValidator {
 
         var password = requestBody.Password;
         if (!password) {
-            password = Helper.generatePassword();
+            password = StringUtils.generatePassword();
         }
         else {
             userService.validatePasswordCriteria(password);
         }
-        requestBody.Password = Helper.generateHashedPassword(password);
+        requestBody.Password = StringUtils.generateHashedPassword(password);
 
         var userName = requestBody.UserName;
         if (!userName) {
@@ -229,16 +230,16 @@ export class UserValidator {
 
         const updateModel: any = {};
 
-        if (Helper.hasProperty(requestBody, 'Prefix')) {
+        if (TypeUtils.hasProperty(requestBody, 'Prefix')) {
             updateModel.Prefix = requestBody.Prefix;
         }
-        if (Helper.hasProperty(requestBody, 'FirstName')) {
+        if (TypeUtils.hasProperty(requestBody, 'FirstName')) {
             updateModel.FirstName = requestBody.FirstName;
         }
-        if (Helper.hasProperty(requestBody, 'LastName')) {
+        if (TypeUtils.hasProperty(requestBody, 'LastName')) {
             updateModel.LastName = requestBody.LastName;
         }
-        if (Helper.hasProperty(requestBody, 'CountryCode') && Helper.hasProperty(requestBody, 'Phone')) {
+        if (TypeUtils.hasProperty(requestBody, 'CountryCode') && TypeUtils.hasProperty(requestBody, 'Phone')) {
             var userWithPhone = await userService.getUserWithPhone(requestBody.CountryCode, requestBody.Phone);
             if (userWithPhone) {
                 ErrorHandler.throwDuplicateUserError(`Other user with phone ${requestBody.CountryCode} ${requestBody.Phone.toString()} already exists!`);
@@ -246,28 +247,28 @@ export class UserValidator {
             updateModel.CountryCode = requestBody.CountryCode;
             updateModel.Phone = requestBody.Phone;
         }
-        else if (Helper.hasProperty(requestBody, 'Phone')) {
+        else if (TypeUtils.hasProperty(requestBody, 'Phone')) {
             var userWithPhone = await userService.getUserWithPhone(user.CountryCode, requestBody.Phone);
             if (userWithPhone && user.id !== userWithPhone.id) {
                 ErrorHandler.throwDuplicateUserError(`Other user with phone ${user.CountryCode} ${requestBody.Phone.toString()} already exists!`);
             }
             updateModel.Phone = requestBody.Phone;
         }
-        else if (Helper.hasProperty(requestBody, 'CountryCode')) {
+        else if (TypeUtils.hasProperty(requestBody, 'CountryCode')) {
             var userWithCountryCode = await userService.getUserWithPhone(requestBody.CountryCode, user.Phone);
             if (userWithCountryCode && user.id !== userWithCountryCode.id) {
                 ErrorHandler.throwDuplicateUserError(`Other user with phone ${requestBody.CountryCode} ${user.Phone.toString()} already exists!`);
             }
             updateModel.CountryCode = requestBody.CountryCode;
         }
-        if (Helper.hasProperty(requestBody, 'Email')) {
+        if (TypeUtils.hasProperty(requestBody, 'Email')) {
             var userWithEmail = await userService.getUserWithEmail(requestBody.Email);
             if (userWithEmail && user.id !== userWithEmail.id) {
                 ErrorHandler.throwDuplicateUserError(`Other user with email ${requestBody.Email} already exists!`);
             }
             updateModel.Email = requestBody.Email;
         }
-        if (Helper.hasProperty(requestBody, 'BiocubeId') || Helper.hasProperty(requestBody, 'UserName')) {
+        if (TypeUtils.hasProperty(requestBody, 'BiocubeId') || TypeUtils.hasProperty(requestBody, 'UserName')) {
             var userName = requestBody.BiocubeId ?? requestBody.UserName;
             var userWithUserName = await userService.getUserWithUserName(userName);
             if (userWithUserName && user.id !== userWithUserName.id) {
@@ -276,11 +277,11 @@ export class UserValidator {
             updateModel.BiocubeId = requestBody.BiocubeId;
             updateModel.UserName = requestBody.UserName;
         }
-        if (Helper.hasProperty(requestBody, 'Gender')) {
+        if (TypeUtils.hasProperty(requestBody, 'Gender')) {
             updateModel.Gender = requestBody.Gender;
         }
-        if (Helper.hasProperty(requestBody, 'Password')) {
-            updateModel.Password = Helper.generateHashedPassword(requestBody.Password);
+        if (TypeUtils.hasProperty(requestBody, 'Password')) {
+            updateModel.Password = StringUtils.generateHashedPassword(requestBody.Password);
         }
 
         return updateModel;

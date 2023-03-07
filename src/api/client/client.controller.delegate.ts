@@ -3,13 +3,13 @@ import {
 } from '../../database/repository.services/client/client.service';
 import {
     ErrorHandler
-} from '../../common/error.handler';
+} from '../../common/handlers/error.handler';
 import {
-    Helper
-} from '../../common/helper';
+    TypeUtils
+} from '../../common/utilities/type.utils';
 import {
     ApiError
-} from '../../common/api.error';
+} from '../../common/handlers/error.handler';
 import {
     ClientValidator as validator
 } from './client.validator';
@@ -134,31 +134,31 @@ export class ClientControllerDelegate {
 
         const updateModel: ClientUpdateModel = {};
 
-        if (Helper.hasProperty(requestBody, 'Name')) {
+        if (TypeUtils.hasProperty(requestBody, 'Name')) {
             updateModel.Name = requestBody.Name;
         }
-        if (Helper.hasProperty(requestBody, 'IsPrivileged')) {
+        if (TypeUtils.hasProperty(requestBody, 'IsPrivileged')) {
             updateModel.IsPrivileged = requestBody.IsPrivileged;
         }
-        if (Helper.hasProperty(requestBody, 'CountryCode')) {
+        if (TypeUtils.hasProperty(requestBody, 'CountryCode')) {
             updateModel.CountryCode = requestBody.CountryCode;
         }
-        if (Helper.hasProperty(requestBody, 'Phone')) {
+        if (TypeUtils.hasProperty(requestBody, 'Phone')) {
             updateModel.Phone = requestBody.Phone;
         }
-        if (Helper.hasProperty(requestBody, 'Email')) {
+        if (TypeUtils.hasProperty(requestBody, 'Email')) {
             updateModel.Email = requestBody.Email;
         }
-        if (Helper.hasProperty(requestBody, 'Password')) {
+        if (TypeUtils.hasProperty(requestBody, 'Password')) {
             updateModel.Password = requestBody.Password;
         }
-        if (Helper.hasProperty(requestBody, 'ApiKey')) {
+        if (TypeUtils.hasProperty(requestBody, 'ApiKey')) {
             updateModel.ApiKey = requestBody.ApiKey;
         }
-        if (Helper.hasProperty(requestBody, 'ValidFrom')) {
+        if (TypeUtils.hasProperty(requestBody, 'ValidFrom')) {
             updateModel.ValidFrom = requestBody.ValidFrom;
         }
-        if (Helper.hasProperty(requestBody, 'ValidTill')) {
+        if (TypeUtils.hasProperty(requestBody, 'ValidTill')) {
             updateModel.ValidTill = requestBody.ValidTill;
         }
 
@@ -219,8 +219,8 @@ export class ClientControllerDelegate {
         let cleanedName = '';
         const len = name.length;
         for (let i = 0; i < len; i++) {
-            if (Helper.isAlpha(name.charAt(i))) {
-                if (!Helper.isAlphaVowel(name.charAt(i))) {
+            if (TypeUtils.isAlpha(name.charAt(i))) {
+                if (!TypeUtils.isAlphaVowel(name.charAt(i))) {
                     cleanedName += name.charAt(i);
                 }
             }

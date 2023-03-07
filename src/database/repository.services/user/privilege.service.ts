@@ -2,7 +2,7 @@ import { Privilege } from '../../models/user/privilege.model';
 import { PrivilegeCreateModel, PrivilegeResponseDto, PrivilegeSearchFilters, PrivilegeSearchResults, PrivilegeUpdateModel } from '../../../domain.types/user/privilege.domain.types';
 import { logger } from '../../../logger/logger';
 import { ApiError } from '../../../common/api.error';
-import { ErrorHandler } from '../../../common/error.handler';
+import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Source } from '../../database.connector';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';

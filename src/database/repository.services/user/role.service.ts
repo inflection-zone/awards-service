@@ -2,7 +2,7 @@ import { Role } from '../../models/user/role.model';
 import { RoleCreateModel, RoleResponseDto, RoleSearchFilters, RoleSearchResults, RoleUpdateModel } from '../../../domain.types/user/role.domain.types';
 import { logger } from '../../../logger/logger';
 import { ApiError } from '../../../common/api.error';
-import { ErrorHandler } from '../../../common/error.handler';
+import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Source } from '../../database.connector';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { BaseService } from '../base.service';
