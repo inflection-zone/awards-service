@@ -1,5 +1,5 @@
 import express from 'express';
-import { ResponseHandler } from '../../common/response.handler';
+import { ResponseHandler } from '../../common/handlers/response.handler';
 import { UserControllerDelegate } from './user.controller.delegate';
 import { BaseController } from '../base.controller';
 
@@ -125,6 +125,17 @@ export class UserController extends BaseController {
             const result = await this._delegate.logout(userId, sessionId);
             const message = 'User logged out successfully!';
             ResponseHandler.success(request, response, message, 200, result);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getRoleTypes = async (request: express.Request, response: express.Response): Promise <void> => {
+        try {
+            await this.authorize('User.GetRoleTypes', request, response, false);
+            const roleTypes = await this._delegate.getRoleTypes();
+            const message = 'Role types retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, roleTypes);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }

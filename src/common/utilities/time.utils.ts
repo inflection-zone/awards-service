@@ -9,7 +9,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import { DateStringFormat, DurationType } from "../domain.types/miscellaneous/time.types";
+import { DateStringFormat, DurationType } from "../../domain.types/miscellaneous/time.types";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,10 +25,43 @@ dayjs.extend(calendar);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export class TimeHelper {
+export class TimeUtils {
 
     static timestamp = (date: Date): string => {
         return date.getTime().toString();
+    };
+
+    static formatDate = (date): string => {
+        const d = new Date(date);
+        const month = ('00' + (d.getMonth() + 1).toString()).slice(-2);
+        const day = ('00' + d.getDate().toString()).slice(-2);
+        const year = d.getFullYear();
+        return [year, month, day].join('-');
+    };
+
+    static getAgeFromBirthDate = (birthdate: Date, onlyYears = false): string => {
+        if (birthdate === null) {
+            return '';
+        }
+        const bd = birthdate.getTime();
+        const milsecs = Date.now() - bd;
+
+        const milsecInYear = 365 * 24 * 3600 * 1000;
+        const milsecsInMonth = 30 * 24 * 3600 * 1000;
+
+        const years = Math.floor(milsecs / milsecInYear);
+        const remainder = milsecs % milsecInYear;
+        const months = Math.floor(remainder / milsecsInMonth);
+
+        let age = years > 0 ? years.toString() + ' years' : '';
+        if (onlyYears) {
+            if (age.length === 0) {
+                return '0 years';
+            }
+            return age;
+        }
+        age = age + (months > 0 ? ' and ' + months.toString() + ' months' : '');
+        return age;
     };
 
     static getDateString = (date: Date, format: DateStringFormat): string => {
@@ -43,7 +76,7 @@ export class TimeHelper {
 
         var date_ = utc === true ? dayjs(date).utc() : dayjs(date);
         var newDate_ = date_;
-        
+
         if (durationType === DurationType.Milisecond) {
             newDate_ = date_.add(durationValue, 'milliseconds');
         }
@@ -77,7 +110,7 @@ export class TimeHelper {
 
         var date_ = utc === true ? dayjs(date).utc() : dayjs(date);
         var newDate_ = dayjs().utc();
-        
+
         if (durationType === DurationType.Milisecond) {
             newDate_ = date_.subtract(durationValue, 'milliseconds');
         }
@@ -119,11 +152,11 @@ export class TimeHelper {
 
         var durationInHours = 0;
         var tokens = str.toLowerCase().split(":");
-    
+
         for (var i = 0; i < tokens.length; i++) {
-    
+
             var x = tokens[i];
-    
+
             if (x.includes("h")) {
                 x = x.replace("h", "");
                 var hours = parseInt(x);
@@ -188,7 +221,7 @@ export class TimeHelper {
         else if (timezoneOffsetStr.includes('-')) {
             offsetTmp = offsetTmp.replace('-', '+');
         }
-    
+
         if (timezoneOffsetStr.includes(':')) {
             var tokens = offsetTmp.split(":");
             var offset_hours = parseInt(tokens[0]);
@@ -343,8 +376,8 @@ export class TimeHelper {
     static getDateWithTimezone = (dateStr: string, timezoneOffset: string) => {
         var todayStr = new Date().toISOString();
         var str = dateStr ? dateStr.split('T')[0] : todayStr.split('T')[0];
-        var offsetMinutes = TimeHelper.getTimezoneOffsets(timezoneOffset, DurationType.Minute);
-        return TimeHelper.strToUtc(str, offsetMinutes);
-    }
+        var offsetMinutes = TimeUtils.getTimezoneOffsets(timezoneOffset, DurationType.Minute);
+        return TimeUtils.strToUtc(str, offsetMinutes);
+    };
 
 }

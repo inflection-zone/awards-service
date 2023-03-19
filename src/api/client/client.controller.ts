@@ -1,7 +1,7 @@
 import express from 'express';
 import {
     ResponseHandler
-} from '../../common/response.handler';
+} from '../../common/handlers/response.handler';
 import {
     ClientControllerDelegate
 } from './client.controller.delegate';

@@ -1,10 +1,10 @@
 import { Source } from '../../database.connector';
 import { User } from '../../models/user/user.model';
 import { UserLoginSession } from '../../models/user/user.login.session.model';
-import { ErrorHandler } from '../../../common/error.handler';
+import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { passwordStrength } from 'check-password-strength';
 import { Helper } from '../../../common/helper';
-import { TimeHelper } from '../../../common/time.helper';
+import { TimeUtils } from '../../../common/utilities/time.utils';
 import { DurationType } from '../../../domain.types/miscellaneous/time.types';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { UserCreateModel, UserResponseDto, UserSearchFilters, UserSearchResults, UserUpdateModel } from '../../../domain.types/user/user.domain.types';
@@ -361,7 +361,7 @@ export class UserService {
     createUserLoginSession = async (userId) => {
         try {
             var now = new Date();
-            var till = TimeHelper.addDuration(now, 3, DurationType.Day);
+            var till = TimeUtils.addDuration(now, 3, DurationType.Day);
             var user = await this._userRepository.findOne({
                 where : {
                     id : userId

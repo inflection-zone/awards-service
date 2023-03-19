@@ -3,7 +3,7 @@ import { ClientCreateModel, ClientResponseDto, ClientSearchFilters, ClientSearch
 import { logger } from '../../../logger/logger';
 import { ApiError } from '../../../common/api.error';
 import { CurrentClient } from '../../../domain.types/miscellaneous/current.client';
-import { ErrorHandler } from '../../../common/error.handler';
+import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Helper } from '../../../common/helper';
 import * as apikeyGenerator from 'uuid-apikey';
 import { Source } from '../../../database/database.connector';

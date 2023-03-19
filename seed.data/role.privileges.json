@@ -2,6 +2,7 @@
     {
         "Role": "Admin",
         "Privileges": [
+            "User.GetRoleTypes",
             "User.Create",
             "User.GetById",
             "User.Search",

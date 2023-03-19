@@ -1,7 +1,7 @@
 import { UserService } from '../../database/repository.services/user/user.service';
-import { ErrorHandler } from '../../common/error.handler';
+import { ErrorHandler } from '../../common/handlers/error.handler';
 import { Helper } from '../../common/helper';
-import { ApiError } from '../../common/api.error';
+import { ApiError } from '../../common/handlers/error.handler';
 import { UserValidator as validator } from './user.validator';
 import {
     UserResponseDto,
@@ -12,6 +12,8 @@ import {
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { Loader } from '../../startup/loader';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
+import { RoleService } from '../../database/repository.services/user/role.service';
+import { StringUtils } from '../../common/utilities/string.utils';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,8 +23,11 @@ export class UserControllerDelegate {
 
     _service: UserService = null;
 
+    _roleService: RoleService = null;
+
     constructor() {
         this._service = new UserService();
+        this._roleService = new RoleService();
     }
 
     //#endregion
@@ -92,7 +97,7 @@ export class UserControllerDelegate {
         const loginModel = await this.getLoginModel(requestBody);
         const sentPassword = loginModel.Password;
         const hashedPassword = loginModel.User.Password;
-        const validPassword = Helper.compareHashedPassword(sentPassword, hashedPassword);
+        const validPassword = StringUtils.compareHashedPassword(sentPassword, hashedPassword);
         if (!validPassword) {
             ErrorHandler.throwUnauthorizedUserError('Invalid password.');
         }
@@ -138,13 +143,13 @@ export class UserControllerDelegate {
         await validator.validatePasswordChangeRequest(requestBody);
         const passwordResetModel = await this.getPasswordChangeModel(requestBody);
         const existingHashedPassword = await this._service.getUserHashedPassword(requestBody.CurrentUserId);
-        const validPassword = Helper.compareHashedPassword(
+        const validPassword = StringUtils.compareHashedPassword(
             passwordResetModel.OldPassword,
             existingHashedPassword);
         if (!validPassword) {
             ErrorHandler.throwUnauthorizedUserError('Invalid old password!');
         }
-        const newHashedPassword = Helper.generateHashedPassword(passwordResetModel.NewPassword);
+        const newHashedPassword = StringUtils.generateHashedPassword(passwordResetModel.NewPassword);
         return await this._service.resetPassword(passwordResetModel.User.id, newHashedPassword);
     };
 
@@ -175,6 +180,11 @@ export class UserControllerDelegate {
         await this._service.invalidateUserLoginSession(sessionId);
     };
 
+    getRoleTypes = async () => {
+        const roles = await this._roleService.getAll();
+        return roles;
+    };
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     getSearchFilters = (query) => {
@@ -194,10 +204,6 @@ export class UserControllerDelegate {
         var lastName = query.lastName ? query.lastName : null;
         if (lastName != null) {
             filters['LastName'] = lastName;
-        }
-        var biocubeId = query.biocubeId ? query.biocubeId : null;
-        if (biocubeId != null) {
-            filters['BiocubeId'] = biocubeId;
         }
         var gender = query.gender ? query.gender : null;
         if (gender != null) {
@@ -314,7 +320,7 @@ export class UserControllerDelegate {
             UserId        : user.id,
             UserName      : user.UserName,
             CurrentRoleId : user.RoleId,
-            DisplayName   : Helper.constructPersonDisplayName(user.Prefix, user.FirstName, user.LastName),
+            DisplayName   : Helper.getFullName(user.Prefix, user.FirstName, user.LastName),
             SessionId     : sessionId,
             Phone         : user.CountryCode + '-' + user.Phone,
             Email         : user.Email
