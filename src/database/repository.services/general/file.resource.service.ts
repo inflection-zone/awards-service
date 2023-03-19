@@ -1,6 +1,6 @@
 import { FileResource } from '../../models/general/file.resource.model';
 import { User } from '../../models/user/user.model';
-import { ErrorHandler } from '../../../common/error.handler';
+import { ErrorHandler } from '../../../common/handlers/error.handler';
 import {
     FileResourceCreateModel,
     FileResourceResponseDto,

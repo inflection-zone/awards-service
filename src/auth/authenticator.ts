@@ -3,7 +3,7 @@ import express from 'express';
 import { IAuthenticator } from './authenticator.interface';
 import { injectable, inject } from "tsyringe";
 
-import { ResponseHandler } from '../common/response.handler';
+import { ResponseHandler } from '../common/handlers/response.handler';
 import { logger } from '../logger/logger';
 import { ApiError } from '../common/api.error';
 
@@ -37,7 +37,7 @@ export class Authenticator {
     public verifyUser = async (request: express.Request): Promise<boolean> => {
         const authResult = await this._authenticator.authenticateUser(request);
         return authResult.Result;
-    }
+    };
 
     public authenticateClient = async (
         request: express.Request,
