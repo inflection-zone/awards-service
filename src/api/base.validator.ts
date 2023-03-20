@@ -1,8 +1,8 @@
-import z from 'zod';
+import joi from 'joi';
 import express from 'express';
 import {
     ErrorHandler
-} from '../common/error.handler';
+} from '../common/handlers/error.handler';
 import { uuid } from '../domain.types/miscellaneous/system.types';
 
 //////////////////////////////////////////////////////////////////
@@ -11,11 +11,9 @@ export default class BaseValidator {
 
     public validateParamAsUUID = async (request: express.Request, paramName: string): Promise<uuid> => {
         try {
-            const schema = z.string({
-                invalid_type_error : 'Parameter data type should UUID.'
-            }).uuid();
-            const parsed = await schema.parseAsync(request.params[paramName]);
-            return parsed;
+            const schema = joi.string().uuid().required();
+            schema.validateAsync(request.params[paramName]);
+            return request.params[paramName];
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }

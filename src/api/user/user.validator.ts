@@ -1,287 +1,326 @@
-import z from 'zod';
+import joi from 'joi';
+import express from 'express';
 import { ErrorHandler } from '../../common/handlers/error.handler';
-import { UserCreateModel } from '../../domain.types/user/user.domain.types';
-import { Gender } from '../../domain.types/miscellaneous/system.types';
-import { UserService } from '../../database/repository.services/user/user.service';
+import { UserCreateModel, UserResponseDto, UserSearchFilters, UserUpdateModel } from '../../domain.types/user/user.domain.types';
+import { Gender, uuid } from '../../domain.types/miscellaneous/system.types';
+import { UserService } from '../../database/services/user/user.service';
 import { StringUtils } from '../../common/utilities/string.utils';
 import { TypeUtils } from '../../common/utilities/type.utils';
+import BaseValidator from '../base.validator';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-export class UserValidator {
+export class UserValidator extends BaseValidator {
 
-    static validateCreateRequest = async (requestBody: any) => {
+    public validateCreateRequest = async (request: express.Request): Promise<UserCreateModel> => {
         try {
-            const schema = z.object({
-                UserName    : z.string().max(16).optional(),
-                Prefix      : z.string().max(16).optional(),
-                FirstName   : z.string().max(64).optional(),
-                LastName    : z.string().max(64).optional(),
-                CountryCode : z.string().max(10).optional(),
-                Phone       : z.string().max(16).min(6),
-                Email       : z.string().max(256),
-                Gender      : z.nativeEnum(Gender),
-                BirthDate   : z.string().optional(),
-                Password    : z.string().max(512),
-                State       : z.string().max(64).optional(),
-                Country     : z.string().max(64).optional(),
-                Address     : z.string().max(256).optional()
+            const schema = joi.object({
+                RoleId      : joi.number().integer().required(),
+                UserName    : joi.string().max(16).optional(),
+                Prefix      : joi.string().max(16).optional(),
+                FirstName   : joi.string().max(64).optional(),
+                LastName    : joi.string().max(64).optional(),
+                CountryCode : joi.string().max(10).optional(),
+                Phone       : joi.string().max(16).min(6).required(),
+                Email       : joi.string().max(256).email().required(),
+                Gender      : joi.string().valid(...Object.values(Gender)).optional(),
+                BirthDate   : joi.string().optional(),
+                Password    : joi.string().max(512).required(),
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
+            return this.getValidUserCreateModel(request);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateSearchRequest = async (query) => {
+    public validateSearchRequest = async (request: express.Request): Promise<UserSearchFilters> => {
         try {
-            const schema = z.object({
-                prefix              : z.string().max(16).optional(),
-                firstName           : z.string().max(64).optional(),
-                lastName            : z.string().max(64).optional(),
-                gender              : z.nativeEnum(Gender).optional(),
-                state               : z.string().max(64).optional(),
-                country             : z.string().max(64).optional(),
-                address             : z.string().max(256).optional(),
-                addedByUserId       : z.string().uuid().optional(),
-                lastUpdatedByUserId : z.string().uuid().optional()
+            const schema = joi.object({
+                roleId   : joi.number().positive().optional(),
+                prefix   : joi.string().max(16).optional(),
+                firstName: joi.string().max(64).optional(),
+                lastName : joi.string().max(64).optional(),
+                phone    : joi.string().max(16).optional(),
+                email    : joi.string().max(256).optional(),
+                gender   : joi.string().max(64).optional(),
             });
-            await schema.parseAsync(query);
+            await schema.validateAsync(request.query);
+            return this.getSearchFilters(request.query);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateUpdateRequest = async (requestBody) => {
+    getSearchFilters = (query) => {
+        var filters = {};
+        var roleId = query.roleId ? query.roleId : null;
+        if (roleId != null) {
+            filters['RoleId'] = roleId;
+        }
+        var prefix = query.prefix ? query.prefix : null;
+        if (prefix != null) {
+            filters['Prefix'] = prefix;
+        }
+        var firstName = query.firstName ? query.firstName : null;
+        if (firstName != null) {
+            filters['FirstName'] = firstName;
+        }
+        var lastName = query.lastName ? query.lastName : null;
+        if (lastName != null) {
+            filters['LastName'] = lastName;
+        }
+        var phone = query.phone ? query.phone : null;
+        if (phone != null) {
+            filters['Phone'] = phone;
+        }
+        var email = query.email ? query.email : null;
+        if (email != null) {
+            filters['Email'] = email;
+        }
+        var gender = query.gender ? query.gender : null;
+        if (gender != null) {
+            filters['Gender'] = gender;
+        }
+        return filters;
+    };
+
+    public validateUpdateRequest = async (request: express.Request): Promise<UserUpdateModel> => {
         try {
-            const schema = z.object({
-                Prefix      : z.string().max(16).optional(),
-                FirstName   : z.string().max(64).optional(),
-                LastName    : z.string().max(64).optional(),
-                CountryCode : z.string().max(10).optional(),
-                Phone       : z.string().max(16).min(6).optional(),
-                Email       : z.string().max(256).optional(),
-                BiocubeId   : z.string().max(32).optional(),
-                Gender      : z.nativeEnum(Gender).optional(),
-                Password    : z.string().max(512).optional(),
-                State       : z.string().max(64).optional(),
-                Country     : z.string().max(64).optional(),
-                Address     : z.string().max(256).optional()
+            const schema = joi.object({
+                RoleId      : joi.number().integer().optional(),
+                UserName    : joi.string().max(16).optional(),
+                Prefix      : joi.string().max(16).optional(),
+                FirstName   : joi.string().max(64).optional(),
+                LastName    : joi.string().max(64).optional(),
+                CountryCode : joi.string().max(10).optional(),
+                Phone       : joi.string().max(16).min(6).optional(),
+                Email       : joi.string().max(256).email().optional(),
+                Gender      : joi.string().valid(...Object.values(Gender)).optional(),
+                BirthDate   : joi.string().optional(),
+                Password    : joi.string().max(512).optional(),
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
+            const id = await this.validateParamAsUUID(request, 'id');
+            return await this.getValidUserUpdateModel(id, request);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validatePasswordChangeRequest = async (requestBody) => {
+    public validatePasswordChangeRequest = async (request: express.Request) => {
         try {
-            const schema = z.object({
-                CurrentUserId : z.string().uuid(),
-                OldPassword   : z.string(),
-                NewPassword   : z.string()
+            const schema = joi.object({
+                CurrentUserId : joi.string().uuid(),
+                OldPassword   : joi.string(),
+                NewPassword   : joi.string()
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateResetPasswordLinkRequest = async (requestBody) => {
+    public validateResetPasswordLinkRequest = async (request: express.Request) => {
         try {
-            const schema = z.object({
-                Email : z.string().email().min(5)
+            const schema = joi.object({
+                Email : joi.string().email().min(5)
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateSetPasswordRequest = async (requestBody) => {
+    public validateSetPasswordRequest = async (request: express.Request) => {
         try {
-            const schema = z.object({
-                ResetPasswordToken : z.string(),
-                Password           : z.string()
+            const schema = joi.object({
+                ResetPasswordToken : joi.string(),
+                Password           : joi.string()
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateLoginWithPasswordRequest = async (requestBody) => {
+    public validateLoginWithPasswordRequest = async (request: express.Request) => {
         try {
-            const schema = z.object({
-                CountryCode : z.string().max(10).optional(),
-                Phone       : z.string().max(16).min(6).optional(),
-                Email       : z.string().max(256).optional(),
-                UserName    : z.string().max(64).optional(),
-                Password    : z.string().max(512),
+            const schema = joi.object({
+                CountryCode : joi.string().max(10).optional(),
+                Phone       : joi.string().max(16).min(6).optional(),
+                Email       : joi.string().max(256).optional(),
+                UserName    : joi.string().max(64).optional(),
+                Password    : joi.string().max(512),
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateLoginWithOtpRequest = async (requestBody) => {
+    public validateLoginWithOtpRequest = async (request: express.Request) => {
         try {
-            const schema = z.object({
-                CountryCode : z.string().max(10).optional(),
-                Phone       : z.string().max(16).min(6).optional(),
-                Email       : z.string().max(256).optional(),
-                UserName    : z.string().max(64).optional(),
-                Otp         : z.string().max(10),
+            const schema = joi.object({
+                CountryCode : joi.string().max(10).optional(),
+                Phone       : joi.string().max(16).min(6).optional(),
+                Email       : joi.string().max(256).optional(),
+                UserName    : joi.string().max(64).optional(),
+                Otp         : joi.string().max(10),
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validatePasswordResetRequest = async (requestBody) => {
+    public validatePasswordResetRequest = async (request: express.Request) => {
         try {
-            const schema = z.object({
-                Email    : z.string().max(256).optional(),
-                UserName : z.string().max(64).optional(),
+            const schema = joi.object({
+                Email    : joi.string().max(256).optional(),
+                UserName : joi.string().max(64).optional(),
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateSendOtpRequest = async (requestBody) => {
+    public validateSendOtpRequest = async (request: express.Request) => {
         try {
-            const schema = z.object({
-                CountryCode : z.string().max(10).optional(),
-                Phone       : z.string().max(16).min(6).optional(),
-                Email       : z.string().max(256).optional(),
-                UserName    : z.string().max(64).optional(),
+            const schema = joi.object({
+                CountryCode : joi.string().max(10).optional(),
+                Phone       : joi.string().max(16).min(6).optional(),
+                Email       : joi.string().max(256).optional(),
+                UserName    : joi.string().max(64).optional(),
             });
-            await schema.parseAsync(requestBody);
+            await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static getUserCreateModel = (requestBody): UserCreateModel => {
+    public getUserCreateModel = (request: express.Request): UserCreateModel => {
 
-        const birthDate = requestBody.BirthDate ? Date.parse(requestBody.BirthDate) : null;
+        const birthDate = request.body.BirthDate ? Date.parse(request.body.BirthDate) : null;
 
         return {
-            RoleId      : requestBody.RoleId ? requestBody.RoleId : null,
-            Prefix      : requestBody.Prefix ? requestBody.Prefix : 'Mr',
-            UserName    : requestBody.UserName ? requestBody.UserName : null,
-            FirstName   : requestBody.FirstName ? requestBody.FirstName : null,
-            LastName    : requestBody.LastName ? requestBody.LastName : null,
-            CountryCode : requestBody.CountryCode ? requestBody.CountryCode : '+91',
-            Phone       : requestBody.Phone ? requestBody.Phone : null,
-            Email       : requestBody.Email ? requestBody.Email : null,
-            Gender      : requestBody.Gender ? requestBody.Gender : 'Male',
+            RoleId      : request.body.RoleId ? request.body.RoleId : null,
+            Prefix      : request.body.Prefix ? request.body.Prefix : 'Mr',
+            UserName    : request.body.UserName ? request.body.UserName : null,
+            FirstName   : request.body.FirstName ? request.body.FirstName : null,
+            LastName    : request.body.LastName ? request.body.LastName : null,
+            CountryCode : request.body.CountryCode ? request.body.CountryCode : '+91',
+            Phone       : request.body.Phone ? request.body.Phone : null,
+            Email       : request.body.Email ? request.body.Email : null,
+            Gender      : request.body.Gender ? request.body.Gender : 'Male',
             BirthDate   : new Date(birthDate),
-            Password    : requestBody.Password ? requestBody.Password : null,
+            Password    : request.body.Password ? request.body.Password : null,
         };
     };
 
-    static getValidUserCreateModel = async (requestBody) => {
+    public getValidUserCreateModel = async (request: express.Request) => {
 
         const userService = new UserService();
 
-        var password = requestBody.Password;
+        var password = request.body.Password;
         if (!password) {
             password = StringUtils.generatePassword();
         }
         else {
             userService.validatePasswordCriteria(password);
         }
-        requestBody.Password = StringUtils.generateHashedPassword(password);
+        request.body.Password = StringUtils.generateHashedPassword(password);
 
-        var userName = requestBody.UserName;
+        var userName = request.body.UserName;
         if (!userName) {
-            userName = await userService.generateUserNameIfDoesNotExist(requestBody.UserName);
+            userName = await userService.generateUserNameIfDoesNotExist(request.body.UserName);
         }
-        requestBody.UserName = userName;
+        request.body.UserName = userName;
 
-        requestBody.CountryCode = requestBody.CountryCode ?? "+91";
-        var userWithPhone = await userService.getUserWithPhone(requestBody.CountryCode, requestBody.Phone);
+        request.body.CountryCode = request.body.CountryCode ?? "+91";
+        var userWithPhone = await userService.getUserWithPhone(request.body.CountryCode, request.body.Phone);
         if (userWithPhone) {
-            ErrorHandler.throwDuplicateUserError(`User with phone ${requestBody.CountryCode} ${requestBody.Phone.toString()} already exists!`);
+            ErrorHandler.throwDuplicateUserError(`User with phone ${request.body.CountryCode} ${request.body.Phone.toString()} already exists!`);
         }
 
-        var userWithUserName = await userService.getUserWithUserName(requestBody.UserName);
+        var userWithUserName = await userService.getUserWithUserName(request.body.UserName);
         if (userWithUserName) {
-            ErrorHandler.throwDuplicateUserError(`User with user-name ${requestBody.UserName} already exists!`);
+            ErrorHandler.throwDuplicateUserError(`User with user-name ${request.body.UserName} already exists!`);
         }
 
-        var userWithEmail = await userService.getUserWithEmail(requestBody.Email);
+        var userWithEmail = await userService.getUserWithEmail(request.body.Email);
         if (userWithEmail) {
-            ErrorHandler.throwDuplicateUserError(`User with email ${requestBody.Email} already exists!`);
+            ErrorHandler.throwDuplicateUserError(`User with email ${request.body.Email} already exists!`);
         }
 
-        var userCreateModel: UserCreateModel = await this.getUserCreateModel(requestBody);
-        return { userCreateModel, password };
+        var userCreateModel: UserCreateModel = await this.getUserCreateModel(request.body);
+        return userCreateModel;
     };
 
-    static getValidUserUpdateModel = async (user, requestBody) => {
+    public getValidUserUpdateModel = async (id: uuid, request: express.Request) => {
 
         const userService = new UserService();
 
+        const user: UserResponseDto = await userService.getById(id);
+        if (user === null) {
+            ErrorHandler.throwNotFoundError('User with id ' + id.toString() + ' cannot be found!');
+        }
+
         const updateModel: any = {};
 
-        if (TypeUtils.hasProperty(requestBody, 'Prefix')) {
-            updateModel.Prefix = requestBody.Prefix;
+        if (TypeUtils.hasProperty(request.body, 'Prefix')) {
+            updateModel.Prefix = request.body.Prefix;
         }
-        if (TypeUtils.hasProperty(requestBody, 'FirstName')) {
-            updateModel.FirstName = requestBody.FirstName;
+        if (TypeUtils.hasProperty(request.body, 'FirstName')) {
+            updateModel.FirstName = request.body.FirstName;
         }
-        if (TypeUtils.hasProperty(requestBody, 'LastName')) {
-            updateModel.LastName = requestBody.LastName;
+        if (TypeUtils.hasProperty(request.body, 'LastName')) {
+            updateModel.LastName = request.body.LastName;
         }
-        if (TypeUtils.hasProperty(requestBody, 'CountryCode') && TypeUtils.hasProperty(requestBody, 'Phone')) {
-            var userWithPhone = await userService.getUserWithPhone(requestBody.CountryCode, requestBody.Phone);
+        if (TypeUtils.hasProperty(request.body, 'CountryCode') && TypeUtils.hasProperty(request.body, 'Phone')) {
+            var userWithPhone = await userService.getUserWithPhone(request.body.CountryCode, request.body.Phone);
             if (userWithPhone) {
-                ErrorHandler.throwDuplicateUserError(`Other user with phone ${requestBody.CountryCode} ${requestBody.Phone.toString()} already exists!`);
+                ErrorHandler.throwDuplicateUserError(`Other user with phone ${request.body.CountryCode} ${request.body.Phone.toString()} already exists!`);
             }
-            updateModel.CountryCode = requestBody.CountryCode;
-            updateModel.Phone = requestBody.Phone;
+            updateModel.CountryCode = request.body.CountryCode;
+            updateModel.Phone = request.body.Phone;
         }
-        else if (TypeUtils.hasProperty(requestBody, 'Phone')) {
-            var userWithPhone = await userService.getUserWithPhone(user.CountryCode, requestBody.Phone);
+        else if (TypeUtils.hasProperty(request.body, 'Phone')) {
+            var userWithPhone = await userService.getUserWithPhone(user.CountryCode, request.body.Phone);
             if (userWithPhone && user.id !== userWithPhone.id) {
-                ErrorHandler.throwDuplicateUserError(`Other user with phone ${user.CountryCode} ${requestBody.Phone.toString()} already exists!`);
+                ErrorHandler.throwDuplicateUserError(`Other user with phone ${user.CountryCode} ${request.body.Phone.toString()} already exists!`);
             }
-            updateModel.Phone = requestBody.Phone;
+            updateModel.Phone = request.body.Phone;
         }
-        else if (TypeUtils.hasProperty(requestBody, 'CountryCode')) {
-            var userWithCountryCode = await userService.getUserWithPhone(requestBody.CountryCode, user.Phone);
+        else if (TypeUtils.hasProperty(request.body, 'CountryCode')) {
+            var userWithCountryCode = await userService.getUserWithPhone(request.body.CountryCode, user.Phone);
             if (userWithCountryCode && user.id !== userWithCountryCode.id) {
-                ErrorHandler.throwDuplicateUserError(`Other user with phone ${requestBody.CountryCode} ${user.Phone.toString()} already exists!`);
+                ErrorHandler.throwDuplicateUserError(`Other user with phone ${request.body.CountryCode} ${user.Phone.toString()} already exists!`);
             }
-            updateModel.CountryCode = requestBody.CountryCode;
+            updateModel.CountryCode = request.body.CountryCode;
         }
-        if (TypeUtils.hasProperty(requestBody, 'Email')) {
-            var userWithEmail = await userService.getUserWithEmail(requestBody.Email);
+        if (TypeUtils.hasProperty(request.body, 'Email')) {
+            var userWithEmail = await userService.getUserWithEmail(request.body.Email);
             if (userWithEmail && user.id !== userWithEmail.id) {
-                ErrorHandler.throwDuplicateUserError(`Other user with email ${requestBody.Email} already exists!`);
+                ErrorHandler.throwDuplicateUserError(`Other user with email ${request.body.Email} already exists!`);
             }
-            updateModel.Email = requestBody.Email;
+            updateModel.Email = request.body.Email;
         }
-        if (TypeUtils.hasProperty(requestBody, 'BiocubeId') || TypeUtils.hasProperty(requestBody, 'UserName')) {
-            var userName = requestBody.BiocubeId ?? requestBody.UserName;
+        if (TypeUtils.hasProperty(request.body, 'BiocubeId') || TypeUtils.hasProperty(request.body, 'UserName')) {
+            var userName = request.body.BiocubeId ?? request.body.UserName;
             var userWithUserName = await userService.getUserWithUserName(userName);
             if (userWithUserName && user.id !== userWithUserName.id) {
-                ErrorHandler.throwDuplicateUserError(`Other user with user-name ${requestBody.UserName} already exists!`);
+                ErrorHandler.throwDuplicateUserError(`Other user with user-name ${request.body.UserName} already exists!`);
             }
-            updateModel.BiocubeId = requestBody.BiocubeId;
-            updateModel.UserName = requestBody.UserName;
+            updateModel.BiocubeId = request.body.BiocubeId;
+            updateModel.UserName = request.body.UserName;
         }
-        if (TypeUtils.hasProperty(requestBody, 'Gender')) {
-            updateModel.Gender = requestBody.Gender;
+        if (TypeUtils.hasProperty(request.body, 'Gender')) {
+            updateModel.Gender = request.body.Gender;
         }
-        if (TypeUtils.hasProperty(requestBody, 'Password')) {
-            updateModel.Password = StringUtils.generateHashedPassword(requestBody.Password);
+        if (TypeUtils.hasProperty(request.body, 'Password')) {
+            updateModel.Password = StringUtils.generateHashedPassword(request.body.Password);
         }
 
         return updateModel;

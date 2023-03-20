@@ -1,6 +1,6 @@
 // import {
 //     EventService
-// } from '../../database/repository.services/event.service';
+// } from '../../database/services/event.service';
 // import {
 //     ErrorHandler
 // } from '../../../common/error.handler';
@@ -42,7 +42,7 @@
 //         var createModel: EventCreateModel = this.getCreateModel(requestBody);
 //         const record = await this._service.create(createModel);
 //         if (record === null) {
-//             throw new ApiError('Unable to create event!', 400);
+//             ErrorHandler.throwInternalServerError('Unable to create event!', 400);
 //         }
 //         return this.getEnrichedDto(record);
 //     };
@@ -73,7 +73,7 @@
 //         const updateModel: EventUpdateModel = this.getUpdateModel(requestBody);
 //         const updated = await this._service.update(id, updateModel);
 //         if (updated == null) {
-//             throw new ApiError('Unable to update event!', 400);
+//             ErrorHandler.throwInternalServerError('Unable to update event!', 400);
 //         }
 //         return this.getEnrichedDto(updated);
 //     };

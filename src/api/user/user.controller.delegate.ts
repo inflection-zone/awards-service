@@ -1,8 +1,8 @@
-import { UserService } from '../../database/repository.services/user/user.service';
+import { UserService } from '../../database/services/user/user.service';
 import { ErrorHandler } from '../../common/handlers/error.handler';
 import { Helper } from '../../common/helper';
 import { ApiError } from '../../common/handlers/error.handler';
-import { UserValidator as validator } from './user.validator';
+import { UserValidator } from './user.validator';
 import {
     UserResponseDto,
     UserSearchFilters,
@@ -12,7 +12,7 @@ import {
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { Loader } from '../../startup/loader';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
-import { RoleService } from '../../database/repository.services/user/role.service';
+import { RoleService } from '../../database/services/user/role.service';
 import { StringUtils } from '../../common/utilities/string.utils';
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -21,28 +21,21 @@ export class UserControllerDelegate {
 
     //#region member variables and constructors
 
-    _service: UserService = null;
+    _service: UserService = new UserService();
 
-    _roleService: RoleService = null;
+    _roleService: RoleService = new RoleService();
 
-    constructor() {
-        this._service = new UserService();
-        this._roleService = new RoleService();
-    }
+    _validator: UserValidator = new UserValidator();
 
     //#endregion
 
     create = async (requestBody: any) => {
 
-        await validator.validateCreateRequest(requestBody);
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { userCreateModel, password } =
-            await validator.getValidUserCreateModel(requestBody);
+        const userCreateModel = await this._validator.validateCreateRequest(requestBody);
 
         const record: UserResponseDto = await this._service.create(userCreateModel);
         if (record === null) {
-            throw new ApiError('Unable to create user!', 400);
+            ErrorHandler.throwInternalServerError('Unable to create user!', 400);
         }
 
         // if (requestBody.CurrentUserId && dto.Email) {
@@ -61,24 +54,18 @@ export class UserControllerDelegate {
     };
 
     search = async (query) => {
-        await validator.validateSearchRequest(query);
-        var filters: UserSearchFilters = this.getSearchFilters(query);
+        var filters: UserSearchFilters = await this._validator.validateSearchRequest(query);
         var searchResults: UserSearchResults = await this._service.search(filters);
         return searchResults;
     };
 
     update = async (id: uuid, requestBody: any) => {
-        await validator.validateUpdateRequest(requestBody);
-        const record: UserResponseDto = await this._service.getById(id);
-        if (record === null) {
-            ErrorHandler.throwNotFoundError('User with id ' + id.toString() + ' cannot be found!');
-        }
-        const updateModel: UserUpdateModel = await validator.getValidUserUpdateModel(record, requestBody);
+        const updateModel: UserUpdateModel = await this._validator.validateUpdateRequest(requestBody);
         const updated: UserResponseDto = await this._service.update(id, updateModel);
         if (updated == null) {
-            throw new ApiError('Unable to update user!', 400);
+            ErrorHandler.throwInternalServerError('Unable to update user!', 400);
         }
-        return this.getEnrichedDto(updated);
+        return updated;
     };
 
     delete = async (id: uuid) => {
@@ -93,7 +80,7 @@ export class UserControllerDelegate {
     };
 
     loginWithPassword = async (requestBody) => {
-        await validator.validateLoginWithPasswordRequest(requestBody);
+        await this._validator.validateLoginWithPasswordRequest(requestBody);
         const loginModel = await this.getLoginModel(requestBody);
         const sentPassword = loginModel.Password;
         const hashedPassword = loginModel.User.Password;
@@ -112,7 +99,7 @@ export class UserControllerDelegate {
     };
 
     // loginWithOtp = async (requestBody) => {
-    //     await validator.validateLoginWithOtpRequest(requestBody);
+    //     await this._validator.validateLoginWithOtpRequest(requestBody);
     //     const loginModel = await this.getLoginModel(requestBody);
     //     const latestOtp = await this._otpService.getLatestActiveOtp(loginModel.User.id);
     //     if (latestOtp == null) {
@@ -140,7 +127,7 @@ export class UserControllerDelegate {
     // }
 
     changePassword = async (requestBody) => {
-        await validator.validatePasswordChangeRequest(requestBody);
+        await this._validator.validatePasswordChangeRequest(requestBody);
         const passwordResetModel = await this.getPasswordChangeModel(requestBody);
         const existingHashedPassword = await this._service.getUserHashedPassword(requestBody.CurrentUserId);
         const validPassword = StringUtils.compareHashedPassword(
@@ -154,7 +141,7 @@ export class UserControllerDelegate {
     };
 
     // sendOtp = async (requestBody) => {
-    //     await validator.validateSendOtpRequest(requestBody);
+    //     await this._validator.validateSendOtpRequest(requestBody);
     //     const countryCode = (typeof requestBody.CountryCode !== undefined) ? requestBody.CountryCode : '+91';
     //     const phone = (typeof requestBody.Phone !== undefined) ? requestBody.Phone : null;
     //     const user = await this._service.getUser(countryCode, phone, null, null);
@@ -187,50 +174,7 @@ export class UserControllerDelegate {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    getSearchFilters = (query) => {
-        var filters = {};
-        var roleId = query.roleId ? query.roleId : null;
-        if (roleId != null) {
-            filters['RoleId'] = roleId;
-        }
-        var prefix = query.prefix ? query.prefix : null;
-        if (prefix != null) {
-            filters['Prefix'] = prefix;
-        }
-        var firstName = query.firstName ? query.firstName : null;
-        if (firstName != null) {
-            filters['FirstName'] = firstName;
-        }
-        var lastName = query.lastName ? query.lastName : null;
-        if (lastName != null) {
-            filters['LastName'] = lastName;
-        }
-        var gender = query.gender ? query.gender : null;
-        if (gender != null) {
-            filters['Gender'] = gender;
-        }
-        var state = query.state ? query.state : null;
-        if (state != null) {
-            filters['State'] = state;
-        }
-        var country = query.country ? query.country : null;
-        if (country != null) {
-            filters['Country'] = country;
-        }
-        var address = query.address ? query.address : null;
-        if (address != null) {
-            filters['Address'] = address;
-        }
-        var addedByUserId = query.addedByUserId ? query.addedByUserId : null;
-        if (addedByUserId != null) {
-            filters['AddedByUserId'] = addedByUserId;
-        }
-        var lastUpdatedByUserId = query.lastUpdatedByUserId ? query.lastUpdatedByUserId : null;
-        if (lastUpdatedByUserId != null) {
-            filters['LastUpdatedByUserId'] = lastUpdatedByUserId;
-        }
-        return filters;
-    };
+
 
     //This function returns a response DTO which is enriched with available resource data
 

@@ -1,7 +1,6 @@
 import { Role } from '../../models/user/role.model';
 import { RoleCreateModel, RoleResponseDto, RoleSearchFilters, RoleSearchResults, RoleUpdateModel } from '../../../domain.types/user/role.domain.types';
 import { logger } from '../../../logger/logger';
-import { ApiError } from '../../../common/api.error';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Source } from '../../database.connector';
 import { FindManyOptions, Like, Repository } from 'typeorm';
@@ -28,7 +27,7 @@ export class RoleService extends BaseService {
             return RoleMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -42,7 +41,7 @@ export class RoleService extends BaseService {
             return RoleMapper.toResponseDto(role);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -112,7 +111,7 @@ export class RoleService extends BaseService {
             return RoleMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -127,7 +126,7 @@ export class RoleService extends BaseService {
             return result != null;
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 

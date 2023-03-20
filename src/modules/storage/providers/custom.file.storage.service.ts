@@ -3,6 +3,7 @@ import path from 'path';
 import { logger } from '../../../logger/logger';
 import { Helper } from '../../../common/helper';
 import { IFileStorageService } from '../interfaces/file.storage.service.interface';
+import { FileUtils } from '../../../common/utilities/file.utils';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +31,7 @@ export class CustomFileStorageService implements IFileStorageService {
     upload = async (inputStream: any, storageKey: string): Promise<string> => {
         return new Promise((resolve, reject) => {
             try {
-                var storagePath = Helper.getStoragePath();
+                var storagePath = FileUtils.getStoragePath();
                 const fileLocation = path.join(storagePath, storageKey);
                 const fileDirectory = path.dirname(fileLocation);
                 if (!fs.existsSync(fileDirectory)){
@@ -70,7 +71,7 @@ export class CustomFileStorageService implements IFileStorageService {
 
     download = async (storageKey: string): Promise<any> => {
         try {
-            var storagePath = Helper.getStoragePath();
+            var storagePath = FileUtils.getStoragePath();
             const fileLocation = path.join(storagePath, storageKey);
             const stream = fs.createReadStream(fileLocation);
             return stream;

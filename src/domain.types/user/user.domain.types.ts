@@ -20,6 +20,7 @@ export interface UserCreateModel {
 }
 
 export interface UserUpdateModel {
+    id          : uuid;
     UserName?   : string;
     Prefix?     : string;
     FirstName?  : string;

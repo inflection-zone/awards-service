@@ -1,7 +1,6 @@
 import { Client } from '../../models/client/client.model';
 import { ClientCreateModel, ClientResponseDto, ClientSearchFilters, ClientSearchResults, ClientUpdateModel, ClientVerificationModel, ClientApiKeyResponseDto } from '../../../domain.types/client/client.domain.types';
 import { logger } from '../../../logger/logger';
-import { ApiError } from '../../../common/api.error';
 import { CurrentClient } from '../../../domain.types/miscellaneous/current.client';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Helper } from '../../../common/helper';
@@ -10,6 +9,7 @@ import { Source } from '../../../database/database.connector';
 import { FindManyOptions, LessThanOrEqual, Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { ClientMapper } from '../../mappers/client/client.mapper';
+import { StringUtils } from '../../../common/utilities/string.utils';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -31,7 +31,7 @@ export class ClientService {
                 CountryCode  : createModel.CountryCode,
                 Phone        : createModel.Phone,
                 Email        : createModel.Email,
-                Password     : Helper.hash(password),
+                Password     : StringUtils.hash(password),
                 ApiKey       : createModel.ApiKey ?? apikeyGenerator.default.create().apiKey,
                 ValidFrom    : createModel.ValidFrom ?? null,
                 ValidTill    : createModel.ValidTill ?? null,
@@ -40,11 +40,11 @@ export class ClientService {
             return ClientMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
-    public getById = async (id: string): Promise<ClientResponseDto> => {
+    public getById = async (id: uuid): Promise<ClientResponseDto> => {
         try {
             var client = await this._clientRepository.findOne({
                 where : {
@@ -54,7 +54,7 @@ export class ClientService {
             return ClientMapper.toResponseDto(client);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -103,7 +103,7 @@ export class ClientService {
             return ClientMapper.toClientSecretsResponseDto(client);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -120,7 +120,7 @@ export class ClientService {
             return client.Password;
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -129,13 +129,13 @@ export class ClientService {
             const apiKeyDto = await this.getApiKeyByClientCode(verificationModel.Code);
             if (apiKeyDto == null) {
                 const message = 'Client does not exist with code (' + verificationModel.Code + ')';
-                throw new ApiError(message, 404);
+                ErrorHandler.throwInternalServerError(message, 404);
             }
 
             const hashedPassword = await this.getClientHashedPassword(apiKeyDto.id);
-            const isPasswordValid = Helper.compareHashedPassword(verificationModel.Password, hashedPassword);
+            const isPasswordValid = StringUtils.compareHashedPassword(verificationModel.Password, hashedPassword);
             if (!isPasswordValid) {
-                throw new ApiError('Invalid password!', 401);
+                ErrorHandler.throwInternalServerError('Invalid password!', 401);
             }
             const client = await this._clientRepository.findOne({
                 where : {
@@ -145,7 +145,7 @@ export class ClientService {
             return await ClientMapper.toClientSecretsResponseDto(client);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -154,13 +154,13 @@ export class ClientService {
         const client = await this.getByClientCode(verificationModel.Code);
         if (client == null) {
             const message = 'Client does not exist for client code (' + verificationModel.Code + ')';
-            throw new ApiError(message, 404);
+            ErrorHandler.throwInternalServerError(message, 404);
         }
 
         const hashedPassword = await this.getClientHashedPassword(client.id);
-        const isPasswordValid = Helper.compareHashedPassword(verificationModel.Password, hashedPassword);
+        const isPasswordValid = StringUtils.compareHashedPassword(verificationModel.Password, hashedPassword);
         if (!isPasswordValid) {
-            throw new ApiError('Invalid password!', 401);
+            ErrorHandler.throwInternalServerError('Invalid password!', 401);
         }
 
         const key = apikeyGenerator.default.create();
@@ -189,7 +189,7 @@ export class ClientService {
             return ClientMapper.toClientSecretsResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -213,11 +213,11 @@ export class ClientService {
             return currentClient;
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
-    public update = async (id: string, updateModel: ClientUpdateModel): Promise<ClientResponseDto> => {
+    public update = async (id: uuid, updateModel: ClientUpdateModel): Promise<ClientResponseDto> => {
         try {
             const client = await this._clientRepository.findOne({
                 where : {
@@ -234,7 +234,7 @@ export class ClientService {
                 client.Name = updateModel.Name;
             }
             if (updateModel.Password != null) {
-                client.Password = Helper.hash(updateModel.Password);
+                client.Password = StringUtils.hash(updateModel.Password);
             }
             if (updateModel.CountryCode != null) {
                 client.CountryCode = updateModel.CountryCode;
@@ -258,7 +258,7 @@ export class ClientService {
             return ClientMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -273,7 +273,7 @@ export class ClientService {
             return result != null;
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 

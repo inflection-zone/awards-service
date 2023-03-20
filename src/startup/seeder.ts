@@ -3,15 +3,17 @@ import path from "path";
 import { Helper } from "../common/helper";
 import { logger } from "../logger/logger";
 import * as RolePrivilegesList from '../../seed.data/role.privileges.json';
-import { UserService } from '../database/repository.services/user/user.service';
-import { ClientService } from '../database/repository.services/client/client.service';
+import { UserService } from '../database/services/user/user.service';
+import { ClientService } from '../database/services/client/client.service';
 import { UserCreateModel } from "../domain.types/user/user.domain.types";
 import { Gender } from "../domain.types/miscellaneous/system.types";
-import { RoleService } from "../database/repository.services/user/role.service";
-import { FileResourceService } from "../database/repository.services/general/file.resource.service";
-import { PrivilegeService } from "../database/repository.services/user/privilege.service";
+import { RoleService } from "../database/services/user/role.service";
+import { FileResourceService } from "../database/services/general/file.resource.service";
+import { PrivilegeService } from "../database/services/user/privilege.service";
 import { RoleCreateModel } from "../domain.types/user/role.domain.types";
 import { ClientResponseDto } from "../domain.types/client/client.domain.types";
+import { FileUtils } from "../common/utilities/file.utils";
+import { StringUtils } from "../common/utilities/string.utils";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -40,8 +42,8 @@ export class Seeder {
     };
 
     private createTempFolders = async () => {
-        await Helper.createTempDownloadFolder();
-        await Helper.createTempUploadFolder();
+        await FileUtils.createTempDownloadFolder();
+        await FileUtils.createTempUploadFolder();
     };
 
     private seedRolePrivileges = async () => {
@@ -106,7 +108,7 @@ export class Seeder {
                 Prefix      : ""
             };
 
-            createModel.Password = Helper.generateHashedPassword(u.Password);
+            createModel.Password = StringUtils.generateHashedPassword(u.Password);
             const user = await this._userService.create(createModel);
             logger.info(JSON.stringify(user, null, 2));
         }

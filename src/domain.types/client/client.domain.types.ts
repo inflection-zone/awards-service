@@ -20,6 +20,7 @@ export interface ClientCreateModel {
 }
 
 export interface ClientUpdateModel {
+    id           : uuid;
     Name        ?: string;
     Code        ?: string;
     IsPrivileged?: boolean;

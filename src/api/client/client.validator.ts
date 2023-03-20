@@ -1,4 +1,4 @@
-import z from 'zod';
+import joi from 'joi';
 import express from 'express';
 import * as apikeyGenerator from 'uuid-apikey';
 import { ClientCreateModel, ClientUpdateModel, ClientVerificationModel } from '../../domain.types/client/client.domain.types';
@@ -7,90 +7,109 @@ import { TimeUtils } from '../../common/utilities/time.utils';
 import { DurationType } from '../../domain.types/miscellaneous/time.types';
 import { ClientSearchFilters } from '../../domain.types/client/client.domain.types';
 import { StringUtils } from '../../common/utilities/string.utils';
+import BaseValidator from '../base.validator';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-export class ClientValidator {
+export class ClientValidator extends BaseValidator {
 
-    static validateCreateRequest = async (requestBody: any): Promise<ClientCreateModel> => {
+    public validateCreateRequest = async (request: express.Request): Promise<ClientCreateModel> => {
         try {
-            const schema = z.object({
-                Name : z.string({
-                    required_error     : 'Name is required',
-                    invalid_type_error : 'Name must be string',
-                }).max(256),
-                Code         : z.string().max(256).optional(),
-                IsPrivileged : z.boolean().optional(),
-                CountryCode  : z.string().max(5).optional(),
-                Phone        : z.string().min(5).max(16),
-                Email        : z.string({
-                    required_error : 'Email is required',
-                }).email(),
-                Password  : z.string().min(6).max(18).optional(),
-                ApiKey    : z.string().max(32).optional(),
-                ValidFrom : z.date().optional(),
-                ValidTill : z.date().optional()
+            const schema = joi.object({
+                Name        : joi.string().max(256).required(),
+                Code        : joi.string().max(256).optional(),
+                IsPrivileged: joi.boolean().optional(),
+                CountryCode : joi.string().max(5).optional(),
+                Phone       : joi.string().min(5).max(16).required(),
+                Email       : joi.string().email().required(),
+                Password    : joi.string().min(6).max(18).optional(),
+                ApiKey      : joi.string().max(32).optional(),
+                ValidFrom   : joi.date().optional(),
+                ValidTill   : joi.date().optional()
             });
-            const parsed = await schema.parseAsync(requestBody) as ClientCreateModel;
-            if (!parsed.ApiKey) {
-                parsed.ApiKey = apikeyGenerator.default.create().apiKey;
+            await schema.validateAsync(request.body) as ClientCreateModel;
+            if (!request.body.ApiKey) {
+                request.body.ApiKey = apikeyGenerator.default.create().apiKey;
             }
-            if (!parsed.ValidFrom) {
-                parsed.ValidFrom = new Date();
+            if (!request.body.ValidFrom) {
+                request.body.ValidFrom = new Date();
             }
-            if (!parsed.ValidTill) {
-                parsed.ValidTill = TimeUtils.addDuration(new Date(), 180, DurationType.Day);
+            if (!request.body.ValidTill) {
+                request.body.ValidTill = TimeUtils.addDuration(new Date(), 180, DurationType.Day);
             }
-            return parsed;
+            return {
+                Name        : request.body.Name,
+                Code        : request.body.Code ?? null,
+                IsPrivileged: request.body.IsPrivileged ?? null,
+                CountryCode : request.body.CountryCode ?? null,
+                Phone       : request.body.Phone,
+                Email       : request.body.Email,
+                Password    : request.body.Password ?? null,
+                ApiKey      : request.body.Name ?? null,
+                ValidFrom   : request.body.Name ?? null,
+                ValidTill   : request.body.Name ?? null,
+            };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateUpdateRequest = async (requestBody: any): Promise<ClientUpdateModel> => {
+    public validateUpdateRequest = async (request: any): Promise<ClientUpdateModel> => {
         try {
-            const schema = z.object({
-                Name : z.string({
-                    invalid_type_error : 'Name must be a string.'
-                }).max(256).optional(),
-                Code         : z.string().max(256).optional(),
-                IsPrivileged : z.boolean().optional(),
-                CountryCode  : z.string().optional(),
-                Phone        : z.string().optional(),
-                Email        : z.string().email().optional(),
-                Password     : z.string().optional(),
-                ApiKey       : z.string().optional(),
-                ValidFrom    : z.date().optional(),
-                ValidTill    : z.date().optional()
+            const schema = joi.object({
+                Name : joi.string().max(256).optional(),
+                Code         : joi.string().max(256).optional(),
+                IsPrivileged : joi.boolean().optional(),
+                CountryCode  : joi.string().optional(),
+                Phone        : joi.string().optional(),
+                Email        : joi.string().email().optional(),
+                Password     : joi.string().optional(),
+                ApiKey       : joi.string().optional(),
+                ValidFrom    : joi.date().optional(),
+                ValidTill    : joi.date().optional()
             });
-            const parsed = await schema.parseAsync(requestBody) as ClientUpdateModel;
-            return parsed;
+            await schema.validateAsync(request.body);
+            const id = await this.validateParamAsUUID(request, 'id');
+            return {
+                id,
+                Name        : request.body.Name ?? null,
+                Code        : request.body.Code ?? null,
+                IsPrivileged: request.body.IsPrivileged ?? null,
+                CountryCode : request.body.CountryCode ?? null,
+                Phone       : request.body.Phone ?? null,
+                Email       : request.body.Email ?? null,
+                Password    : request.body.Password ?? null,
+                ApiKey      : request.body.Name ?? null,
+                ValidFrom   : request.body.Name ?? null,
+                ValidTill   : request.body.Name ?? null,
+            };
+
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static validateSearchRequest = async (query): Promise<ClientSearchFilters> => {
+    public validateSearchRequest = async (request: express.Request): Promise<ClientSearchFilters> => {
         try {
-            const schema = z.object({
-                name         : z.string().max(256).optional(),
-                code         : z.string().max(256).optional(),
-                isPrivileged : z.boolean().optional(),
-                countryCode  : z.string().optional(),
-                phone        : z.string().optional(),
-                email        : z.string().email().optional(),
-                validFrom    : z.date().optional(),
-                validTill    : z.date().optional()
+            const schema = joi.object({
+                name         : joi.string().max(256).optional(),
+                code         : joi.string().max(256).optional(),
+                isPrivileged : joi.boolean().optional(),
+                countryCode  : joi.string().optional(),
+                phone        : joi.string().optional(),
+                email        : joi.string().email().optional(),
+                validFrom    : joi.date().optional(),
+                validTill    : joi.date().optional()
             });
-            const parsed = await schema.parseAsync(query) as ClientSearchFilters;
-            const filters = ClientValidator.getSearchFilters(parsed);
+            await schema.validateAsync(request.query);
+            const filters = this.getSearchFilters(request.query);
             return filters;
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
     };
 
-    static getSearchFilters = (query): ClientSearchFilters => {
+    private getSearchFilters = (query): ClientSearchFilters => {
 
         var filters = {};
 
@@ -130,11 +149,15 @@ export class ClientValidator {
         return filters;
     };
 
-    static getOrRenewApiKey = async ( request: express.Request
-    ): Promise<ClientVerificationModel> => {
+    public getOrRenewApiKey = async ( request: express.Request): 
+        Promise<ClientVerificationModel|null> => {
         try {
-            const authHeader = request.headers['authorization'].toString();
-            let tokens = authHeader.split(' ');
+            const authHeader = request.headers['authorization']?.toString();
+            let tokens = authHeader? authHeader.split(' ') : null;
+            if (!tokens || tokens.length < 1) {
+                ErrorHandler.throwInputValidationError('Ill-formated authorization header');
+                return null;
+            }
             if (tokens.length < 2) {
                 throw new Error("Invalid authorization header.");
             }
@@ -149,21 +172,22 @@ export class ClientValidator {
             const clientCode = tokens[0].trim();
             const password = tokens[1].trim();
 
-            const schema = z.object({
-                ValidFrom : z.date().optional(),
-                ValidTill : z.date().optional()
+            const schema = joi.object({
+                ValidFrom : joi.date().optional(),
+                ValidTill : joi.date().optional()
             });
-        await schema.parseAsync(request.body) as ClientSearchFilters;
-        return ClientValidator.getVerificationDomainModel(request.body, clientCode, password);
+            await schema.validateAsync(request.body);
+            return this.getVerificationDomainModel(request.body, clientCode, password);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
+        return null;
     };
 
-    static getVerificationDomainModel = async (body: any, clientCode: string, password: string):
+    public getVerificationDomainModel = async (body: any, clientCode: string, password: string):
         Promise<ClientVerificationModel> => {
 
-        let model: ClientVerificationModel = null;
+        let model: ClientVerificationModel|null = null;
         model = {
             Code      : clientCode,
             Password  : password,

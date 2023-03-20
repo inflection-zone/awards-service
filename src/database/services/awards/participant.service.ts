@@ -1,8 +1,7 @@
 import { Participant } from '../../models/awards/participant.model';
 import { ParticipantCreateModel, ParticipantResponseDto, ParticipantSearchFilters, ParticipantSearchResults, ParticipantUpdateModel } from '../../../domain.types/awards/participant.domain.types';
 import { logger } from '../../../logger/logger';
-import { ApiError } from '../../../common/api.error';
-import { ErrorHandler } from '../../../common/error.handler';
+import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Helper } from '../../../common/helper';
 import { Source } from '../../../database/database.connector';
 import { FindManyOptions, Like, Repository } from 'typeorm';
@@ -10,6 +9,7 @@ import { ParticipantMapper } from '../../mappers/awards/participant.mapper';
 import { Client } from '../../models/client/client.model';
 import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import { StringUtils } from '../../../common/utilities/string.utils';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -62,7 +62,7 @@ export class ParticipantService extends BaseService {
             return ParticipantMapper.toResponseDto(participant);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -106,10 +106,10 @@ export class ParticipantService extends BaseService {
                 participant.Prefix = model.Prefix;
             }
             if (model.FirstName != null) {
-                participant.FirstName = Helper.hash(model.FirstName);
+                participant.FirstName = StringUtils.hash(model.FirstName);
             }
             if (model.LastName != null) {
-                participant.LastName = Helper.hash(model.LastName);
+                participant.LastName = StringUtils.hash(model.LastName);
             }
             if (model.CountryCode != null) {
                 participant.CountryCode = model.CountryCode;
@@ -133,7 +133,7 @@ export class ParticipantService extends BaseService {
             return ParticipantMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -148,7 +148,7 @@ export class ParticipantService extends BaseService {
             return result != null;
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
