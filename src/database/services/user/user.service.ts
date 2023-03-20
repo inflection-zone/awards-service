@@ -209,16 +209,16 @@ export class UserService {
         }
     };
 
-    update = async (id, updateModel) => {
+    update = async (updateModel: UserUpdateModel) => {
         try {
             if (Object.keys(updateModel).length > 0) {
                 var res = await this._userRepository.update({
-                    id : id
+                    id : updateModel.id
                 },
                 updateModel);
                 logger.info(`Update SQL Query : ${res.raw}`);
             }
-            return await this.getById(id);
+            return await this.getById(updateModel.id);
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to update user!', error);
         }
