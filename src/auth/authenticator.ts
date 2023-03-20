@@ -5,7 +5,7 @@ import { injectable, inject } from "tsyringe";
 
 import { ResponseHandler } from '../common/handlers/response.handler';
 import { logger } from '../logger/logger';
-import { ApiError } from '../common/api.error';
+import { ErrorHandler } from '../common/handlers/error.handler';
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -60,11 +60,11 @@ export class Authenticator {
     public checkAuthentication = async(request: express.Request): Promise<boolean> => {
         const clientAuthResult = await this._authenticator.authenticateClient(request);
         if (clientAuthResult.Result === false){
-            throw new ApiError('Unauthorized access', 401);
+            ErrorHandler.throwInternalServerError('Unauthorized access', 401);
         }
         const userAuthResult = await this._authenticator.authenticateUser(request);
         if (userAuthResult.Result === false){
-            throw new ApiError('Unauthorized access', 401);
+            ErrorHandler.throwInternalServerError('Unauthorized access', 401);
         }
         return true;
     };

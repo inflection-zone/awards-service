@@ -1,4 +1,3 @@
-import { ClientResponseDto } from "../client/client.domain.types";
 import {
     BaseSearchResults
 } from "../miscellaneous/base.search.types";
@@ -21,7 +20,11 @@ export interface ParticipantUpdateModel extends PersonModel {
 }
 
 export interface ParticipantResponseDto extends PersonResponseDto {
-    Client        : ClientResponseDto;
+    Client        : {
+        id  : uuid;
+        Name: string;
+        Code: string;
+    };
     OnboardingDate: Date;
 }
 

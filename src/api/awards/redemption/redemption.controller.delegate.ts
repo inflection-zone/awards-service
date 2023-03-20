@@ -1,6 +1,6 @@
 // import {
 //     RedemptionService
-// } from '../../database/repository.services/redemption.service';
+// } from '../../database/services/redemption.service';
 // import {
 //     ErrorHandler
 // } from '../../../common/error.handler';
@@ -42,7 +42,7 @@
 //         var createModel: RedemptionCreateModel = this.getCreateModel(requestBody);
 //         const record = await this._service.create(createModel);
 //         if (record === null) {
-//             throw new ApiError('Unable to create redemption!', 400);
+//             ErrorHandler.throwInternalServerError('Unable to create redemption!', 400);
 //         }
 //         return this.getEnrichedDto(record);
 //     }
@@ -73,7 +73,7 @@
 //         const updateModel: RedemptionUpdateModel = this.getUpdateModel(requestBody);
 //         const updated = await this._service.update(id, updateModel);
 //         if (updated == null) {
-//             throw new ApiError('Unable to update redemption!', 400);
+//             ErrorHandler.throwInternalServerError('Unable to update redemption!', 400);
 //         }
 //         return this.getEnrichedDto(updated);
 //     }

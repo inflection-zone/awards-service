@@ -1,4 +1,4 @@
-// import { RoleService } from "../../database/repository.services/role.service";
+// import { RoleService } from "../../database/services/role.service";
 
 // export class TypesControllerDelegate {
 

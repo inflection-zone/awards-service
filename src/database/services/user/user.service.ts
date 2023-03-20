@@ -5,6 +5,8 @@ import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { passwordStrength } from 'check-password-strength';
 import { Helper } from '../../../common/helper';
 import { TimeUtils } from '../../../common/utilities/time.utils';
+import { StringUtils } from '../../../common/utilities/string.utils';
+import { TypeUtils } from '../../../common/utilities/type.utils';
 import { DurationType } from '../../../domain.types/miscellaneous/time.types';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { UserCreateModel, UserResponseDto, UserSearchFilters, UserSearchResults, UserUpdateModel } from '../../../domain.types/user/user.domain.types';
@@ -277,9 +279,9 @@ export class UserService {
     };
 
     generateUserNameIfDoesNotExist = async (userName: string) => {
-        var tmpUsername = userName ?? Helper.generateUserName();
+        var tmpUsername = userName ?? StringUtils.generateUserName();
         while (await this.getUserWithUserName(tmpUsername) != null) {
-            tmpUsername = Helper.generateUserName();
+            tmpUsername = StringUtils.generateUserName();
         }
         return tmpUsername;
     };
@@ -330,28 +332,28 @@ export class UserService {
 
         var updateModel: any = {};
 
-        if (Helper.hasProperty(inputModel, 'Prefix')) {
+        if (TypeUtils.hasProperty(inputModel, 'Prefix')) {
             updateModel.Prefix = inputModel.Prefix;
         }
-        if (Helper.hasProperty(inputModel, 'FirstName')) {
+        if (TypeUtils.hasProperty(inputModel, 'FirstName')) {
             updateModel.FirstName = inputModel.FirstName;
         }
-        if (Helper.hasProperty(inputModel, 'LastName')) {
+        if (TypeUtils.hasProperty(inputModel, 'LastName')) {
             updateModel.LastName = inputModel.LastName;
         }
-        if (Helper.hasProperty(inputModel, 'Phone')) {
+        if (TypeUtils.hasProperty(inputModel, 'Phone')) {
             updateModel.Phone = inputModel.Phone;
         }
-        if (Helper.hasProperty(inputModel, 'Email')) {
+        if (TypeUtils.hasProperty(inputModel, 'Email')) {
             updateModel.Email = inputModel.Email;
         }
-        if (Helper.hasProperty(inputModel, 'ProfileImageUrl')) {
+        if (TypeUtils.hasProperty(inputModel, 'ProfileImageUrl')) {
             updateModel.ImageUrl = inputModel.ProfileImageUrl;
         }
-        if (Helper.hasProperty(inputModel, 'Gender')) {
+        if (TypeUtils.hasProperty(inputModel, 'Gender')) {
             updateModel.Gender = inputModel.Gender;
         }
-        if (Helper.hasProperty(inputModel, 'BirthDate')) {
+        if (TypeUtils.hasProperty(inputModel, 'BirthDate')) {
             updateModel.BirthDate = inputModel.BirthDate;
         }
 

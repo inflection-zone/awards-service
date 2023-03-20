@@ -2,7 +2,7 @@
 // import { ResponseHandler } from '../../common/response.handler';
 // import { ErrorHandler } from '../../common/error.handler';
 // import { BaseController } from '../base.controller';
-// import { RoleService } from '../../database/repository.services/role.service';
+// import { RoleService } from '../../database/services/role.service';
 
 // ///////////////////////////////////////////////////////////////////////////////////////
 

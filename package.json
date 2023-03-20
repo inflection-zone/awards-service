@@ -45,6 +45,7 @@
         "generate-password": "^1.7.0",
         "glob": "^8.1.0",
         "helmet": "^6.0.1",
+        "joi": "^17.9.0",
         "jsonwebtoken": "^9.0.0",
         "mime-types": "^2.1.34",
         "mysql2": "^3.0.1",
@@ -67,8 +68,7 @@
         "uuid": "^9.0.0",
         "uuid-apikey": "^1.5.3",
         "winston": "^3.8.2",
-        "winston-daily-rotate-file": "^4.7.1",
-        "zod": "^3.20.6"
+        "winston-daily-rotate-file": "^4.7.1"
     },
     "devDependencies": {
         "@jest/types": "^29.3.1",

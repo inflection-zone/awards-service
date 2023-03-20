@@ -5,7 +5,7 @@ import { IAuthorizer } from '../authorizer.interface';
 import { CurrentUser } from '../../domain.types/miscellaneous/current.user';
 import { ConfigurationManager } from '../../config/configuration.manager';
 import { Loader } from '../../startup/loader';
-import { UserService } from '../../database/repository.services/user/user.service';
+import { UserService } from '../../database/services/user/user.service';
 
 //////////////////////////////////////////////////////////////
 

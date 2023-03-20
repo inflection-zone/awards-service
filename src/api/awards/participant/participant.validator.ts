@@ -1,9 +1,13 @@
-import z from 'zod';
+import joi from 'joi';
 import express from 'express';
-import { ParticipantCreateModel, ParticipantUpdateModel, ParticipantSearchFilters } from '../../../domain.types/awards/participant.domain.types';
+import { 
+    ParticipantCreateModel, 
+    ParticipantUpdateModel, 
+    ParticipantSearchFilters 
+} from '../../../domain.types/awards/participant.domain.types';
 import {
     ErrorHandler
-} from '../../../common/error.handler';
+} from '../../../common/handlers/error.handler';
 import { Gender } from '../../../domain.types/miscellaneous/system.types';
 import BaseValidator from '../../base.validator';
 
@@ -12,23 +16,37 @@ import BaseValidator from '../../base.validator';
 export class ParticipantValidator extends BaseValidator {
 
     public validateCreateRequest = async (request: express.Request): Promise<ParticipantCreateModel> => {
-        try {
-            const schema = z.object({
-                ReferenceId     : z.string(),
-                ClientId        : z.string().uuid().optional(),
-                Prefix          : z.string().max(32).optional(),
-                FirstName       : z.string().max(64).optional(),
-                LastName        : z.string().max(64).optional(),
-                CountryCode     : z.string().max(16).optional(),
-                Phone           : z.string().max(16).min(6).optional(),
-                Email           : z.string().max(256).optional(),
-                Gender          : z.nativeEnum(Gender).optional(),
-                BirthDate       : z.date().optional(),
-                ProfileImageUrl : z.string().max(1024).optional(),
-                OnboardingDate  : z.date().optional(),
+
+    try {
+            const schema = joi.object({
+                ReferenceId     : joi.string(),
+                ClientId        : joi.string().uuid(),
+                Prefix          : joi.string().max(32).optional(),
+                FirstName       : joi.string().max(64).optional(),
+                LastName        : joi.string().max(64).optional(),
+                CountryCode     : joi.string().max(16).optional(),
+                Phone           : joi.string().max(16).min(6).optional(),
+                Email           : joi.string().max(256).optional(),
+                Gender          : joi.string().valid(...Object.values(Gender)).optional(),
+                BirthDate       : joi.date().optional(),
+                ProfileImageUrl : joi.string().max(1024).optional(),
+                OnboardingDate  : joi.date().optional(),
             });
-            const parsed = await schema.parseAsync(request.body);
-            return parsed;
+            await schema.validateAsync(request.body);
+            return {
+                ReferenceId     : request.body.ReferenceId,
+                ClientId        : request.body.ClientId,
+                Prefix          : request.body.Prefix ?? null,
+                FirstName       : request.body.FirstName ?? null,
+                LastName        : request.body.LastName ?? null,
+                CountryCode     : request.body.CountryCode ?? null,
+                Phone           : request.body.Phone ?? null,
+                Email           : request.body.Email ?? null,
+                Gender          : request.body.Gender ?? null,
+                BirthDate       : request.body.BirthDate ?? null,
+                ProfileImageUrl : request.body.ProfileImageUrl ?? null,
+                OnboardingDate  : request.body.OnboardingDate ?? null,
+            };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }
@@ -36,23 +54,34 @@ export class ParticipantValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<ParticipantUpdateModel> => {
         try {
-            const schema = z.object({
-                Prefix          : z.string().max(32).optional(),
-                FirstName       : z.string().max(64).optional(),
-                LastName        : z.string().max(64).optional(),
-                CountryCode     : z.string().max(16).optional(),
-                Phone           : z.string().max(16).min(6).optional(),
-                Email           : z.string().max(256).email().optional(),
-                Gender          : z.nativeEnum(Gender).optional(),
-                BirthDate       : z.date().optional(),
-                ProfileImageUrl : z.string().max(1024).optional(),
-                OnboardingDate  : z.date().optional(),
+            const schema = joi.object({
+                Prefix          : joi.string().max(32).optional(),
+                FirstName       : joi.string().max(64).optional(),
+                LastName        : joi.string().max(64).optional(),
+                CountryCode     : joi.string().max(16).optional(),
+                Phone           : joi.string().max(16).min(6).optional(),
+                Email           : joi.string().max(256).email().optional(),
+                Gender          : joi.string().valid(...Object.values(Gender)).optional(),
+                BirthDate       : joi.date().optional(),
+                ProfileImageUrl : joi.string().max(1024).optional(),
+                OnboardingDate  : joi.date().optional(),
             });
-            const parsed = await schema.parseAsync(request.body);
+            await schema.validateAsync(request.body);
             const id = await this.validateParamAsUUID(request, 'id');
             return {
                 id,
-                ...parsed
+                ReferenceId     : request.body.ReferenceId ?? null,
+                ClientId        : request.body.ClientId ?? null,
+                Prefix          : request.body.Prefix ?? null,
+                FirstName       : request.body.FirstName ?? null,
+                LastName        : request.body.LastName ?? null,
+                CountryCode     : request.body.CountryCode ?? null,
+                Phone           : request.body.Phone ?? null,
+                Email           : request.body.Email ?? null,
+                Gender          : request.body.Gender ?? null,
+                BirthDate       : request.body.BirthDate ?? null,
+                ProfileImageUrl : request.body.ProfileImageUrl ?? null,
+                OnboardingDate  : request.body.OnboardingDate ?? null,
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -61,14 +90,14 @@ export class ParticipantValidator extends BaseValidator {
 
     public validateSearchRequest = async (request: express.Request): Promise<ParticipantSearchFilters> => {
         try {
-            const schema = z.object({
-                clientId : z.string().uuid().optional(),
-                name     : z.string().max(64).optional(),
-                phone    : z.string().max(12).min(2).optional(),
-                email    : z.string().min(3).optional(),
+            const schema = joi.object({
+                clientId : joi.string().uuid().optional(),
+                name     : joi.string().max(64).optional(),
+                phone    : joi.string().max(12).min(2).optional(),
+                email    : joi.string().min(3).optional(),
             });
-            const parsed = await schema.parseAsync(request.query);
-            const filters = this.getSearchFilters(parsed);
+            await schema.validateAsync(request.query);
+            const filters = this.getSearchFilters(request.query);
             return filters;
         } catch (error) {
             ErrorHandler.handleValidationError(error);

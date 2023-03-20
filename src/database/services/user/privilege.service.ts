@@ -1,7 +1,6 @@
 import { Privilege } from '../../models/user/privilege.model';
 import { PrivilegeCreateModel, PrivilegeResponseDto, PrivilegeSearchFilters, PrivilegeSearchResults, PrivilegeUpdateModel } from '../../../domain.types/user/privilege.domain.types';
 import { logger } from '../../../logger/logger';
-import { ApiError } from '../../../common/api.error';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Source } from '../../database.connector';
 import { FindManyOptions, Like, Repository } from 'typeorm';
@@ -32,7 +31,7 @@ export class PrivilegeService extends BaseService {
             return PrivilegeMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -46,7 +45,7 @@ export class PrivilegeService extends BaseService {
             return PrivilegeMapper.toResponseDto(role);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -76,7 +75,7 @@ export class PrivilegeService extends BaseService {
             return PrivilegeMapper.toResponseDto(privilege_);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -136,7 +135,7 @@ export class PrivilegeService extends BaseService {
             return PrivilegeMapper.toResponseDto(record);
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 
@@ -151,7 +150,7 @@ export class PrivilegeService extends BaseService {
             return result != null;
         } catch (error) {
             logger.error(error.message);
-            throw new ApiError(error.message, 500);
+            ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
 

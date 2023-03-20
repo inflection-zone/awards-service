@@ -1,39 +1,37 @@
 import express from 'express';
 import { ResponseHandler } from '../../../common/handlers/response.handler';
-import { ParticipantValidator } from './participant.validator';
+import { BadgeValidator } from './badge.validator';
 import { BaseController } from '../../base.controller';
-import { ParticipantService } from '../../../database/services/awards/participant.service';
+import { BadgeService } from '../../../database/services/awards/badge.service';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
-import { ParticipantCreateModel, ParticipantSearchFilters, ParticipantUpdateModel } from '../../../domain.types/awards/participant.domain.types';
+import { BadgeCreateModel, BadgeSearchFilters, BadgeUpdateModel } from '../../../domain.types/awards/badge.domain.types';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-export class ParticipantController extends BaseController {
+export class BadgeController extends BaseController {
 
     //#region member variables and constructors
 
-    _service: ParticipantService = null;
+    _service: BadgeService = new BadgeService();
 
-    _validator: ParticipantValidator = null;
+    _validator: BadgeValidator = new BadgeValidator();
 
     constructor() {
         super();
-        this._service = new ParticipantService();
-        this._validator = new ParticipantValidator();
     }
 
     //#endregion
 
     create = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('Participant.Create', request, response);
-            var model: ParticipantCreateModel = await this._validator.validateCreateRequest(request);
+            await this.authorize('Badge.Create', request, response);
+            var model: BadgeCreateModel = await this._validator.validateCreateRequest(request);
             const record = await this._service.create(model);
             if (record === null) {
-                ErrorHandler.throwInternalServerError('Unable to add participant!');
+                ErrorHandler.throwInternalServerError('Unable to add badge!');
             }
-            const message = 'Participant added successfully!';
+            const message = 'Badge added successfully!';
             return ResponseHandler.success(request, response, message, 201, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
@@ -42,10 +40,10 @@ export class ParticipantController extends BaseController {
 
     getById = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('Participant.GetById', request, response);
+            await this.authorize('Badge.GetById', request, response);
             var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
             const record = await this._service.getById(id);
-            const message = 'Participant retrieved successfully!';
+            const message = 'Badge retrieved successfully!';
             return ResponseHandler.success(request, response, message, 200, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
@@ -54,10 +52,10 @@ export class ParticipantController extends BaseController {
 
     update = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('Participant.Update', request, response);
-            var model: ParticipantUpdateModel = await this._validator.validateUpdateRequest(request);
+            await this.authorize('Badge.Update', request, response);
+            var model: BadgeUpdateModel = await this._validator.validateUpdateRequest(request);
             const updatedRecord = await this._service.update(model);
-            const message = 'Participant updated successfully!';
+            const message = 'Badge updated successfully!';
             ResponseHandler.success(request, response, message, 200, updatedRecord);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
@@ -66,10 +64,10 @@ export class ParticipantController extends BaseController {
 
     search = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('Participant.Search', request, response);
-            var filters: ParticipantSearchFilters = await this._validator.validateSearchRequest(request);
+            await this.authorize('Badge.Search', request, response);
+            var filters: BadgeSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
-            const message = 'Participant records retrieved successfully!';
+            const message = 'Badge records retrieved successfully!';
             ResponseHandler.success(request, response, message, 200, searchResults);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
@@ -78,10 +76,10 @@ export class ParticipantController extends BaseController {
 
     delete = async (request: express.Request, response: express.Response): Promise < void > => {
         try {
-            await this.authorize('Participant.Delete', request, response);
+            await this.authorize('Badge.Delete', request, response);
             var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
-            const message = 'Participant deleted successfully!';
+            const message = 'Badge deleted successfully!';
             ResponseHandler.success(request, response, message, 200, result);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);

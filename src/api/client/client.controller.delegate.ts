@@ -1,6 +1,6 @@
 import {
     ClientService
-} from '../../database/repository.services/client/client.service';
+} from '../../database/services/client/client.service';
 import {
     ErrorHandler
 } from '../../common/handlers/error.handler';
@@ -8,10 +8,7 @@ import {
     TypeUtils
 } from '../../common/utilities/type.utils';
 import {
-    ApiError
-} from '../../common/handlers/error.handler';
-import {
-    ClientValidator as validator
+    ClientValidator,
 } from './client.validator';
 import {
     uuid
@@ -30,16 +27,14 @@ export class ClientControllerDelegate {
 
     //#region member variables and constructors
 
-    _service: ClientService = null;
+    _service: ClientService = new ClientService();
 
-    constructor() {
-        this._service = new ClientService();
-    }
+    _validator: ClientValidator = new ClientValidator();
 
     //#endregion
 
     create = async (requestBody: any) => {
-        const createModel: ClientCreateModel = await validator.validateCreateRequest(requestBody);
+        const createModel: ClientCreateModel = await this._validator.validateCreateRequest(requestBody);
         var clientCode = requestBody.Code;
         if (clientCode) {
             var existing = await this._service.getByClientCode(clientCode);
@@ -53,7 +48,7 @@ export class ClientControllerDelegate {
         }
         const record = await this._service.create(createModel);
         if (record === null) {
-            throw new ApiError('Unable to create client!', 400);
+            ErrorHandler.throwInternalServerError('Unable to create client!');
         }
         return this.getEnrichedDto(record);
     };
@@ -67,21 +62,20 @@ export class ClientControllerDelegate {
     };
 
     search = async (query: any) => {
-        var filters: ClientSearchFilters = await validator.validateSearchRequest(query);
+        var filters: ClientSearchFilters = await this._validator.validateSearchRequest(query);
         var searchResults: ClientSearchResults = await this._service.search(filters);
         return searchResults;
     };
 
     update = async (id: uuid, requestBody: any) => {
-        await validator.validateUpdateRequest(requestBody);
+        const updateModel: ClientUpdateModel = await this._validator.validateUpdateRequest(requestBody);
         const record = await this._service.getById(id);
         if (record === null) {
-            ErrorHandler.throwNotFoundError('Api client with id ' + id.toString() + ' cannot be found!');
+            ErrorHandler.throwNotFoundError('Api client with id ' + id?.toString() + ' cannot be found!');
         }
-        const updateModel: ClientUpdateModel = this.getUpdateModel(requestBody);
         const updated = await this._service.update(id, updateModel);
         if (updated == null) {
-            throw new ApiError('Unable to update client!', 400);
+            ErrorHandler.throwInternalServerError('Unable to update client!');
         }
         return this.getEnrichedDto(updated);
     };
@@ -98,17 +92,17 @@ export class ClientControllerDelegate {
     };
 
     getCurrentApiKey = async (request) => {
-        const verificationModel = await validator.getOrRenewApiKey(request);
+        const verificationModel = await this._validator.getOrRenewApiKey(request);
         const apiKeyDto = await this._service.getApiKey(verificationModel);
         if (apiKeyDto == null) {
-            throw new ApiError('Unable to retrieve client key.', 400);
+            ErrorHandler.throwInternalServerError('Unable to retrieve client key.');
         }
         return apiKeyDto;
     };
 
     renewApiKey = async (request) => {
 
-        const verificationModel = await validator.getOrRenewApiKey(request);
+        const verificationModel = await this._validator.getOrRenewApiKey(request);
 
         if (verificationModel.ValidFrom == null) {
             verificationModel.ValidFrom = new Date();
@@ -121,7 +115,7 @@ export class ClientControllerDelegate {
 
         const apiKeyDto = await this._service.renewApiKey(verificationModel);
         if (apiKeyDto == null) {
-            throw new ApiError('Unable to renew client key.', 400);
+            ErrorHandler.throwInternalServerError('Unable to renew client key.');
         }
         return apiKeyDto;
     };
@@ -129,41 +123,6 @@ export class ClientControllerDelegate {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     //#region Privates
-
-    getUpdateModel = (requestBody): ClientUpdateModel => {
-
-        const updateModel: ClientUpdateModel = {};
-
-        if (TypeUtils.hasProperty(requestBody, 'Name')) {
-            updateModel.Name = requestBody.Name;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'IsPrivileged')) {
-            updateModel.IsPrivileged = requestBody.IsPrivileged;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'CountryCode')) {
-            updateModel.CountryCode = requestBody.CountryCode;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'Phone')) {
-            updateModel.Phone = requestBody.Phone;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'Email')) {
-            updateModel.Email = requestBody.Email;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'Password')) {
-            updateModel.Password = requestBody.Password;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'ApiKey')) {
-            updateModel.ApiKey = requestBody.ApiKey;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'ValidFrom')) {
-            updateModel.ValidFrom = requestBody.ValidFrom;
-        }
-        if (TypeUtils.hasProperty(requestBody, 'ValidTill')) {
-            updateModel.ValidTill = requestBody.ValidTill;
-        }
-
-        return updateModel;
-    };
 
     getEnrichedDto = (record) => {
         if (record == null) {

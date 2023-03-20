@@ -1,4 +1,4 @@
-// import { FileResourceService } from '../../database/repository.services/general/file.resource.service';
+// import { FileResourceService } from '../../database/services/general/file.resource.service';
 // import { ErrorHandler } from '../../common/error.handler';
 // import { Helper } from '../../common/helper';
 // import { ApiError } from '../../common/api.error';
@@ -54,7 +54,7 @@
 //         };
 //         var record = await this._service.create(model);
 //         if (record === null) {
-//             throw new ApiError('Unable to create file resource!', 400);
+//             ErrorHandler.throwInternalServerError('Unable to create file resource!', 400);
 //         }
 
 //         return this.getEnrichedDto(record);

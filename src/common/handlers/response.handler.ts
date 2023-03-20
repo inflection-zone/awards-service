@@ -113,7 +113,7 @@ export class ResponseHandler {
     static handleError(
         request: express.Request,
         response: express.Response,
-        error: Error) {
+        error: any) {
 
         if (error instanceof InputValidationError) {
             const validationError = error as InputValidationError;
