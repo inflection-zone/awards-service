@@ -35,7 +35,7 @@ export class Rule {
     @JoinColumn()
     Action: RuleAction;
 
-    @OneToOne(() => Condition, (condition) => condition.Rule)
+    @OneToOne(() => Condition, (condition) => condition.Rule, { nullable: true })
     @JoinColumn()
     Condition: Condition;
 
