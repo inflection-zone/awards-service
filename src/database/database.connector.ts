@@ -11,7 +11,7 @@ import { AwardPointRedemption } from "./models/awards/award.points.redemption.mo
 import { BadgeCategory } from "./models/awards/badge.category.model";
 import { Badge } from "./models/awards/badge.model";
 import { DisbursedAwardPoint } from "./models/awards/disbursed.award.point.model";
-import { Group } from "./models/awards/group.model";
+import { ParticipantGroup } from "./models/awards/participant.group.model";
 import { ParticipantBadge } from "./models/awards/participant.badge.model";
 import { Participant } from "./models/awards/participant.model";
 import { Condition } from './models/engine/condition.model';
@@ -97,7 +97,7 @@ class DatabaseConnector {
             Badge,
             BadgeCategory,
             DisbursedAwardPoint,
-            Group,
+            ParticipantGroup,
             ParticipantBadge,
             Participant,
             Condition,

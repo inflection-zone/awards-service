@@ -90,7 +90,7 @@ export class BadgeService extends BaseService {
                 }
             });
             if (!badge) {
-                ErrorHandler.throwNotFoundError('badge not found!');
+                ErrorHandler.throwNotFoundError('Badge not found!');
             }
             //Badge code is not modifiable
             //Use renew key to update ApiKey, ValidFrom and ValidTill

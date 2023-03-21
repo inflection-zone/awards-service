@@ -8,7 +8,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Participant } from "../awards/participant.model";
-import { Group } from "../awards/group.model";
+import { ParticipantGroup } from "../awards/participant.group.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -28,8 +28,8 @@ export class Context {
     @JoinColumn()
     Participant: Participant;
 
-    @OneToOne(() => Group, { nullable: true })
+    @OneToOne(() => ParticipantGroup, { nullable: true })
     @JoinColumn()
-    Group: Group;
+    Group: ParticipantGroup;
 
 }
