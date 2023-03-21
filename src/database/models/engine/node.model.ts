@@ -6,9 +6,14 @@ import {
     OneToMany,
     OneToOne,
     JoinColumn,
+    ManyToOne,
+    CreateDateColumn,
+    UpdateDateColumn,
+    DeleteDateColumn,
 } from 'typeorm';
 import { NodeDefaultAction } from "./node.default.action.model";
 import { Rule } from "./rule.model";
+import { Schema } from "./schema.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -24,8 +29,14 @@ export class Node {
     @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
 
-    @Column({ type: 'uuid', nullable: true })
-    SchemaId: string;
+    @ManyToOne(() => Node, (node) => node.Children)
+    ParentNode: Node;
+
+    @OneToMany(() => Node, (node) => node.ParentNode)
+    Children: Node[];
+
+    @ManyToOne(() => Schema, (schema) => schema.Nodes)
+    Schema: Schema;
 
     @OneToMany(() => Rule, (rule) => rule.ParentNode, {
         cascade  : true,
@@ -37,5 +48,14 @@ export class Node {
     @OneToOne(() => NodeDefaultAction, (action) => action.ParentNode)
     @JoinColumn()
     DefaultAction: NodeDefaultAction;
+
+    @CreateDateColumn()
+    CreatedAt : Date;
+
+    @UpdateDateColumn()
+    UpdatedAt : Date;
+
+    @DeleteDateColumn()
+    DeletedAt : Date;
 
 }
