@@ -21,11 +21,11 @@ export class BadgeValidator extends BaseValidator {
             });
             await schema.validateAsync(request.body);
             return {
-                Name       : request.body.Name,
-                CategoryId : request.body.CategoryId,
-                ClientId   : request.body.ClientId,
-                Description: request.body.Description ?? null,
-                ImageUrl   : request.body.ImageUrl
+                Name        : request.body.Name,
+                CategoryId  : request.body.CategoryId,
+                ClientId    : request.body.ClientId,
+                Description : request.body.Description ?? null,
+                ImageUrl    : request.body.ImageUrl
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -43,11 +43,11 @@ export class BadgeValidator extends BaseValidator {
             });
             await schema.validateAsync(request.body);
             return {
-                Name       : request.body.Name ?? null,
-                CategoryId : request.body.CategoryId ?? null,
-                ClientId   : request.body.ClientId ?? null,
-                Description: request.body.Description ?? null,
-                ImageUrl   : request.body.ImageUrl ?? null
+                Name        : request.body.Name ?? null,
+                CategoryId  : request.body.CategoryId ?? null,
+                ClientId    : request.body.ClientId ?? null,
+                Description : request.body.Description ?? null,
+                ImageUrl    : request.body.ImageUrl ?? null
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
