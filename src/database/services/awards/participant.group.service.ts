@@ -137,6 +137,9 @@ export class ParticipantGroupService extends BaseService {
             relations : {
             },
             where : {
+                // Participants: {
+                //     id : filters.ParticipantId
+                // }
             },
             select : {
                 id      : true,
