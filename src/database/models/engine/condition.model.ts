@@ -24,6 +24,9 @@ export class Condition {
     @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;
 
+    @Column({ type: 'varchar', length: 512, nullable: true })
+    Description : string;
+
     @OneToOne(() => Rule, (rule) => rule.Condition)
     Rule: Rule;
 
@@ -33,13 +36,13 @@ export class Condition {
     @Column({ type: 'varchar', length: 256, nullable: true })
     Fact : string;
 
-    @Column({ type: 'enum', enum: LogicalOperator, nullable: false })
+    @Column({ type: 'enum', enum: LogicalOperator, nullable: true })
     LogicalOperator : LogicalOperator;
 
-    @Column({ type: 'enum', enum: MathematicalOperator, nullable: false })
+    @Column({ type: 'enum', enum: MathematicalOperator, nullable: true })
     MathematicalOperator : MathematicalOperator;
 
-    @Column({ type: 'enum', enum: CompositionOperator, nullable: false })
+    @Column({ type: 'enum', enum: CompositionOperator, nullable: true })
     CompositionOperator : CompositionOperator;
 
     @Column({ type: 'enum', enum: OperandDataType, nullable: false })
@@ -48,7 +51,7 @@ export class Condition {
     @Column({ type: 'json', nullable: true })
     Value : any;
 
-    @ManyToOne(() => Condition, (child) => child.ChildrenConditions)
+    @ManyToOne(() => Condition, (child) => child.ChildrenConditions, { nullable: true })
     ParentCondition: Condition;
 
     @OneToMany(() => Condition, (parent) => parent.ParentCondition)
