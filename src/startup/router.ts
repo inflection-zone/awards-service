@@ -6,6 +6,7 @@ import { register as registerBadgeRoutes } from "../api/awards/badge/badge.route
 import { register as registerBadgeCategoryRoutes } from "../api/awards/badge.category/badge.category.routes";
 import { register as registerParticipantRoutes } from "../api/awards/participant/participant.routes";
 import { register as registerParticipantGroupRoutes } from "../api/awards/participant.group/participant.group.routes";
+import { register as registerSchemaRoutes } from '../api/engine/schema/schema.routes';
 
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +35,7 @@ export class Router {
                 registerBadgeCategoryRoutes(this._app);
                 registerParticipantRoutes(this._app);
                 registerParticipantGroupRoutes(this._app);
+                registerSchemaRoutes(this._app);
 
                 resolve(true);
 

@@ -38,6 +38,9 @@ export class Schema {
     @Column({ type: 'date', nullable: true })
     ValidTill : Date;
 
+    @Column({ type: 'boolean', nullable: false, default: true })
+    IsValid : boolean;
+
     @CreateDateColumn()
     CreatedAt : Date;
 
