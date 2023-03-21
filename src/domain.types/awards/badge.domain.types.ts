@@ -17,7 +17,6 @@ export interface BadgeCreateModel {
 }
 
 export interface BadgeUpdateModel {
-    id           : uuid;
     CategoryId?  : uuid;
     ClientId?    : uuid;
     Name?        : string;

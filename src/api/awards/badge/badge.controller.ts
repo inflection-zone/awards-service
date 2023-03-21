@@ -53,8 +53,9 @@ export class BadgeController extends BaseController {
     update = async (request: express.Request, response: express.Response) => {
         try {
             await this.authorize('Badge.Update', request, response);
+            const id = await this._validator.validateParamAsUUID(request, 'id');
             var model: BadgeUpdateModel = await this._validator.validateUpdateRequest(request);
-            const updatedRecord = await this._service.update(model);
+            const updatedRecord = await this._service.update(id, model);
             const message = 'Badge updated successfully!';
             ResponseHandler.success(request, response, message, 200, updatedRecord);
         } catch (error) {

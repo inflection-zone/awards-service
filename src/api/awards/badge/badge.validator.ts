@@ -42,9 +42,7 @@ export class BadgeValidator extends BaseValidator {
                 ImageUrl    : joi.string().max(1024).uri().optional(),
             });
             await schema.validateAsync(request.body);
-            const id = await this.validateParamAsUUID(request, 'id');
             return {
-                id,
                 Name       : request.body.Name ?? null,
                 CategoryId : request.body.CategoryId ?? null,
                 ClientId   : request.body.ClientId ?? null,

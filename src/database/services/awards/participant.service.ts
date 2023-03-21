@@ -88,12 +88,12 @@ export class ParticipantService extends BaseService {
         }
     };
 
-    public update = async (model: ParticipantUpdateModel)
+    public update = async (id: uuid, model: ParticipantUpdateModel)
         : Promise<ParticipantResponseDto> => {
         try {
             const participant = await this._participantRepository.findOne({
                 where : {
-                    id : model.id
+                    id : id
                 }
             });
             if (!participant) {
