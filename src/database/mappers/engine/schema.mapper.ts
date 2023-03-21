@@ -7,25 +7,25 @@ import {
 
 export class SchemaMapper {
 
-    static toResponseDto = (badge: Schema): SchemaResponseDto => {
-        if (badge == null) {
+    static toResponseDto = (schema: Schema): SchemaResponseDto => {
+        if (schema == null) {
             return null;
         }
         const dto: SchemaResponseDto = {
-            id     : badge.id,
+            id     : schema.id,
             Client : {
-                id   : badge.Client.id,
-                Name : badge.Client.Name,
-                Code : badge.Client.Code,
+                id   : schema.Client.id,
+                Name : schema.Client.Name,
+                Code : schema.Client.Code,
             },
-            Name        : badge.Name,
-            Description : badge.Description,
-            ValidFrom   : badge.ValidFrom,
-            ValidTill   : badge.ValidTill,
-            IsValid     : badge.IsValid,
-            RootNodeId  : badge.RootNodeId,
-            CreatedAt   : badge.CreatedAt,
-            UpdatedAt   : badge.UpdatedAt,
+            Name        : schema.Name,
+            Description : schema.Description,
+            ValidFrom   : schema.ValidFrom,
+            ValidTill   : schema.ValidTill,
+            IsValid     : schema.IsValid,
+            RootNodeId  : schema.RootNodeId,
+            CreatedAt   : schema.CreatedAt,
+            UpdatedAt   : schema.UpdatedAt,
         };
         return dto;
     };

@@ -7,9 +7,11 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     ManyToOne,
+    OneToMany,
     JoinColumn,
 } from 'typeorm';
 import { Client } from "../client/client.model";
+import { Node } from "../engine/node.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +33,13 @@ export class Schema {
 
     @Column({ type: 'uuid', nullable: true })
     RootNodeId: string;
+
+    @OneToMany(() => Node, (node) => node.Schema, {
+        cascade  : true,
+        nullable : true,
+    })
+    @JoinColumn()
+    Nodes: Node[];
 
     @Column({ type: 'date', nullable: true })
     ValidFrom : Date;
