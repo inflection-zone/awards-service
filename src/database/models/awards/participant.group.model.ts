@@ -35,7 +35,7 @@ export class ParticipantGroup {
 
     @Column({ type: 'varchar', length: 1024, nullable: true })
     @IsUrl()
-    ProfileImageUrl : string;
+    ImageUrl : string;
 
     @ManyToMany(() => Participant)
     @JoinTable()
