@@ -209,16 +209,48 @@ export class UserService {
         }
     };
 
-    update = async (updateModel: UserUpdateModel) => {
+    update = async (id: uuid, model: UserUpdateModel) => {
         try {
-            if (Object.keys(updateModel).length > 0) {
-                var res = await this._userRepository.update({
-                    id : updateModel.id
-                },
-                updateModel);
-                logger.info(`Update SQL Query : ${res.raw}`);
+            const user = await this._userRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            if (!user) {
+                ErrorHandler.throwNotFoundError('User not found!');
             }
-            return await this.getById(updateModel.id);
+            if (model.UserName != null) {
+                user.UserName = model.UserName;
+            }
+            if (model.Prefix != null) {
+                user.Prefix = model.Prefix;
+            }
+            if (model.FirstName != null) {
+                user.FirstName = model.FirstName;
+            }
+            if (model.LastName != null) {
+                user.LastName = model.LastName;
+            }
+            if (model.CountryCode != null) {
+                user.CountryCode = model.CountryCode;
+            }
+            if (model.Phone != null) {
+                user.Phone = model.Phone;
+            }
+            if (model.Email != null) {
+                user.Email = model.Email;
+            }
+            if (model.Gender != null) {
+                user.Gender = model.Gender;
+            }
+            if (model.BirthDate != null) {
+                user.BirthDate = model.BirthDate;
+            }
+            if (model.ProfileImageUrl != null) {
+                user.ProfileImageUrl = model.ProfileImageUrl;
+            }
+            var record = await this._userRepository.save(user);
+            return UserMapper.toResponseDto(record);
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to update user!', error);
         }

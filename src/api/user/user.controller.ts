@@ -83,8 +83,9 @@ export class UserController extends BaseController {
     update = async (request: express.Request, response: express.Response): Promise <void> => {
         try {
             await this.authorize('User.Update', request, response);
+            const id: uuid = await this._validator.validateParamAsUUID(request, 'id');
             const updateModel: UserUpdateModel = await this._validator.validateUpdateRequest(request);
-            const updated: UserResponseDto = await this._service.update(updateModel);
+            const updated: UserResponseDto = await this._service.update(id, updateModel);
             if (updated == null) {
                 ErrorHandler.throwInternalServerError('Unable to update user!', 400);
             }

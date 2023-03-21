@@ -17,8 +17,8 @@ import { Participant } from "./participant.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-@Entity({ name: 'groups' })
-export class Group {
+@Entity({ name: 'participant_groups' })
+export class ParticipantGroup {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
