@@ -10,7 +10,6 @@ import { EventActionType } from "./enums";
 //////////////////////////////////////////////////////////////
 
 export interface NodeCreateModel {
-    ClientId        : uuid;
     Name            : string;
     Description?    : string;
     ParentNodeId    : uuid;
@@ -19,7 +18,6 @@ export interface NodeCreateModel {
 }
 
 export interface NodeUpdateModel {
-    ClientId        ?: uuid;
     Name            ?: string;
     Description     ?: string;
     ParentNodeId    ?: uuid;
@@ -63,7 +61,6 @@ export interface NodeResponseDto {
 
 export interface NodeSearchFilters extends BaseSearchFilters {
     Name         ?: string;
-    ClientId     ?: uuid;
     ParentNodeId ?: uuid;
     SchemaId     ?: uuid;
 }
