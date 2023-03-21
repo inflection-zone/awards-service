@@ -27,9 +27,6 @@ export class NodeInstance extends Node {
     ExecutionStatus : ExecutionStatus;
 
     @Column({ type: 'uuid', nullable: false })
-    SchemaId: string;
-
-    @Column({ type: 'uuid', nullable: false })
     NodeId: string;
 
     @Column({ type: 'uuid', nullable: false })
