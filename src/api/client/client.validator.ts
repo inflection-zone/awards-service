@@ -69,9 +69,7 @@ export class ClientValidator extends BaseValidator {
                 ValidTill    : joi.date().optional()
             });
             await schema.validateAsync(request.body);
-            const id = await this.validateParamAsUUID(request, 'id');
             return {
-                id,
                 Name        : request.body.Name ?? null,
                 Code        : request.body.Code ?? null,
                 IsPrivileged: request.body.IsPrivileged ?? null,

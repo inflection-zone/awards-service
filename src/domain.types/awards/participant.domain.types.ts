@@ -14,7 +14,6 @@ export interface ParticipantCreateModel extends PersonModel {
 }
 
 export interface ParticipantUpdateModel extends PersonModel {
-    id              : uuid;
     ClientId       ?: uuid;
     OnboardingDate ?: Date;
 }

@@ -67,9 +67,7 @@ export class ParticipantValidator extends BaseValidator {
                 OnboardingDate  : joi.date().optional(),
             });
             await schema.validateAsync(request.body);
-            const id = await this.validateParamAsUUID(request, 'id');
             return {
-                id,
                 ReferenceId     : request.body.ReferenceId ?? null,
                 ClientId        : request.body.ClientId ?? null,
                 Prefix          : request.body.Prefix ?? null,

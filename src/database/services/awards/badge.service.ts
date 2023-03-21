@@ -81,12 +81,12 @@ export class BadgeService extends BaseService {
         }
     };
 
-    public update = async (model: BadgeUpdateModel)
+    public update = async (id: uuid, model: BadgeUpdateModel)
         : Promise<BadgeResponseDto> => {
         try {
             const badge = await this._badgeRepository.findOne({
                 where : {
-                    id : model.id
+                    id : id
                 }
             });
             if (!badge) {
