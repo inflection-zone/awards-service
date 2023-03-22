@@ -29,7 +29,13 @@ export class RuleMapper {
                 id          : rule.Action.id,
                 Name        : rule.Action.Name,
                 Description : rule.Action.Description,
-                ActionType  : rule.Action.ActionType
+                ActionType  : rule.Action.ActionType,
+                Params : {
+                    Message: rule.Action.Params.Message,
+                    Action : rule.Action.Params.Action,
+                    NextNodeId: rule.Action.Params.NextNodeId,
+                    Extra: rule.Action.Params.Extra,
+                }
             } : null,
             CreatedAt : rule.CreatedAt,
             UpdatedAt : rule.UpdatedAt,

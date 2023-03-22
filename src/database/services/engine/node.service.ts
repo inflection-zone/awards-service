@@ -1,5 +1,4 @@
 import { Node } from '../../models/engine/node.model';
-//import { Client } from '../../models/client/client.model';
 import { Schema } from '../../models/engine/schema.model';
 import { Rule } from '../../models/engine/rule.model';
 import { NodeDefaultAction } from '../../models/engine/node.default.action.model';
@@ -25,8 +24,6 @@ export class NodeService extends BaseService {
 
     _nodeRepository: Repository<Node> = Source.getRepository(Node);
 
-    //_clientRepository: Repository<Client> = Source.getRepository(Client);
-
     _schemaRepository: Repository<Schema> = Source.getRepository(Schema);
 
     _ruleRepository: Repository<Rule> = Source.getRepository(Rule);
@@ -38,9 +35,8 @@ export class NodeService extends BaseService {
     public create = async (createModel: NodeCreateModel)
         : Promise<NodeResponseDto> => {
 
-        //const client = await this.getClient(createModel.ClientId);
         const schema = await this.getSchema(createModel.SchemaId);
-        const defaultAction = await this.getDefaultAction(createModel.DefaultActionId);
+        const defaultAction = await this.createAction(createModel.DefaultAction);
         const parentNode = await this.getNode(createModel.ParentNodeId);
 
         const node = this._nodeRepository.create({
@@ -101,9 +97,6 @@ export class NodeService extends BaseService {
             if (!node) {
                 ErrorHandler.throwNotFoundError('Node not found!');
             }
-            //Node code is not modifiable
-            //Use renew key to update ApiKey, ValidFrom and ValidTill
-
             if (model.SchemaId != null) {
                 const schema = await this.getSchema(model.SchemaId);
                 node.Schema = schema;
@@ -118,8 +111,8 @@ export class NodeService extends BaseService {
             if (model.Description != null) {
                 node.Description = model.Description;
             }
-            if (model.DefaultActionId != null) {
-                const defaultAction = await this.getDefaultAction(model.DefaultActionId);
+            if (model.DefaultAction != null) {
+                const defaultAction = await this.updateAction(node.DefaultAction.id, model.DefaultAction);
                 node.DefaultAction = defaultAction;
             }
             var record = await this._nodeRepository.save(node);
@@ -230,9 +223,19 @@ export class NodeService extends BaseService {
         return node;
     }
 
-    private async getDefaultAction(actionId: uuid) {
+    private async createAction(actionModel: any) {
+        const action = await this._actionRepository.create({
+            ActionType: actionModel.ActionType,
+            Name: actionModel.Name,
+            Description: actionModel.Description,
+            Params: actionModel.Params
+        });
+        return action;
+    }
+
+    private async updateAction(actionId: uuid, actionModel: any) {
         if (!actionId) {
-            return null;
+            ErrorHandler.throwNotFoundError('Action cannot be found');
         }
         const action = await this._actionRepository.findOne({
             where: {
@@ -240,8 +243,31 @@ export class NodeService extends BaseService {
             }
         });
         if (!action) {
-            ErrorHandler.throwNotFoundError('Default node action cannot be found');
+            ErrorHandler.throwNotFoundError('Action cannot be found');
         }
-        return action;
+        if(actionModel && actionModel.ActionType) {
+            action.ActionType = actionModel.ActionType;
+        }
+        if(actionModel && actionModel.Name) {
+            action.Name = actionModel.Name;
+        }
+        if(actionModel && actionModel.Description) {
+            action.Description = actionModel.Description;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.Message) {
+            action.Params.Message = actionModel.Params.Message;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.Action) {
+            action.Params.Action = actionModel.Params.Action;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.NextNodeId) {
+            action.Params.NextNodeId = actionModel.Params.NextNodeId;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.Extra) {
+            action.Params.Extra = actionModel.Params.Extra;
+        }
+
+        const updated = await this._actionRepository.save(action);
+        return updated;
     }
 }

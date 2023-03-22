@@ -13,6 +13,7 @@ import {
 import { Condition } from "./condition.model";
 import { RuleAction } from "./rule.action.model";
 import { Node } from "./node.model";
+import { Schema } from "./schema.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +31,9 @@ export class Rule {
 
     @ManyToOne(() => Node, (node) => node.Rules)
     ParentNode: Node;
+
+    @ManyToOne(() => Schema, (schema) => schema.Nodes)
+    Schema: Schema;
 
     @OneToOne(() => RuleAction, (action) => action.ParentRule)
     @JoinColumn()

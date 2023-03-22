@@ -10,11 +10,21 @@ import { EventActionType, OperatorType } from "./enums";
 //////////////////////////////////////////////////////////////
 
 export interface RuleCreateModel {
-    Name            : string;
-    Description?    : string;
-    ParentNodeId    : uuid;
-    SchemaId        : uuid;
-    ActionId        : uuid;
+    Name        : string;
+    Description?: string;
+    ParentNodeId: uuid;
+    SchemaId    : uuid;
+    Action      : {
+        ActionType  : EventActionType;
+        Name        : string;
+        Description?: string;
+        Params      : {
+            Message    : string;
+            Action    ?: EventActionType;
+            NextNodeId?: uuid;
+            Extra     ?: any;
+        }
+    };
 }
 
 export interface RuleUpdateModel {
@@ -22,7 +32,17 @@ export interface RuleUpdateModel {
     Description  ?: string;
     ParentNodeId ?: uuid;
     SchemaId     ?: uuid;
-    ActionId     ?: uuid;
+    Action       ?: {
+        ActionType   ?: EventActionType;
+        Name         ?: string;
+        Description  ?: string;
+        Params       ?: {
+            Message   ?: string;
+            Action    ?: EventActionType;
+            NextNodeId?: uuid;
+            Extra     ?: any;
+        }
+    };
 }
 
 export interface RuleResponseDto {
@@ -44,6 +64,12 @@ export interface RuleResponseDto {
         Name: string;
         Description: string;
         ActionType: EventActionType;
+        Params: {
+            Message    : string;
+            Action     : EventActionType;
+            NextNodeId : uuid;
+            Extra      : any;
+        }
     },
     CreatedAt: Date;
     UpdatedAt: Date;

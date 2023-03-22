@@ -10,11 +10,21 @@ import { EventActionType } from "./enums";
 //////////////////////////////////////////////////////////////
 
 export interface NodeCreateModel {
-    Name            : string;
-    Description?    : string;
-    ParentNodeId    : uuid;
-    SchemaId        : uuid;
-    DefaultActionId?: uuid;
+    Name         : string;
+    Description? : string;
+    ParentNodeId : uuid;
+    SchemaId     : uuid;
+    DefaultAction: {
+        ActionType  : EventActionType;
+        Name        : string;
+        Description?: string;
+        Params      : {
+            Message    : string;
+            Action    ?: EventActionType;
+            NextNodeId?: uuid;
+            Extra     ?: any;
+        }
+    };
 }
 
 export interface NodeUpdateModel {
@@ -22,7 +32,17 @@ export interface NodeUpdateModel {
     Description     ?: string;
     ParentNodeId    ?: uuid;
     SchemaId        ?: uuid;
-    DefaultActionId ?: uuid;
+    DefaultAction       ?: {
+        ActionType   ?: EventActionType;
+        Name         ?: string;
+        Description  ?: string;
+        Params       ?: {
+            Message   ?: string;
+            Action    ?: EventActionType;
+            NextNodeId?: uuid;
+            Extra     ?: any;
+        }
+    };
 }
 
 export interface NodeResponseDto {
@@ -54,6 +74,12 @@ export interface NodeResponseDto {
         Name: string;
         Description: string;
         ActionType: EventActionType;
+        Params: {
+            Message    : string;
+            Action     : EventActionType;
+            NextNodeId : uuid;
+            Extra      : any;
+        }
     } | null,
     CreatedAt: Date;
     UpdatedAt: Date;
