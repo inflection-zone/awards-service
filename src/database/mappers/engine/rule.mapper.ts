@@ -23,7 +23,7 @@ export class RuleMapper {
             Condition : {
                 id          : rule.Condition.id,
                 Name        : rule.Condition.Name,
-                IsComposite : rule.Condition.IsComposite,
+                Operator    : rule.Condition.Operator,
             },
             Action : rule.Action ? {
                 id          : rule.Action.id,

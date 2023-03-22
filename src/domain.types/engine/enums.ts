@@ -9,6 +9,12 @@ export const ContextTypeList: ContextType[] = [
     ContextType.Group,
 ];
 
+export enum OperatorType {
+    Logical      = 'Logical',
+    Mathematical = 'Mathematical',
+    Composition  = 'Composition',
+}
+
 export enum CompositionOperator {
     And  = 'And',
     Or   = 'Or',
@@ -63,6 +69,7 @@ export enum MathematicalOperator {
     Divide     = 'Divide',
     Multiply   = 'Multiply',
     Percentage = 'Percentage',
+    None       = 'None',
 }
 
 export const MathematicalOperatorList: MathematicalOperator[] = [
@@ -71,6 +78,7 @@ export const MathematicalOperatorList: MathematicalOperator[] = [
     MathematicalOperator.Divide,
     MathematicalOperator.Multiply,
     MathematicalOperator.Percentage,
+    MathematicalOperator.None,
 ];
 
 export enum OperandDataType {

@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { EventActionType } from "./enums";
+import { EventActionType, OperatorType } from "./enums";
 
 //////////////////////////////////////////////////////////////
 
@@ -37,7 +37,7 @@ export interface RuleResponseDto {
     Condition : {
         id  : uuid;
         Name: string;
-        IsComposite: boolean;
+        Operator: OperatorType;
     };
     Action: {
         id: uuid;
