@@ -4,11 +4,13 @@ import {
     Column,
     Entity,
     JoinColumn,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Participant } from "../awards/participant.model";
 import { ParticipantGroup } from "../awards/participant.group.model";
+import { SchemaInstance } from "./schema.instance.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -31,5 +33,12 @@ export class Context {
     @OneToOne(() => ParticipantGroup, { nullable: true })
     @JoinColumn()
     Group: ParticipantGroup;
+
+    @OneToMany(() => SchemaInstance, (schemaInstance) => schemaInstance.Context, {
+        cascade  : true,
+        nullable : true,
+    })
+    @JoinColumn()
+    SchemaInstances: SchemaInstance[];
 
 }

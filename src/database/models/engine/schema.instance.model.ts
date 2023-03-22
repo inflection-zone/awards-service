@@ -1,22 +1,34 @@
 import "reflect-metadata";
 import {
-    Column,
     Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
     OneToOne,
+    PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Schema } from "./schema.model";
 import { NodeInstance } from "./node.instance.model";
+import { Context } from "./context.model";
 
 ////////////////////////////////////////////////////////////////////////
 
 @Entity({ name: 'schema_instances' })
-export class SchemaInstance extends Schema {
+export class SchemaInstance {
 
-    @Column({ type: 'uuid', nullable: false })
-    SchemaId: string;
+    @PrimaryGeneratedColumn('uuid')
+    id : string;
 
-    @Column({ type: 'uuid', nullable: false })
-    ContextId: string;
+    @ManyToOne(() => Schema)
+    @JoinColumn()
+    Schema: Schema;
+
+    @ManyToOne(() => Context)
+    @JoinColumn()
+    Context: Context;
+
+    @OneToMany(() => NodeInstance, (nodeInstance) => nodeInstance.SchemaInstance)
+    NodeInstances : NodeInstance[];
 
     @OneToOne(() => NodeInstance)
     RootNodeInstance: NodeInstance;

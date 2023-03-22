@@ -5,32 +5,41 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     OneToOne,
+    ManyToOne,
+    JoinColumn,
+    OneToMany,
 } from 'typeorm';
 import { Rule } from "./rule.model";
 import { Node } from './node.model';
+import { Context } from "./context.model";
+import { SchemaInstance } from "./schema.instance.model";
 
 ////////////////////////////////////////////////////////////////////////
 
 @Entity({ name: 'node_instances' })
-export class NodeInstance extends Node {
+export class NodeInstance {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'varchar', length: 256, nullable: false })
-    Name : string;
+    @ManyToOne(() => Node)
+    @JoinColumn()
+    Node: Node;
 
-    @Column({ type: 'varchar', length: 512, nullable: true })
-    Description : string;
+    @ManyToOne(() => SchemaInstance, (schemaInstance) => schemaInstance.NodeInstances)
+    SchemaInstance: SchemaInstance;
+
+    @ManyToOne(() => NodeInstance, (parentNodeInstance) => parentNodeInstance.ChildrenNodeInstances)
+    ParentNodeInstance: NodeInstance;
+
+    @OneToMany(() => NodeInstance, (childNodeInstance) => childNodeInstance.ParentNodeInstance)
+    ChildrenNodeInstances: NodeInstance[];
 
     @Column({ type: 'enum', enum: ExecutionStatus, nullable: false, default: ExecutionStatus.Pending })
     ExecutionStatus : ExecutionStatus;
 
-    @Column({ type: 'uuid', nullable: false })
-    NodeId: string;
-
-    @Column({ type: 'uuid', nullable: false })
-    ContextId: string;
+    @ManyToOne(() => Context)
+    Context: Context;
 
     @Column({ type: 'timestamp', nullable: true })
     StatusUpdateTimestamp : Date;
