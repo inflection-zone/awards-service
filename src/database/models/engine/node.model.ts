@@ -12,6 +12,7 @@ import {
     DeleteDateColumn,
 } from 'typeorm';
 import { NodeDefaultAction } from "./node.default.action.model";
+import { NodeInstance } from "./node.instance.model";
 import { Rule } from "./rule.model";
 import { Schema } from "./schema.model";
 
@@ -42,7 +43,6 @@ export class Node {
         cascade  : true,
         nullable : true,
     })
-    @JoinColumn()
     Rules: Rule[];
 
     @OneToOne(() => NodeDefaultAction, (action) => action.ParentNode)

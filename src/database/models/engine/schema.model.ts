@@ -38,7 +38,6 @@ export class Schema {
         cascade  : true,
         nullable : true,
     })
-    @JoinColumn()
     Nodes: Node[];
 
     @Column({ type: 'date', nullable: true })
