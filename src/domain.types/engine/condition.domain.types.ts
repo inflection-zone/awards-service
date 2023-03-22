@@ -1,4 +1,3 @@
-import { LogicalOperator } from "aws-sdk/clients/glue";
 import {
     BaseSearchFilters,
     BaseSearchResults
@@ -6,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { CompositionOperator, EventActionType, MathematicalOperator, OperandDataType } from "./enums";
+import { CompositionOperator, LogicalOperator, MathematicalOperator, OperandDataType, OperatorType } from "./enums";
 
 //////////////////////////////////////////////////////////////
 
@@ -15,7 +14,7 @@ export interface ConditionCreateModel {
     Description          ?: string;
     RuleId                : uuid;
     ParentConditionId     : uuid;
-    IsComposite          ?: boolean;
+    Operator             ?: OperatorType;
     Fact                 ?: string;
     DataType              : OperandDataType;
     Value                ?: any;
@@ -29,7 +28,7 @@ export interface ConditionUpdateModel {
     Description          ?: string;
     RuleId               ?: uuid;
     ParentConditionId    ?: uuid;
-    IsComposite          ?: boolean;
+    Operator             ?: OperatorType;
     Fact                 ?: string;
     DataType             ?: OperandDataType;
     Value                ?: any;
@@ -42,9 +41,9 @@ export interface ConditionResponseDto {
     id                  : uuid;
     Name                : string;
     Description         : string;
-    IsComposite         : boolean;
-    Fact                : string;
+    Operator            : OperatorType;
     DataType            : OperandDataType;
+    Fact                : string;
     Value               : any;
     LogicalOperator     : LogicalOperator;
     MathematicalOperator: MathematicalOperator;

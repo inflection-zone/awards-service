@@ -150,12 +150,12 @@ export class ruleService extends BaseService {
             where : {
             },
             select : {
-                id      : true,
+                id         : true,
                 Name       : true,
                 Description: true,
-                ParentNode       : {
-                    id  : true,
-                    Name: true,
+                ParentNode : {
+                    id         : true,
+                    Name       : true,
                     Description: true,
                 },
                 Action: {
@@ -164,9 +164,9 @@ export class ruleService extends BaseService {
                     ActionType : true,
                 },
                 Condition: {
-                    id          : true,
-                    Name        : true,
-                    IsComposite : true,
+                    id      : true,
+                    Name    : true,
+                    Operator: true,
                 },
                 CreatedAt  : true,
                 UpdatedAt  : true,

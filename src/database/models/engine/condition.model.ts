@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { LogicalOperator, CompositionOperator, MathematicalOperator, OperandDataType } from "../../../domain.types/engine/enums";
+import { LogicalOperator, CompositionOperator, MathematicalOperator, OperandDataType, OperatorType } from "../../../domain.types/engine/enums";
 import {
     Column,
     Entity,
@@ -30,19 +30,19 @@ export class Condition {
     @OneToOne(() => Rule, (rule) => rule.Condition)
     Rule: Rule;
 
-    @Column({ type: 'boolean', nullable: false, default: false })
-    IsComposite : boolean;
+    @Column({ type: 'enum', enum: OperatorType, nullable: false, default: OperatorType.Logical })
+    Operator : OperatorType;
 
     @Column({ type: 'varchar', length: 256, nullable: true })
     Fact : string;
 
-    @Column({ type: 'enum', enum: LogicalOperator, nullable: true })
+    @Column({ type: 'enum', enum: LogicalOperator, nullable: false, default: LogicalOperator.None })
     LogicalOperator : LogicalOperator;
 
-    @Column({ type: 'enum', enum: MathematicalOperator, nullable: true })
+    @Column({ type: 'enum', enum: MathematicalOperator, nullable: false, default: MathematicalOperator.None })
     MathematicalOperator : MathematicalOperator;
 
-    @Column({ type: 'enum', enum: CompositionOperator, nullable: true })
+    @Column({ type: 'enum', enum: CompositionOperator, nullable: false, default: CompositionOperator.None })
     CompositionOperator : CompositionOperator;
 
     @Column({ type: 'enum', enum: OperandDataType, nullable: false })
