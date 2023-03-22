@@ -1,5 +1,4 @@
 import { Rule } from '../../models/engine/rule.model';
-import { Schema } from '../../models/engine/schema.model';
 import { Node } from '../../models/engine/node.model';
 import { RuleAction } from '../../models/engine/rule.action.model';
 import { Condition } from '../../models/engine/condition.model';
@@ -19,7 +18,7 @@ import {
 
 ///////////////////////////////////////////////////////////////////////
 
-export class ruleService extends BaseService {
+export class RuleService extends BaseService {
 
     //#region Repositories
 
@@ -36,7 +35,7 @@ export class ruleService extends BaseService {
     public create = async (createModel: RuleCreateModel)
         : Promise<RuleResponseDto> => {
 
-        const action = await this.getRuleAction(createModel.ActionId);
+        const action = await this.createAction(createModel.Action);
         const parentNode = await this.getNode(createModel.ParentNodeId);
 
         const rule = this._ruleRepository.create({
@@ -107,8 +106,8 @@ export class ruleService extends BaseService {
                 const node = await this.getNode(model.ParentNodeId);
                 rule.ParentNode = node;
             }
-            if (model.ActionId != null) {
-                const action = await this.getRuleAction(model.ActionId);
+            if (model.Action != null) {
+                const action = await this.updateAction(rule.Action.id, model.Action);
                 rule.Action = action;
             }
             if (model.Name != null) {
@@ -203,9 +202,19 @@ export class ruleService extends BaseService {
         return node;
     }
 
-    private async getRuleAction(actionId: uuid) {
+    private async createAction(actionModel: any) {
+        const action = await this._actionRepository.create({
+            ActionType: actionModel.ActionType,
+            Name: actionModel.Name,
+            Description: actionModel.Description,
+            Params: actionModel.Params
+        });
+        return action;
+    }
+
+    private async updateAction(actionId: uuid, actionModel: any) {
         if (!actionId) {
-            return null;
+            ErrorHandler.throwNotFoundError('Action cannot be found');
         }
         const action = await this._actionRepository.findOne({
             where: {
@@ -215,7 +224,29 @@ export class ruleService extends BaseService {
         if (!action) {
             ErrorHandler.throwNotFoundError('Action cannot be found');
         }
-        return action;
-    }
+        if(actionModel && actionModel.ActionType) {
+            action.ActionType = actionModel.ActionType;
+        }
+        if(actionModel && actionModel.Name) {
+            action.Name = actionModel.Name;
+        }
+        if(actionModel && actionModel.Description) {
+            action.Description = actionModel.Description;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.Message) {
+            action.Params.Message = actionModel.Params.Message;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.Action) {
+            action.Params.Action = actionModel.Params.Action;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.NextNodeId) {
+            action.Params.NextNodeId = actionModel.Params.NextNodeId;
+        }
+        if(actionModel && actionModel.Params && actionModel.Params.Extra) {
+            action.Params.Extra = actionModel.Params.Extra;
+        }
 
+        const updated = await this._actionRepository.save(action);
+        return updated;
+    }
 }
