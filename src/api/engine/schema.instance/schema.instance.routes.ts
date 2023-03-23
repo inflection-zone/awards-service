@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-    SchemaController
+    SchemaInstanceController
 } from './schema.instance.controller';
 import {
     Loader
@@ -12,7 +12,7 @@ export const register = (app: express.Application): void => {
 
     const router = express.Router();
     const authenticator = Loader.Authenticator;
-    const controller = new SchemaController();
+    const controller = new SchemaInstanceController();
 
     router.post('/', authenticator.authenticateClient, controller.create);
     router.get('/search', authenticator.authenticateClient, controller.search);
@@ -20,5 +20,5 @@ export const register = (app: express.Application): void => {
     router.put('/:id', authenticator.authenticateClient, controller.update);
     router.delete('/:id', authenticator.authenticateClient, controller.delete);
 
-    app.use('/api/v1/engine/schema', router);
+    app.use('/api/v1/engine/schema-instances', router);
 };

@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { ContextType, EventActionType, ExecutionStatus } from "./enums";
+import { ContextType, EventActionType, ExecutionStatus, OperandDataType, OperatorType } from "./enums";
 
 //////////////////////////////////////////////////////////////
 
@@ -40,6 +40,23 @@ export interface NodeInstanceResponseDto {
             ActionType: EventActionType;
             Params: any;
         } | null,
+        Rules: {
+            id: uuid,
+            Name: string;
+            Action: {
+                id: uuid;
+                Name: string;
+                ActionType : EventActionType;
+                Params: any;
+            },
+            Condition: {
+                id: uuid;
+                Name: string;
+                Operator : OperatorType,
+                DataType: OperandDataType,
+                Fact : string;
+            }
+        }[],
     };
     SchemaInstance : {
         id    : uuid;
@@ -85,9 +102,8 @@ export interface NodeInstanceResponseDto {
 }
 
 export interface NodeInstanceSearchFilters extends BaseSearchFilters {
-    Name         ?: string;
-    ParentNodeId ?: uuid;
-    SchemaId     ?: uuid;
+    NodeId           ?: uuid;
+    SchemaInstanceId ?: uuid;
 }
 
 export interface NodeInstanceSearchResults extends BaseSearchResults {
