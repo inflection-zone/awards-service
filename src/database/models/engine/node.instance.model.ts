@@ -8,6 +8,9 @@ import {
     ManyToOne,
     JoinColumn,
     OneToMany,
+    CreateDateColumn,
+    UpdateDateColumn,
+    DeleteDateColumn,
 } from 'typeorm';
 import { Rule } from "./rule.model";
 import { Node } from './node.model';
@@ -38,9 +41,6 @@ export class NodeInstance {
     @Column({ type: 'enum', enum: ExecutionStatus, nullable: false, default: ExecutionStatus.Pending })
     ExecutionStatus : ExecutionStatus;
 
-    @ManyToOne(() => Context)
-    Context: Context;
-
     @Column({ type: 'timestamp', nullable: true })
     StatusUpdateTimestamp : Date;
 
@@ -55,5 +55,14 @@ export class NodeInstance {
 
     @Column({ type: 'simple-json', nullable: true })
     ExecutionResult : any;
+
+    @CreateDateColumn()
+    CreatedAt : Date;
+
+    @UpdateDateColumn()
+    UpdatedAt : Date;
+
+    @DeleteDateColumn()
+    DeletedAt : Date;
 
 }

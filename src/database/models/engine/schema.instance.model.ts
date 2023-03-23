@@ -1,11 +1,14 @@
 import "reflect-metadata";
 import {
+    CreateDateColumn,
+    DeleteDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { Schema } from "./schema.model";
 import { NodeInstance } from "./node.instance.model";
@@ -35,5 +38,14 @@ export class SchemaInstance {
 
     @OneToOne(() => NodeInstance)
     CurrentNodeInstance: NodeInstance;
+
+    @CreateDateColumn()
+    CreatedAt : Date;
+
+    @UpdateDateColumn()
+    UpdatedAt : Date;
+
+    @DeleteDateColumn()
+    DeletedAt : Date;
 
 }

@@ -47,14 +47,27 @@ export interface SchemaInstanceResponseDto {
             Description: string;
         };
     };
-    RootNode : {
+    RootNodeInstance : {
         id: uuid;
-        Name: string;
+        Node: {
+            id: uuid;
+            Name: string;
+        }
     };
-    CurrentNode : {
+    CurrentNodeInstance : {
         id: uuid;
-        Name: string;
+        Node: {
+            id: uuid;
+            Name: string;
+        }
     };
+    NodeInstances : {
+        id: uuid;
+        Node: {
+            id: uuid;
+            Name: string;
+        }
+    }[];
     CreatedAt: Date;
     UpdatedAt: Date;
 }
