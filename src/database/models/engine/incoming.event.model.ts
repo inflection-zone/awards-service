@@ -10,6 +10,8 @@ import {
     JoinColumn,
 } from 'typeorm';
 import { IncomingEventType } from "./incoming.event.type.model";
+import { uuid } from "../../../domain.types/miscellaneous/system.types";
+import { Context } from "./context.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -19,18 +21,15 @@ export class IncomingEvent {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'varchar', length: 256, nullable: false })
-    Name : string;
-
-    @ManyToOne(() => IncomingEventType, (EventType) => EventType.Events)
+    @ManyToOne(() => IncomingEventType)
     @JoinColumn()
     EventType: IncomingEventType;
 
-    @Column({ type: 'uuid', nullable: false })
-    ContextId: string; //ContextId in most cases is userId
+    @ManyToOne(() => Context)
+    Context: Context;
 
     @Column({ type: 'uuid', nullable: true })
-    SchemaId: string;
+    ReferenceId: uuid;
 
     @CreateDateColumn()
     CreatedAt : Date;
