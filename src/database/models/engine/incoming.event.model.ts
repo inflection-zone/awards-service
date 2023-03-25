@@ -31,6 +31,9 @@ export class IncomingEvent {
     @Column({ type: 'uuid', nullable: true })
     ReferenceId: uuid;
 
+    @Column({ type: 'simple-json', nullable: true })
+    Payload: any;
+
     @CreateDateColumn()
     CreatedAt : Date;
 

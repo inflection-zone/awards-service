@@ -1,18 +1,17 @@
 import { SchemaInstance } from '../../models/engine/schema.instance.model';
 import { Schema } from '../../models/engine/schema.model';
-import { Rule } from '../../models/engine/rule.model';
 import { logger } from '../../../logger/logger';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Source } from '../../../database/database.connector';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { SchemaInstanceMapper } from '../../mappers/engine/schema.instance.mapper';
 import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { 
-    SchemaInstanceCreateModel, 
-    SchemaInstanceResponseDto, 
-    SchemaInstanceSearchFilters, 
-    SchemaInstanceSearchResults, 
+import {
+    SchemaInstanceCreateModel,
+    SchemaInstanceResponseDto,
+    SchemaInstanceSearchFilters,
+    SchemaInstanceSearchResults,
     SchemaInstanceUpdateModel } from '../../../domain.types/engine/schema.instance.domain.types';
 import { Context } from '../../models/engine/context.model';
 
@@ -37,7 +36,7 @@ export class SchemaInstanceService extends BaseService {
         const context = await this.getContext(createModel.ContextId);
 
         const schemaInstance = this._schemaInstanceRepository.create({
-            Schema     : schema,
+            Schema  : schema,
             Context : context,
         });
         var record = await this._schemaInstanceRepository.save(schemaInstance);
@@ -132,56 +131,56 @@ export class SchemaInstanceService extends BaseService {
             where : {
             },
             select : {
-                id      : true,
-                Schema: {
-                    id         : true,
-                    Name       : true,
-                    Description: true,
-                    Client : {
-                        id: true,
-                        Name: true,
+                id     : true,
+                Schema : {
+                    id          : true,
+                    Name        : true,
+                    Description : true,
+                    Client      : {
+                        id   : true,
+                        Name : true,
                     }
                 },
-                Context       : {
-                    id  : true,
-                    ReferenceId: true,
-                    Type: true,
+                Context : {
+                    id          : true,
+                    ReferenceId : true,
+                    Type        : true,
                     Participant : {
-                        id : true,
-                        ReferenceId: true,
-                        Prefix: true,
-                        FirstName: true,
-                        LastName: true,
+                        id          : true,
+                        ReferenceId : true,
+                        Prefix      : true,
+                        FirstName   : true,
+                        LastName    : true,
                     },
                     Group : {
-                        id : true,
-                        Name: true,
-                        Description: true,
+                        id          : true,
+                        Name        : true,
+                        Description : true,
                     },
                 },
-                RootNodeInstance: {
-                    id          : true,
-                    Node        : {
-                        id: true,
-                        Name: true,
+                RootNodeInstance : {
+                    id   : true,
+                    Node : {
+                        id   : true,
+                        Name : true,
                     },
                 },
-                CurrentNodeInstance: {
-                    id          : true,
-                    Node        : {
-                        id: true,
-                        Name: true,
+                CurrentNodeInstance : {
+                    id   : true,
+                    Node : {
+                        id   : true,
+                        Name : true,
                     },
                 },
                 NodeInstances : {
-                    id          : true,
-                    Node        : {
-                        id: true,
-                        Name: true,
+                    id   : true,
+                    Node : {
+                        id   : true,
+                        Name : true,
                     },
                 },
-                CreatedAt  : true,
-                UpdatedAt  : true,
+                CreatedAt : true,
+                UpdatedAt : true,
             }
         };
 
@@ -199,8 +198,8 @@ export class SchemaInstanceService extends BaseService {
 
     private async getSchema(schemaId: uuid) {
         const schema = await this._schemaRepository.findOne({
-            where: {
-                id: schemaId
+            where : {
+                id : schemaId
             }
         });
         if (!schema) {
@@ -211,8 +210,8 @@ export class SchemaInstanceService extends BaseService {
 
     private async getContext(contextId: uuid) {
         const context = await this._contextRepository.findOne({
-            where: {
-                id: contextId
+            where : {
+                id : contextId
             }
         });
         if (!context) {

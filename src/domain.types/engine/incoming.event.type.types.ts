@@ -26,6 +26,6 @@ export interface IncomingEventTypeSearchFilters extends BaseSearchFilters {
     Name ?: string;
 }
 
-export interface EventSearchResults extends BaseSearchResults {
+export interface IncomingEventTypeSearchResults extends BaseSearchResults {
     Items: IncomingEventTypeResponseDto[];
 }
