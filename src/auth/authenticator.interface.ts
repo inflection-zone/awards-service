@@ -1,5 +1,5 @@
 import express from 'express';
-import { AuthenticationResult } from '../domain.types/auth.domain.types';
+import { AuthenticationResult } from '../domain.types/user/auth.domain.types';
 
 export interface IAuthenticator {
 

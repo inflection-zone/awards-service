@@ -1,5 +1,5 @@
-import { BaseSearchFilters } from "./miscellaneous/base.search.types";
-import { Gender, uuid } from "./miscellaneous/system.types";
+import { BaseSearchFilters } from "../miscellaneous/base.search.types";
+import { Gender, uuid } from "../miscellaneous/system.types";
 
 export interface PersonModel {
     ReferenceId?    : string;

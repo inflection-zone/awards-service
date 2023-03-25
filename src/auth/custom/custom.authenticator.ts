@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { logger } from '../../logger/logger';
-import { AuthenticationResult } from '../../domain.types/auth.domain.types';
+import { AuthenticationResult } from '../../domain.types/user/auth.domain.types';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
 import { ClientService } from '../../database/services/client/client.service';
 import { Loader } from '../../startup/loader';

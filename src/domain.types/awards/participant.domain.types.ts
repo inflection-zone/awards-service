@@ -4,7 +4,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { PersonModel, PersonResponseDto, PersonSearchFilters } from '../person.domain.types';
+import { PersonModel, PersonResponseDto, PersonSearchFilters } from '../user/person.domain.types';
 
 //////////////////////////////////////////////////////////////
 

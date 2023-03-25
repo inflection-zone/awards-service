@@ -1,7 +1,7 @@
 import { FileResource } from '../../models/general/file.resource.model';
 import {
     FileResourceResponseDto,
-} from '../../../domain.types/file.resource.domain.types';
+} from '../../../domain.types/general/file.resource.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
