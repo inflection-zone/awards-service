@@ -4,7 +4,7 @@ import { ConditionValidator } from './condition.validator';
 import { BaseController } from '../../base.controller';
 import { ConditionService } from '../../../database/services/engine/condition.service';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
-import { ConditionCreateModel, ConditionSearchFilters, ConditionUpdateModel } from '../../../domain.types/engine/condition.domain.types';
+import { ConditionCreateModel, ConditionSearchFilters, ConditionUpdateModel } from '../../../domain.types/engine/condition.types';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////

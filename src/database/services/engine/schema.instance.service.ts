@@ -12,7 +12,7 @@ import {
     SchemaInstanceResponseDto,
     SchemaInstanceSearchFilters,
     SchemaInstanceSearchResults,
-    SchemaInstanceUpdateModel } from '../../../domain.types/engine/schema.instance.domain.types';
+    SchemaInstanceUpdateModel } from '../../../domain.types/engine/schema.instance.types';
 import { Context } from '../../models/engine/context.model';
 
 ///////////////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ export class SchemaInstanceService extends BaseService {
             return searchResults;
         } catch (error) {
             logger.error(error.message);
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search api schema instance records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 

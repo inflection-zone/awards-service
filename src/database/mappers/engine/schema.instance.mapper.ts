@@ -1,7 +1,7 @@
 import { SchemaInstance } from '../../models/engine/schema.instance.model';
 import {
     SchemaInstanceResponseDto
-} from '../../../domain.types/engine/schema.instance.domain.types';
+} from '../../../domain.types/engine/schema.instance.types';
 
 ///////////////////////////////////////////////////////////////////////////////////
 

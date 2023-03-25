@@ -202,7 +202,7 @@ export class FileResourceService {
             return searchResults;
 
         } catch (error) {
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search file resource records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 
