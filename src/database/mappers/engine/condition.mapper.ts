@@ -1,7 +1,7 @@
 import { Condition } from '../../models/engine/condition.model';
 import {
     ConditionResponseDto
-} from '../../../domain.types/engine/condition.domain.types';
+} from '../../../domain.types/engine/condition.types';
 
 ///////////////////////////////////////////////////////////////////////////////////
 

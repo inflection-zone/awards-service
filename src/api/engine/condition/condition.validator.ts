@@ -1,6 +1,6 @@
 import joi from 'joi';
 import express from 'express';
-import { ConditionCreateModel, ConditionUpdateModel, ConditionSearchFilters } from '../../../domain.types/engine/condition.domain.types';
+import { ConditionCreateModel, ConditionUpdateModel, ConditionSearchFilters } from '../../../domain.types/engine/condition.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
 import { CompositionOperator, LogicalOperator, MathematicalOperator, OperandDataType, OperatorType } from '../../../domain.types/engine/enums';

@@ -4,7 +4,7 @@ import {
     SchemaInstanceCreateModel, 
     SchemaInstanceUpdateModel, 
     SchemaInstanceSearchFilters 
-} from '../../../domain.types/engine/schema.instance.domain.types';
+} from '../../../domain.types/engine/schema.instance.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
 

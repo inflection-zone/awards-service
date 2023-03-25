@@ -97,7 +97,7 @@ export class PrivilegeService extends BaseService {
             return searchResults;
         } catch (error) {
             logger.error(error.message);
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search api role records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 

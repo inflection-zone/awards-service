@@ -2,11 +2,14 @@ import "reflect-metadata";
 import { ContextType } from "../../../domain.types/engine/enums";
 import {
     Column,
+    CreateDateColumn,
+    DeleteDateColumn,
     Entity,
     JoinColumn,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { Participant } from "../awards/participant.model";
 import { ParticipantGroup } from "../awards/participant.group.model";
@@ -40,5 +43,14 @@ export class Context {
     })
     @JoinColumn()
     SchemaInstances: SchemaInstance[];
+
+    @CreateDateColumn()
+    CreatedAt : Date;
+
+    @UpdateDateColumn()
+    UpdatedAt : Date;
+
+    @DeleteDateColumn()
+    DeletedAt : Date;
 
 }

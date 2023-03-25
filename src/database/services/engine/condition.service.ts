@@ -13,7 +13,7 @@ import {
     ConditionSearchFilters, 
     ConditionSearchResults, 
     ConditionUpdateModel 
-} from '../../../domain.types/engine/condition.domain.types';
+} from '../../../domain.types/engine/condition.types';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -82,7 +82,7 @@ export class ConditionService extends BaseService {
             return searchResults;
         } catch (error) {
             logger.error(error.message);
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search api condition records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 

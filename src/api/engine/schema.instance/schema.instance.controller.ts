@@ -4,7 +4,7 @@ import { SchemaInstanceValidator } from './schema.instance.validator';
 import { BaseController } from '../../base.controller';
 import { SchemaInstanceService } from '../../../database/services/engine/schema.instance.service';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
-import { SchemaInstanceCreateModel, SchemaInstanceSearchFilters, SchemaInstanceUpdateModel } from '../../../domain.types/engine/schema.instance.domain.types';
+import { SchemaInstanceCreateModel, SchemaInstanceSearchFilters, SchemaInstanceUpdateModel } from '../../../domain.types/engine/schema.instance.types';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////

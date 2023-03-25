@@ -13,7 +13,7 @@ import {
     NodeInstanceResponseDto, 
     NodeInstanceSearchFilters, 
     NodeInstanceSearchResults, 
-    NodeInstanceUpdateModel } from '../../../domain.types/engine/node.instance.domain.types';
+    NodeInstanceUpdateModel } from '../../../domain.types/engine/node.instance.types';
 import { Context } from '../../models/engine/context.model';
 import { SchemaInstance } from '../../models/engine/schema.instance.model';
 
@@ -77,7 +77,7 @@ export class NodeInstanceService extends BaseService {
             return searchResults;
         } catch (error) {
             logger.error(error.message);
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search api node instance records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 

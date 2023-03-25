@@ -205,7 +205,7 @@ export class UserService {
             return searchResults;
 
         } catch (error) {
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search user records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 

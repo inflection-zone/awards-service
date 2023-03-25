@@ -75,7 +75,7 @@ export class ClientService {
             return searchResults;
         } catch (error) {
             logger.error(error.message);
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search api client records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 

@@ -75,7 +75,7 @@ export class ParticipantGroupService extends BaseService {
             return searchResults;
         } catch (error) {
             logger.error(error.message);
-            ErrorHandler.throwDbAccessError('DB Error: Unable to search api badge records!', error);
+            ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
 
