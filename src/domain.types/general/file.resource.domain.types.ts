@@ -1,5 +1,5 @@
-import { BaseSearchFilters, BaseSearchResults } from "./miscellaneous/base.search.types";
-import { uuid } from "./miscellaneous/system.types";
+import { BaseSearchFilters, BaseSearchResults } from "../miscellaneous/base.search.types";
+import { uuid } from "../miscellaneous/system.types";
 
 export interface FileResourceCreateModel {
     StorageKey       ?: string;

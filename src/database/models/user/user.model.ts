@@ -11,7 +11,7 @@ import {
     ManyToMany,
 } from 'typeorm';
 import { Client } from "../client/client.model";
-import { Person } from "../person/person.model";
+import { Person } from "./person.model";
 import { Role } from "./role.model";
 
 ////////////////////////////////////////////////////////////////////////

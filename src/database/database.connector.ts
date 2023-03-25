@@ -26,7 +26,7 @@ import { Rule } from './models/engine/rule.model';
 import { SchemaInstance } from './models/engine/schema.instance.model';
 import { Schema } from './models/engine/schema.model';
 import { FileResource } from "./models/general/file.resource.model";
-import { Person } from './models/person/person.model';
+import { Person } from './models/user/person.model';
 import { UserLoginSession } from "./models/user/user.login.session.model";
 import { Role } from "./models/user/role.model";
 import { Privilege } from "./models/user/privilege.model";
