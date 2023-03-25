@@ -10,6 +10,9 @@ import { register as registerSchemaRoutes } from '../api/engine/schema/schema.ro
 import { register as registerNodeRoutes } from '../api/engine/node/node.routes';
 import { register as registerRuleRoutes } from '../api/engine/rule/rule.routes';
 import { register as registerConditionRoutes } from '../api/engine/condition/condition.routes';
+import { register as registerIncomingEventRoutes } from '../api/engine/incoming.event/incoming.event.routes';
+import { register as registerIncomingEventTypeRoutes } from '../api/engine/incoming.event.type/incoming.event.type.routes';
+import { register as registerSchemaInstanceRoutes } from '../api/engine/schema.instance/schema.instance.routes';
 
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -42,6 +45,9 @@ export class Router {
                 registerNodeRoutes(this._app);
                 registerRuleRoutes(this._app);
                 registerConditionRoutes(this._app);
+                registerIncomingEventTypeRoutes(this._app);
+                registerIncomingEventRoutes(this._app);
+                registerSchemaInstanceRoutes(this._app);
 
                 resolve(true);
 

@@ -13,37 +13,37 @@ export class RuleValidator extends BaseValidator {
         : Promise<RuleCreateModel> => {
         try {
             const rule = joi.object({
-                Name        : joi.string().max(32).required(),
-                Description : joi.string().max(256).optional(),
-                ParentNodeId: joi.string().uuid().required(),
-                SchemaId    : joi.string().uuid().required(),
-                Action      : {
-                    ActionType : joi.string().valid(...Object.values(EventActionType)).required(),
-                    Name       : joi.string().max(32).required(),
-                    Description: joi.string().max(256).optional(),
-                    Params     : {
-                        Message   : joi.string().max(256).required(),
-                        Action    : joi.string().valid(...Object.values(EventActionType)).optional(),
-                        NextNodeId: joi.string().uuid().optional(),
-                        Extra     : joi.any().optional()
+                Name         : joi.string().max(32).required(),
+                Description  : joi.string().max(256).optional(),
+                ParentNodeId : joi.string().uuid().required(),
+                SchemaId     : joi.string().uuid().required(),
+                Action       : {
+                    ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
+                    Name        : joi.string().max(32).required(),
+                    Description : joi.string().max(256).optional(),
+                    Params      : {
+                        Message    : joi.string().max(256).required(),
+                        Action     : joi.string().valid(...Object.values(EventActionType)).optional(),
+                        NextNodeId : joi.string().uuid().optional(),
+                        Extra      : joi.any().optional()
                     }
                 }
             });
             await rule.validateAsync(request.body);
             return {
-                Name        : request.body.Name,
-                Description : request.body.Description ?? null,
-                ParentNodeId: request.body.ParentNodeId,
-                SchemaId    : request.body.SchemaId,
-                Action      : {
-                    Name       : request.body.Action.Name,
-                    Description: request.body.Action.Description ?? null,
-                    ActionType : request.body.Action.ActionType,
-                    Params     : {
-                        Message   : request.body.Action.Params.Message,
-                        Action    : request.body.Action.Params.Action ?? request.body.Action.ActionType,
-                        NextNodeId: request.body.Action.Params.NextNodeId ?? null,
-                        Extra     : request.body.Action.Params.Extra ?? null,
+                Name         : request.body.Name,
+                Description  : request.body.Description ?? null,
+                ParentNodeId : request.body.ParentNodeId,
+                SchemaId     : request.body.SchemaId,
+                Action       : {
+                    Name        : request.body.Action.Name,
+                    Description : request.body.Action.Description ?? null,
+                    ActionType  : request.body.Action.ActionType,
+                    Params      : {
+                        Message    : request.body.Action.Params.Message,
+                        Action     : request.body.Action.Params.Action ?? request.body.Action.ActionType,
+                        NextNodeId : request.body.Action.Params.NextNodeId ?? null,
+                        Extra      : request.body.Action.Params.Extra ?? null,
                     }
                 },
             };
@@ -55,39 +55,39 @@ export class RuleValidator extends BaseValidator {
     public validateUpdateRequest = async (request: express.Request): Promise<RuleUpdateModel> => {
         try {
             const rule = joi.object({
-                Name        : joi.string().max(32).optional(),
-                Description : joi.string().max(256).optional(),
-                ParentNodeId: joi.string().uuid().optional(),
-                SchemaId    : joi.string().uuid().optional(),
-                Action      : {
-                    ActionType : joi.string().valid(...Object.values(EventActionType)).optional(),
-                    Name       : joi.string().max(32).optional(),
-                    Description: joi.string().max(256).optional(),
-                    Params     : {
-                        Message   : joi.string().max(256).optional(),
-                        Action    : joi.string().valid(...Object.values(EventActionType)).optional(),
-                        NextNodeId: joi.string().uuid().optional(),
-                        Extra     : joi.any().optional()
+                Name         : joi.string().max(32).optional(),
+                Description  : joi.string().max(256).optional(),
+                ParentNodeId : joi.string().uuid().optional(),
+                SchemaId     : joi.string().uuid().optional(),
+                Action       : {
+                    ActionType  : joi.string().valid(...Object.values(EventActionType)).optional(),
+                    Name        : joi.string().max(32).optional(),
+                    Description : joi.string().max(256).optional(),
+                    Params      : {
+                        Message    : joi.string().max(256).optional(),
+                        Action     : joi.string().valid(...Object.values(EventActionType)).optional(),
+                        NextNodeId : joi.string().uuid().optional(),
+                        Extra      : joi.any().optional()
                     }
                 }
             });
             await rule.validateAsync(request.body);
             return {
-                Name        : request.body.Name ?? null,
-                Description : request.body.Description ?? null,
-                ParentNodeId: request.body.ParentNodeId ?? null,
-                SchemaId    : request.body.SchemaId ?? null,
-                Action      : request.body.Action ? {
-                    Name       : request.body.Action.Name ?? null,
-                    Description: request.body.Action.Description ?? null,
-                    ActionType : request.body.Action.ActionType ?? null,
-                    Params     : request.body.Action?.Params? {
-                    Message   : request.body.Action.Params.Message ?? null,
-                    Action    : request.body.Action.Params.Action ?? null,
-                    NextNodeId: request.body.Action.Params.NextNodeId ?? null,
-                    Extra     : request.body.Action.Params.Extra ?? null,
+                Name         : request.body.Name ?? null,
+                Description  : request.body.Description ?? null,
+                ParentNodeId : request.body.ParentNodeId ?? null,
+                SchemaId     : request.body.SchemaId ?? null,
+                Action       : request.body.Action ? {
+                    Name        : request.body.Action.Name ?? null,
+                    Description : request.body.Action.Description ?? null,
+                    ActionType  : request.body.Action.ActionType ?? null,
+                    Params      : request.body.Action?.Params ? {
+                        Message    : request.body.Action.Params.Message ?? null,
+                        Action     : request.body.Action.Params.Action ?? null,
+                        NextNodeId : request.body.Action.Params.NextNodeId ?? null,
+                        Extra      : request.body.Action.Params.Extra ?? null,
                     }         : null,
-                }: null,
+                } : null,
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -97,9 +97,9 @@ export class RuleValidator extends BaseValidator {
     public validateSearchRequest = async (request: express.Request): Promise<RuleSearchFilters> => {
         try {
             const rule = joi.object({
-                parentNodeId: joi.string().uuid().optional(),
-                conditionId : joi.string().uuid().optional(),
-                name        : joi.string().max(64).optional(),
+                parentNodeId : joi.string().uuid().optional(),
+                conditionId  : joi.string().uuid().optional(),
+                name         : joi.string().max(64).optional(),
             });
             await rule.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);

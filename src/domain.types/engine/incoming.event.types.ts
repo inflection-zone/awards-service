@@ -8,13 +8,14 @@ import { ContextType } from "./enums";
 ////////////////////////////////////////////////////////////
 
 export interface IncomingEventCreateModel {
-    IncomingEventTypeId: uuid;
-    ReferenceId        : uuid;
+    TypeId     : uuid;
+    ReferenceId: uuid;
+    Payload    : any;
 }
 
 export interface IncomingEventUpdateModel {
-    IncomingEventTypeId ?: uuid;
-    ReferenceId         ?: uuid;
+    TypeId     ?: uuid;
+    ReferenceId?: uuid;
 }
 
 export interface IncomingEventResponseDto {
@@ -42,13 +43,14 @@ export interface IncomingEventResponseDto {
         };
     };
     ReferenceId: uuid;
+    Payload    : any;
     CreatedAt  : Date;
     UpdatedAt  : Date;
 }
 
 export interface IncomingEventSearchFilters extends BaseSearchFilters {
-    IncomingEventTypeId?: uuid;
-    ReferenceId        ?: uuid;
+    TypeId     ?: uuid;
+    ReferenceId?: uuid;
 }
 
 export interface IncomingEventSearchResults extends BaseSearchResults {

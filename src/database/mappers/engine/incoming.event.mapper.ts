@@ -5,7 +5,7 @@ import { IncomingEventResponseDto } from "../../../domain.types/engine/incoming.
 
 export class IncomingEventMapper {
 
-    static toDto = (event: IncomingEvent): IncomingEventResponseDto => {
+    static toResponseDto = (event: IncomingEvent): IncomingEventResponseDto => {
         if (event == null) {
             return null;
         }
@@ -34,6 +34,7 @@ export class IncomingEventMapper {
                     Description : event.Context.Group.Description,
                 } : null,
             },
+            Payload   : event.Payload,
             CreatedAt : event.CreatedAt,
             UpdatedAt : event.UpdatedAt,
         };
