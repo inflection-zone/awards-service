@@ -1,8 +1,9 @@
 import { Participant } from '../../models/awards/participant.model';
-import { ParticipantCreateModel, ParticipantResponseDto, ParticipantSearchFilters, ParticipantSearchResults, ParticipantUpdateModel } from '../../../domain.types/awards/participant.domain.types';
+import { ParticipantBadge } from '../../models/awards/participant.badge.model';
+import { Badge } from '../../models/awards/badge.model';
+import { ParticipantBadgeResponseDto, ParticipantCreateModel, ParticipantResponseDto, ParticipantSearchFilters, ParticipantSearchResults, ParticipantUpdateModel } from '../../../domain.types/awards/participant.domain.types';
 import { logger } from '../../../logger/logger';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
-import { Helper } from '../../../common/helper';
 import { Source } from '../../../database/database.connector';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { ParticipantMapper } from '../../mappers/awards/participant.mapper';
@@ -10,6 +11,8 @@ import { Client } from '../../models/client/client.model';
 import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { StringUtils } from '../../../common/utilities/string.utils';
+import { Context } from '../../models/engine/context.model';
+import { ContextType } from '../../../domain.types/engine/engine.enums';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -20,6 +23,12 @@ export class ParticipantService extends BaseService {
     _participantRepository: Repository<Participant> = Source.getRepository(Participant);
 
     _clientRepository: Repository<Client> = Source.getRepository(Client);
+
+    _contextRepository: Repository<Context> = Source.getRepository(Context);
+
+    _participantBadgeRepository: Repository<ParticipantBadge> = Source.getRepository(ParticipantBadge);
+
+    _badgeRepository: Repository<Badge> = Source.getRepository(Badge);
 
     //#endregion
 
@@ -49,6 +58,16 @@ export class ParticipantService extends BaseService {
             OnboardingDate  : createModel.OnboardingDate ?? new Date(),
         });
         var record = await this._participantRepository.save(participant);
+
+        //Keep person context for this participant
+        const context = this._contextRepository.create({
+            Type: ContextType.Person,
+            ReferenceId : createModel.ReferenceId,
+            Participant : record,
+        })
+        const contextRecord = await this._contextRepository.save(context);
+        logger.info(JSON.stringify(contextRecord, null, 2));
+
         return ParticipantMapper.toResponseDto(record);
     };
 
@@ -146,6 +165,88 @@ export class ParticipantService extends BaseService {
             });
             var result = await this._participantRepository.remove(record);
             return result != null;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
+    
+    public awardBadge = async (id: string, badgeId: uuid, reason: string, acquiredDate = new Date())
+        : Promise<ParticipantBadge> => {
+        try {
+            var participant = await this._participantRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            var badge = await this._badgeRepository.findOne({
+                where : {
+                    id : badgeId
+                }
+            });
+            var participantBadge = await this._participantBadgeRepository.create({
+                Participant: participant,
+                Badge: badge,
+                AcquiredDate: acquiredDate,
+                Reason : reason
+            });
+            var record = await this._participantBadgeRepository.save(participantBadge);
+            return record;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
+    public getBadges = async (id: string): Promise<ParticipantBadgeResponseDto[]> => {
+        try {
+            const search: FindManyOptions<ParticipantBadge> = {
+                relations : {
+                },
+                where : {
+                    Participant : {
+                        id : id
+                    }
+                },
+                select: {
+                    Badge : {
+                        id         : true,
+                        Name       : true,
+                        Description: true,
+                        Category   : {
+                            id      : true,
+                            Name    : true,
+                            ImageUrl: true,
+                        },
+                        ImageUrl: true,
+                    },
+                    AcquiredDate: true,
+                    Reason      : true,
+                    CreatedAt : true,
+                }
+            };
+            const list = await this._participantBadgeRepository.find(search);
+            const participantBadges = list.map(x => {
+                return {
+                    ParticipantId: id,
+                    Badge: {
+                        id : x.Badge.id,
+                        Name: x.Badge.Name,
+                        Description : x.Badge.Description,
+                        Category: {
+                            id: x.Badge.Category.id,
+                            Name: x.Badge.Category.Name,
+                            ImageUrl: x.Badge.Category.ImageUrl,
+                        },
+                        ImageUrl : x.Badge.ImageUrl,
+                    },
+                    AcquiredDate: x.AcquiredDate,
+                    Reason: x.Reason,
+                    CreatedAt: x.CreatedAt
+                }
+            });
+            return participantBadges;
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);

@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { ContextType } from "./enums";
+import { ContextType } from "./engine.enums";
 
 //////////////////////////////////////////////////////////////
 

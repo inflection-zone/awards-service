@@ -46,6 +46,7 @@
         "glob": "^8.1.0",
         "helmet": "^6.0.1",
         "joi": "^17.9.0",
+        "json-rules-engine": "^6.1.2",
         "jsonwebtoken": "^9.0.0",
         "mime-types": "^2.1.34",
         "mysql2": "^3.0.1",

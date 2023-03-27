@@ -14,6 +14,8 @@ import {
     ParticipantGroupSearchFilters, 
     ParticipantGroupSearchResults, 
     ParticipantGroupUpdateModel } from '../../../domain.types/awards/participant.group.domain.types';
+    import { Context } from '../../models/engine/context.model';
+    import { ContextType } from '../../../domain.types/engine/engine.enums';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,8 @@ export class ParticipantGroupService extends BaseService {
     _clientRepository: Repository<Client> = Source.getRepository(Client);
 
     _participantRepository: Repository<Participant> = Source.getRepository(Participant);
+
+    _contextRepository: Repository<Context> = Source.getRepository(Context);
 
     //#endregion
 
@@ -40,6 +44,16 @@ export class ParticipantGroupService extends BaseService {
             ImageUrl   : createModel.ImageUrl,
         });
         var record = await this._groupRepository.save(badge);
+
+        //Keep group context for this participant group
+        const context = this._contextRepository.create({
+            Type: ContextType.Group,
+            ReferenceId : record.id,
+            Group : record,
+        })
+        const contextRecord = await this._contextRepository.save(context);
+        logger.info(JSON.stringify(contextRecord, null, 2));
+
         return ParticipantGroupMapper.toResponseDto(record);
     };
 

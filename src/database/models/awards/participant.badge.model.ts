@@ -28,6 +28,9 @@ export class ParticipantBadge {
     @JoinColumn()
     Badge : Badge;
 
+    @Column({ type: 'varchar', length: 512, nullable: true })
+    Reason : string;
+
     @Column({ type: 'date', nullable: false })
     AcquiredDate : Date;
 

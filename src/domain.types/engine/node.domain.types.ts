@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { EventActionType } from "./enums";
+import { EventActionType } from "./engine.enums";
 
 //////////////////////////////////////////////////////////////
 
