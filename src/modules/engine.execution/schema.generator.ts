@@ -3,7 +3,8 @@ import {
     LogicalOperator,
     OperandDataType,
     EventActionType,
-} from './enums';
+} from '../../domain.types/engine/engine.enums';
+
 import {
     Condition,
     EventAction,

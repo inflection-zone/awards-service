@@ -1,7 +1,4 @@
-import {
-    CompositionOperator,
-    LogicalOperator,
-} from './enums';
+import { CompositionOperator, LogicalOperator } from '../../domain.types/engine/engine.enums';
 import {
     Condition,
     Rule} from './types';
