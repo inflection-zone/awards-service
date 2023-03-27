@@ -1,13 +1,13 @@
 import { CompositionOperator, LogicalOperator } from '../../domain.types/engine/engine.enums';
 import {
-    Condition,
-    Rule} from './types';
+    SCondition,
+    SRule} from './execution.types';
 
 export class SchemaConverter {
 
-    public static convertRule = (rule: Rule) =>{
+    public static convertRule = (rule: SRule) =>{
 
-        var condition = rule.Condition as Condition;
+        var condition = rule.Condition as SCondition;
 
         var decision: any = {
             conditions: SchemaConverter.addCompositeCondition(condition),
@@ -20,7 +20,7 @@ export class SchemaConverter {
         return decision;
     }
 
-    private static addCompositeCondition(condition: Condition) {
+    private static addCompositeCondition(condition: SCondition) {
         if(!condition.IsComposite) {
             throw new Error('Expecting a composite condition!');
         }
@@ -37,7 +37,7 @@ export class SchemaConverter {
         }
     }
 
-    private static addChildrenConditions(condition: Condition) {
+    private static addChildrenConditions(condition: SCondition) {
         var list: any = [];
         for (var child of condition.Children) {
             if (child.IsComposite) {
@@ -52,7 +52,7 @@ export class SchemaConverter {
         return list;
     }
 
-    private static addLogicalCondition(condition: Condition) {
+    private static addLogicalCondition(condition: SCondition) {
         if (condition.IsComposite) {
             throw new Error('Not expecting a composite condition!');
         }

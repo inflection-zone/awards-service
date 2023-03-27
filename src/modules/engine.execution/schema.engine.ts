@@ -1,17 +1,18 @@
 import { Engine } from 'json-rules-engine';
 import { SchemaConverter } from './schema.converter';
 import {
-    NodeExecutionInstance,
-    Schema,
-    SchemaExecutionInstance} from './types';
+    SNodeInstance,
+    SSchema,
+    SSchemaInstance} from './execution.types';
 import { EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
 
 export class SchemaEngine {
 
-    public static execute = async (schema: Schema, patientFacts: any) =>{
-        var schemaInstance = new SchemaExecutionInstance(schema);
+    public static execute = async (schema: SSchema, facts: any) =>{
+        
+        var schemaInstance = new SSchemaInstance(schema);
         var rootNodeInstance = schemaInstance.RootNode;
-        var currentNode = rootNodeInstance as NodeExecutionInstance;
+        var currentNode = rootNodeInstance as SNodeInstance;
 
         console.log(`\nCurrent node    : ${currentNode.Name}`);
         console.log(`Current node Id : ${currentNode.id}\n`);
@@ -20,22 +21,22 @@ export class SchemaEngine {
             currentNode = await SchemaEngine.traverse(
                 schemaInstance,
                 currentNode,
-                patientFacts,
-                patientFacts.Name);
+                facts,
+                facts.Name);
         }
         return currentNode;
     }
 
     private static async traverse(
-        schema: SchemaExecutionInstance,
-        currentNode: NodeExecutionInstance,
+        schema: SSchemaInstance,
+        currentNode: SNodeInstance,
         facts: any,
         context: string) {
 
-        var rules = currentNode.Rules;
+        const rules = currentNode.Rules;
         var facts: any = SchemaEngine.extractFactsForNode(facts, currentNode);
         var successEvent: any = undefined;
-        var successEvent: any = undefined;
+
 
         for (var r of rules) {
             const engine = new Engine();
@@ -78,7 +79,7 @@ export class SchemaEngine {
         return currentNode;
     }
 
-    private static extractFactsForNode(incomingFacts: any, currentNode: NodeExecutionInstance) {
+    private static extractFactsForNode(incomingFacts: any, currentNode: SNodeInstance) {
         var factKeys = Object.keys(incomingFacts.Facts);
         var nodeFactNames: string[] = currentNode.extractFacts();
         var facts: any = {};
