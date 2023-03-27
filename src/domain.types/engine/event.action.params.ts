@@ -1,4 +1,4 @@
-import { EventActionType } from "./enums";
+import { EventActionType } from "./engine.enums";
 import { uuid } from "../miscellaneous/system.types";
 
 export interface EventActionParams {

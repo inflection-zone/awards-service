@@ -34,3 +34,21 @@ export interface ParticipantSearchFilters extends PersonSearchFilters {
 export interface ParticipantSearchResults extends BaseSearchResults {
     Items: ParticipantResponseDto[];
 }
+
+export interface ParticipantBadgeResponseDto {
+    ParticipantId: uuid;
+    Badge : {
+        id         : uuid;
+        Name       : string;
+        Description: string;
+        Category   : {
+            id      : uuid;
+            Name    : string;
+            ImageUrl: string;
+        };
+        ImageUrl: string;
+    };
+    AcquiredDate: Date;
+    Reason      : string;
+    CreatedAt : Date;
+}

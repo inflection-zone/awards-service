@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ExecutionStatus } from "../../../domain.types/engine/enums";
+import { ExecutionStatus } from "../../../domain.types/engine/engine.enums";
 import {
     Column,
     Entity,

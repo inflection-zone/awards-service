@@ -3,7 +3,7 @@ import express from 'express';
 import { NodeCreateModel, NodeUpdateModel, NodeSearchFilters } from '../../../domain.types/engine/node.domain.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
-import { EventActionType } from '../../../domain.types/engine/enums';
+import { EventActionType } from '../../../domain.types/engine/engine.enums';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

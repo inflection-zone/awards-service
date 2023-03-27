@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ContextType } from "../../../domain.types/engine/enums";
+import { ContextType } from "../../../domain.types/engine/engine.enums";
 import {
     Column,
     CreateDateColumn,

@@ -14,7 +14,7 @@ import {
     ContextSearchFilters,
     ContextSearchResults
 } from '../../../domain.types/engine/context.types';
-import { ContextType } from '../../../domain.types/engine/enums';
+import { ContextType } from '../../../domain.types/engine/engine.enums';
 import { contentType } from 'mime-types';
 
 ///////////////////////////////////////////////////////////////////////

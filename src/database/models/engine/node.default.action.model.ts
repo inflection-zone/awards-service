@@ -8,7 +8,7 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
 } from 'typeorm';
-import { EventActionType } from "../../../domain.types/engine/enums";
+import { EventActionType } from "../../../domain.types/engine/engine.enums";
 import { Node } from "./node.model";
 import { EventActionParams } from "../../../domain.types/engine/event.action.params";
 

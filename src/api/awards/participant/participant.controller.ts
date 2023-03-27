@@ -77,7 +77,7 @@ export class ParticipantController extends BaseController {
         }
     };
 
-    delete = async (request: express.Request, response: express.Response): Promise < void > => {
+    delete = async (request: express.Request, response: express.Response) => {
         try {
             await this.authorize('Participant.Delete', request, response);
             var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
@@ -89,4 +89,15 @@ export class ParticipantController extends BaseController {
         }
     };
 
+    getBadges = async (request: express.Request, response: express.Response) => {
+        try {
+            await this.authorize('Participant.GetBadges', request, response);
+            var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
+            const result = await this._service.getBadges(id);
+            const message = 'Participant badges retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, result);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
 }

@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { CompositionOperator, LogicalOperator, MathematicalOperator, OperandDataType, OperatorType } from "./enums";
+import { CompositionOperator, LogicalOperator, MathematicalOperator, OperandDataType, OperatorType } from "./engine.enums";
 
 //////////////////////////////////////////////////////////////
 
