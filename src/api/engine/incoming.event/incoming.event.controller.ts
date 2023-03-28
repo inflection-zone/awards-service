@@ -6,6 +6,7 @@ import { IncomingEventService } from '../../../database/services/engine/incoming
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { IncomingEventCreateModel, IncomingEventSearchFilters } from '../../../domain.types/engine/incoming.event.types';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import EventHandler from '../../../modules/engine.execution/event.handler';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +32,8 @@ export class IncomingEventController extends BaseController {
             if (record === null) {
                 ErrorHandler.throwInternalServerError('Unable to add event!');
             }
-            const message = 'Incoming event added successfully!';
+            EventHandler.handle(record);
+            const message = 'Incoming event handled successfully!';
             return ResponseHandler.success(request, response, message, 201, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
