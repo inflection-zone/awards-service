@@ -1,6 +1,9 @@
 import { logger } from "../../logger/logger";
 import { IncomingEventResponseDto } from "../../domain.types/engine/incoming.event.types";
 import * as asyncLib from 'async';
+import { ContextService } from "../../database/services/engine/context.service";
+import { ContextType } from "../../domain.types/engine/engine.enums";
+import { SchemaInstanceService } from "../../database/services/engine/schema.instance.service";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -39,9 +42,28 @@ export default class EventHandler {
         });
     };
 
-    private static processEvent = (event: IncomingEventResponseDto) => {
+    private static processEvent = async (event: IncomingEventResponseDto) => {
+
         logger.info(JSON.stringify(event, null, 2));
         //Process incoming event here...
+
+        const contextService = new ContextService();
+        const schemaInstanceService = new SchemaInstanceService();
+        const referenceId = event.ReferenceId;
+        const eventName = event.EventType.Name;
+        var context = await contextService.getByReferenceId(referenceId);
+        if (!context) {
+            context = await contextService.create({
+                ReferenceId : referenceId,
+                Type        : ContextType.Person
+            });
+        }
+        const schemaInstances = await schemaInstanceService.getByContextId(context.id);
+
+        if (eventName === 'Medication') {
+            //Collect all medication relevant data for the context here as facts
+        }
+
     };
 
 }

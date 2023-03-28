@@ -69,6 +69,20 @@ export class ContextService extends BaseService {
         }
     };
 
+    public getByReferenceId = async (referenceId: uuid): Promise<ContextResponseDto> => {
+        try {
+            var event = await this._eventRepository.findOne({
+                where : {
+                    ReferenceId : referenceId
+                }
+            });
+            return ContextMapper.toResponseDto(event);
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
     public search = async (filters: ContextSearchFilters)
         : Promise<ContextSearchResults> => {
         try {

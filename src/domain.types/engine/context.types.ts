@@ -8,7 +8,6 @@ import { ContextType } from "./engine.enums";
 ////////////////////////////////////////////////////////////
 
 export interface ContextCreateModel {
-    id          : uuid;
     ReferenceId : uuid;
     Type       ?: ContextType;
 }
