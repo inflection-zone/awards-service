@@ -1,21 +1,22 @@
 import { Engine } from 'json-rules-engine';
-import { SchemaConverter } from './schema.converter';
+import { RuleConverter } from './rule.converter';
 import {
-    SNodeInstance,
-    SSchema,
-    SSchemaInstance } from './execution.types';
+    CNodeInstance,
+    CSchema,
+    CSchemaInstance } from './execution.types';
 import { EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
 import { logger } from '../../logger/logger';
+import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
 
 ///////////////////////////////////////////////////////////////////////////////
 
 export class SchemaEngine {
 
-    public static execute = async (schema: SSchema, facts: any) =>{
+    public static execute = async (schema: SchemaInstanceResponseDto, facts: any) =>{
         
-        var schemaInstance = new SSchemaInstance(schema);
+        var schemaInstance = new CSchemaInstance(schema);
         var rootNodeInstance = schemaInstance.RootNode;
-        var currentNode = rootNodeInstance as SNodeInstance;
+        var currentNode = rootNodeInstance as CNodeInstance;
 
         logger.info(`\nCurrent node    : ${currentNode.Name}`);
         logger.info(`Current node Id : ${currentNode.id}\n`);
@@ -31,8 +32,8 @@ export class SchemaEngine {
     };
 
     private static async traverse(
-        schema: SSchemaInstance,
-        currentNode: SNodeInstance,
+        schema: CSchemaInstance,
+        currentNode: CNodeInstance,
         facts: any,
         context: string) {
 
@@ -42,7 +43,7 @@ export class SchemaEngine {
 
         for (var r of rules) {
             const engine = new Engine();
-            var rule = SchemaConverter.convertRule(r);
+            var rule = RuleConverter.convertRule(r);
             engine.addRule(rule);
             engine.on('success', async (event, almanac) => {
                 successEvent = event;
@@ -81,7 +82,7 @@ export class SchemaEngine {
         return currentNode;
     }
 
-    private static extractFactsForNode(incomingFacts: any, currentNode: SNodeInstance) {
+    private static extractFactsForNode(incomingFacts: any, currentNode: CNodeInstance) {
         var factKeys = Object.keys(incomingFacts.Facts);
         var nodeFactNames: string[] = currentNode.extractFacts();
         var facts: any = {};

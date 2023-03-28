@@ -6,6 +6,7 @@ import {
     uuid
 } from "../miscellaneous/system.types";
 import { EventActionType, OperatorType } from "./engine.enums";
+import { EventActionParams } from "./event.action.params";
 
 //////////////////////////////////////////////////////////////
 
@@ -64,12 +65,7 @@ export interface RuleResponseDto {
         Name: string;
         Description: string;
         ActionType: EventActionType;
-        Params: {
-            Message    : string;
-            Action     : EventActionType;
-            NextNodeId : uuid;
-            Extra      : any;
-        }
+        Params: EventActionParams;
     },
     CreatedAt: Date;
     UpdatedAt: Date;

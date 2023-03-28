@@ -1,10 +1,10 @@
 import { writeFileSync } from "fs";
 import { PatientData } from "./data";
-import { SchemaConverter } from "../schema.converter";
+import { RuleConverter } from "../rule.converter";
 import { SchemaEngine } from "../schema.engine";
-import { SchemaGenerator } from "../schema.generator";
+import { TestSchemaGenerator } from "./test.schema.generator";
 
-var generator = new SchemaGenerator();
+var generator = new TestSchemaGenerator();
 const schema = generator.generate();
 
 printSchema();
@@ -25,7 +25,7 @@ function printSchema() {
         var rules = n.Rules;
         var decisions = [];
         for (var r of rules) {
-            var rObj = SchemaConverter.convertRule(r);
+            var rObj = RuleConverter.convertRule(r);
             rObj["rule"] = r.Name;
             decisions.push(rObj);
         }
