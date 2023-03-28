@@ -17,6 +17,7 @@ export class SchemaValidator extends BaseValidator {
                 ValidFrom   : joi.date().iso().greater('now').optional(),
                 ValidTill   : joi.date().iso().greater(joi.ref('ValidTill')).optional(),
                 IsValid     : joi.boolean().optional(),
+                EventTypeIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await schema.validateAsync(request.body);
             return {
@@ -41,6 +42,7 @@ export class SchemaValidator extends BaseValidator {
                 ValidFrom   : joi.date().iso().greater('now').optional(),
                 ValidTill   : joi.date().iso().greater(joi.ref('ValidTill')).optional(),
                 IsValid     : joi.boolean().optional(),
+                EventTypeIds: joi.array().items(joi.string().uuid()).optional(),
             });
             await schema.validateAsync(request.body);
             return {

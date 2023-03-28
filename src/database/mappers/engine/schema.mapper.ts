@@ -24,6 +24,13 @@ export class SchemaMapper {
             ValidTill   : schema.ValidTill,
             IsValid     : schema.IsValid,
             RootNodeId  : schema.RootNodeId,
+            EventTypes  : schema.EventTypes.map(x => {
+                return {
+                    id         : x.id,
+                    Name       : x.Name,
+                    Description: x.Description,
+                };
+            }),
             CreatedAt   : schema.CreatedAt,
             UpdatedAt   : schema.UpdatedAt,
         };

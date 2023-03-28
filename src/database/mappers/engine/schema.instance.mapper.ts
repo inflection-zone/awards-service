@@ -20,7 +20,14 @@ export class SchemaInstanceMapper {
                 Client      : {
                     id   : instance.Schema.Client.id,
                     Name : instance.Schema.Client.Name,
-                }
+                },
+                EventTypes : instance.Schema.EventTypes.map(x => {
+                    return {
+                        id: x.id,
+                        Name: x.Name,
+                        Description: x.Description
+                    }
+                }),
             },
             Context : {
                 id          : instance.Context.id,

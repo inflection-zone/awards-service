@@ -9,9 +9,11 @@ import {
     ManyToOne,
     OneToMany,
     JoinColumn,
+    ManyToMany,
 } from 'typeorm';
 import { Client } from "../client/client.model";
 import { Node } from "../engine/node.model";
+import { IncomingEventType } from "./incoming.event.type.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -39,6 +41,9 @@ export class Schema {
         nullable : true,
     })
     Nodes: Node[];
+
+    @ManyToMany(() => IncomingEventType)
+    EventTypes: IncomingEventType[];
 
     @Column({ type: 'date', nullable: true })
     ValidFrom : Date;
