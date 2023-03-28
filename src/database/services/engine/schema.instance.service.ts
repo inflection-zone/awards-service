@@ -73,6 +73,27 @@ export class SchemaInstanceService extends BaseService {
         }
     };
 
+    public getByContextAndEventType = async (contextId: uuid, eventTypeId: uuid): Promise<SchemaInstanceResponseDto[]> => {
+        try {
+            var instances = await this._schemaInstanceRepository.find({
+                where : {
+                    Context : {
+                        id : contextId
+                    },
+                    Schema: {
+                        EventTypes: {
+                            id: eventTypeId
+                        }
+                    }
+                }
+            });
+            return instances.map(x => SchemaInstanceMapper.toResponseDto(x));
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
     public search = async (filters: SchemaInstanceSearchFilters)
         : Promise<SchemaInstanceSearchResults> => {
         try {
