@@ -64,6 +64,9 @@ export default class EventHandler {
             //Collect all medication relevant data for the context here as facts
         }
 
+        for await (var schemaInstance of schemaInstances) {
+            
+        }
     };
 
 }

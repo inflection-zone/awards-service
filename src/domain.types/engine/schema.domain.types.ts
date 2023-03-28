@@ -1,3 +1,4 @@
+import { IncomingEventType } from "../../database/models/engine/incoming.event.type.model";
 import {
     BaseSearchFilters,
     BaseSearchResults
@@ -5,6 +6,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
+import { IncomingEventTypeResponseDto } from "./incoming.event.type.types";
 
 //////////////////////////////////////////////////////////////
 
@@ -15,6 +17,7 @@ export interface SchemaCreateModel {
     ValidFrom   ?: Date;
     ValidTill   ?: Date;
     IsValid     ?: boolean;
+    EventTypeIds?: uuid[];
 }
 
 export interface SchemaUpdateModel {
@@ -24,6 +27,7 @@ export interface SchemaUpdateModel {
     ValidFrom   ?: Date;
     ValidTill   ?: Date;
     IsValid     ?: boolean;
+    EventTypeIds?: uuid[];
 }
 
 export interface SchemaResponseDto {
@@ -39,6 +43,7 @@ export interface SchemaResponseDto {
         Name: string;
         Code: string;
     };
+    EventTypes ?: IncomingEventTypeResponseDto[];
     CreatedAt: Date;
     UpdatedAt: Date;
 }

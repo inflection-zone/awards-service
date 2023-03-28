@@ -3,7 +3,7 @@ import { Client } from '../../models/client/client.model';
 import { logger } from '../../../logger/logger';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { Source } from '../../../database/database.connector';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, In, Like, Repository } from 'typeorm';
 import { SchemaMapper } from '../../mappers/engine/schema.mapper';
 import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
@@ -13,6 +13,7 @@ import {
     SchemaSearchFilters,
     SchemaSearchResults,
     SchemaUpdateModel } from '../../../domain.types/engine/schema.domain.types';
+import { IncomingEventType } from '../../models/engine/incoming.event.type.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -24,12 +25,22 @@ export class SchemaService extends BaseService {
 
     _clientRepository: Repository<Client> = Source.getRepository(Client);
 
+    _eventTypeRepository: Repository<IncomingEventType> = Source.getRepository(IncomingEventType);
+
     //#endregion
 
     public create = async (createModel: SchemaCreateModel)
         : Promise<SchemaResponseDto> => {
 
         const client = await this.getClient(createModel.ClientId);
+        var eventTypes = [];
+        if (createModel.EventTypeIds) {
+            eventTypes = await this._eventTypeRepository.find({
+                where: {
+                    id: In(createModel.EventTypeIds)
+                }
+            });
+        }
         const schema = this._schemaRepository.create({
             Client      : client,
             Name        : createModel.Name,
@@ -37,6 +48,7 @@ export class SchemaService extends BaseService {
             ValidFrom   : createModel.ValidFrom,
             ValidTill   : createModel.ValidTill,
             IsValid     : createModel.IsValid ?? true,
+            EventTypes  : eventTypes,
         });
         var record = await this._schemaRepository.save(schema);
         return SchemaMapper.toResponseDto(record);

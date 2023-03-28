@@ -28,7 +28,12 @@ export interface SchemaInstanceResponseDto {
         Client     : {
             id  : uuid;
             Name: string;
-        }
+        },
+        EventTypes : {
+            id: uuid;
+            Name: string;
+            Description: string;
+        }[],
     };
     Context     : {
         id          : uuid;
