@@ -50,7 +50,6 @@ export default class EventHandler {
         const contextService = new ContextService();
         const schemaInstanceService = new SchemaInstanceService();
         const referenceId = event.ReferenceId;
-        const eventName = event.EventType.Name;
         var context = await contextService.getByReferenceId(referenceId);
         if (!context) {
             context = await contextService.create({
@@ -59,13 +58,12 @@ export default class EventHandler {
             });
         }
         const schemaInstances = await schemaInstanceService.getByContextId(context.id);
+        const filtered = schemaInstances.filter(x => 
+            x.Schema.EventTypes.find(y => y.id === event.EventType.id) !== undefined);
+        //const filtered = await schemaInstanceService.getByContextAndEventType(context.id, event.EventType.id);
 
-        if (eventName === 'Medication') {
-            //Collect all medication relevant data for the context here as facts
-        }
-
-        for await (var schemaInstance of schemaInstances) {
-            
+        for await (var schemaInstance of filtered) {
+            //const instance = 
         }
     };
 
