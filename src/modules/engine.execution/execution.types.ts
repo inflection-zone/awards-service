@@ -2,32 +2,41 @@ export type uuid    = string | null;
 import { EventActionParams } from '../../domain.types/engine/event.action.params';
 import { 
     CompositionOperator, 
+    EventActionType, 
     ExecutionStatus, 
     LogicalOperator, 
     MathematicalOperator, 
     OperandDataType 
 } from '../../domain.types/engine/engine.enums';
 import { v4 as uuidv4 } from 'uuid';
+import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
+import { NodeInstanceResponseDto } from '../../domain.types/engine/node.instance.types';
+import { RuleResponseDto } from '../../domain.types/engine/rule.domain.types';
+import { ConditionResponseDto } from '../../domain.types/engine/condition.types';
 
 ///////////////////////////////////////////////////////////////////////////
 
-export class SCondition {
+export class CCondition {
     id               : uuid = uuidv4();
     ParentConditionId: uuid | undefined;
     RuleId           : uuid | undefined;
     IsComposite      : boolean | undefined;
-    Children         : SCondition[] = [];
+    Children         : CCondition[] = [];
     Fact             : string | undefined;
     Operator         : LogicalOperator | MathematicalOperator | CompositionOperator | undefined;
     DataType         : OperandDataType | undefined = OperandDataType.Text;
     Value            : string | number | boolean | [] | undefined;
 
+    constructor(cond: ConditionResponseDto) {
+
+    }
+
     static createComposite(
         ruleId: uuid, 
-        parentCondition: SCondition | undefined | null, 
+        parentCondition: CCondition | undefined | null, 
         operator: CompositionOperator) {
 
-        var condition = new SCondition();
+        var condition = new CCondition();
 
         condition.id = uuidv4();
         condition.RuleId = ruleId;
@@ -47,13 +56,13 @@ export class SCondition {
 
     static createLogical(
         ruleId: uuid,
-        parentCondition: SCondition | undefined | null,
+        parentCondition: CCondition | undefined | null,
         fact:string,
         operator: LogicalOperator,
         dataType:OperandDataType,
         value: string | number | boolean | []) {
             
-        var condition = new SCondition();
+        var condition = new CCondition();
         condition.id = uuidv4();
         condition.RuleId = ruleId;
         condition.ParentConditionId = parentCondition? parentCondition.id : null;
@@ -87,13 +96,13 @@ export class SCondition {
     }
 }
 
-export class SNode {
+export class CNode {
     id          : uuid = uuidv4();
     SchemaId    : uuid;
     ParentNodeId: uuid | undefined;
     Name        : string | undefined;
     Description : string | undefined;
-    Rules       : SRule[] = [];
+    Rules       : CRule[] = [];
 
     constructor(
         schemaId: uuid,
@@ -122,52 +131,91 @@ export class SNode {
     }
 }
 
-export class EventAction {
-    id          : uuid = uuidv4();
-    ParentRuleId: uuid | undefined;
-    Type        : string | undefined;
-    Name        : string | undefined;
-    Description : string | undefined;
-    Params      : EventActionParams;
-
-    constructor(
-        parentRuleId: uuid,
-        name:string,
-        description: string,
-        params: EventActionParams) {
-            this.id = uuidv4();
-            this.ParentRuleId = parentRuleId;
-            this.Name = name;
-            this.Description = description;
-            this.Params = params;
-        }
-}
-
-export class SRule {
+export class CRule {
     id          : uuid = uuidv4();
     Name        : string | undefined;
     NodeId      : uuid | undefined;
-    Condition   : SCondition | undefined;
-    Event       : EventAction | undefined | null;
-
-    constructor(
-        nodeId: uuid,
-        name:string,
-        composition: CompositionOperator,
-        event: EventAction | undefined | null = null) {
-            this.id = uuidv4();
-            this.NodeId = nodeId;
-            this.Name = name;
-            this.Event = event;
-            this.Condition = SCondition.createComposite(this.id, null, composition);
+    Condition   : CCondition | undefined;
+    ParentRuleId: uuid | undefined;
+    Action      : {
+        ActionType  : EventActionType;
+        Name        : string;
+        Description?: string;
+        Params      : EventActionParams;
+    };
+    
+    constructor(rule: RuleResponseDto) {
+        this.id = rule.id;
+        this.NodeId = rule.ParentNode.id;
+        this.Name = rule.Name;
+        this.Action = {
+            ActionType : rule.Action.ActionType,
+            Name : rule.Action.Name,
+            Description: rule.Description,
+            Params : {
+                Message: rule.Action.Params.Message,
+                Action : rule.Action.Params.Action,
+                NextNodeId: rule.Action.Params.NextNodeId,
+                Extra: rule.Action.Params.Extra,
+            }
         }
+        this.Condition = new CCondition(rule.Condition);
+    }
 }
 
-export class SSchema {
+export class CNodeInstance {
+    id                  : uuid;
+    SchemaId            : uuid;
+    SchemaInstanceId    : uuid;
+    ParentNodeInstanceId: uuid | undefined;
+    ParentNodeId        : uuid | undefined;
+    NodeId              : uuid | undefined;
+    Name                : string | undefined;
+    Description         : string | undefined;
+    Status              : ExecutionStatus = ExecutionStatus.Pending;
+    UpdatedAt           : Date;
+    ApplicableRule      : CRule | undefined;
+    AvailableFacts      : any[] | undefined;
+    UserId              : uuid | undefined;
+    Rules               : CRule[] = [];
+
+    constructor(ni: NodeInstanceResponseDto) {
+        this.id = ni.id;
+        this.Name = ni.Node.Name;
+        this.NodeId = ni.Node.id;
+        this.SchemaId = ni.SchemaInstance.Schema.id;
+        this.SchemaInstanceId = ni.SchemaInstance.id;
+        this.ParentNodeId = ni.ParentNodeInstance?.Node?.id,
+        this.ParentNodeInstanceId = ni.ParentNodeInstance?.id;
+        this.UpdatedAt = new Date();
+        this.Rules = [];
+        for (var r of ni.Node.Rules) {
+            const rule = new CRule(r)
+            var rule = {...r};
+            this.Rules.push(rule);
+        }
+    }
+
+    public extractFacts = () => {
+        var facts: string[] = [];
+        for(var r of this.Rules) {
+            var f = r.Condition?.getFacts();
+            if(Array.isArray(f))
+            {
+                facts.push(...f);
+            }
+        }
+        var s = new Set(facts);
+        return Array.from(s);
+    }
+
+}
+
+export class CSchema {
     id          : uuid = uuidv4();
     Name        : string | undefined;
-    Nodes       : SNode[];
-    RootNode    : SNode | undefined;
+    Nodes       : CNode[];
+    RootNode    : CNode | undefined;
 
     constructor(name: string) {
         this.id = uuidv4();
@@ -176,48 +224,27 @@ export class SSchema {
     }
 }
 
-export class SNodeInstance extends SNode {
-    id            : uuid = uuidv4();
-    NodeId        : uuid | undefined;
-    Status        : ExecutionStatus = ExecutionStatus.Pending;
-    UpdatedAt     : Date;
-    ApplicableRule: SRule | undefined;
-    AvailableFacts: any[] | undefined;
-    UserId        : uuid | undefined;
-
-    constructor(node: SNode) {
-        super(node.SchemaId, node.ParentNodeId as uuid, node.Name as string, node.Description as string)
-        this.id = uuidv4();
-        this.NodeId = node.id;
-        this.UpdatedAt = new Date();
-        this.Rules = [];
-        for (var r of node.Rules){
-            var rule = {...r};
-            this.Rules.push(rule);
-        }
-    }
-}
-
-export class SSchemaInstance extends SSchema {
-    id                 : uuid = uuidv4();
+export class CSchemaInstance {
+    id                 : uuid;
+    Name               : string;
     SchemaId           : uuid;
-    Nodes              : SNodeInstance[];
-    CurrentNodeInstance: SNodeInstance | undefined;
-    RootNode           : SNodeInstance | undefined;
+    Nodes              : CNodeInstance[];
+    CurrentNodeInstance: CNodeInstance | undefined;
+    RootNode           : CNodeInstance | undefined;
 
-    constructor(schema: SSchema) {
-        super(schema.Name as string);
-        this.id = uuidv4();
-        this.SchemaId = schema.id;
+    constructor(si: SchemaInstanceResponseDto) {
+
+        this.id = si.id;
+        this.SchemaId = si.Schema.id;
         this.Nodes = [];
-        for (var n of schema.Nodes){
-            var nodeInstance = new SNodeInstance(n);
+        for (var ni of si.NodeInstances) {
+            var nodeInstance = new CNodeInstance(ni);
             this.Nodes.push(nodeInstance);
         }
         this.RootNode = this.Nodes.find(x => x.NodeId === schema.RootNode?.id);
     }
 
-    public setCurrent = (instance: SNodeInstance) => {
+    public setCurrent = (instance: CNodeInstance) => {
         this.CurrentNodeInstance = instance;
     }
 }
