@@ -2,7 +2,6 @@ import { Engine } from 'json-rules-engine';
 import { RuleConverter } from './rule.converter';
 import {
     CNodeInstance,
-    CSchema,
     CSchemaInstance } from './execution.types';
 import { EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
 import { logger } from '../../logger/logger';

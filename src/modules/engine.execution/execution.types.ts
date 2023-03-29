@@ -113,25 +113,6 @@ export class CRule {
         Description?: string;
         Params      : EventActionParams;
     };
-    
-    // constructor(rule: RuleResponseDto) {
-    //     this.id = rule.id;
-    //     this.NodeId = rule.ParentNode.id;
-    //     this.Name = rule.Name;
-    //     this.Action = {
-    //         ActionType  : rule.Action.ActionType,
-    //         Name        : rule.Action.Name,
-    //         Description : rule.Description,
-    //         Params      : {
-    //             Message    : rule.Action.Params.Message,
-    //             Action     : rule.Action.Params.Action,
-    //             NextNodeId : rule.Action.Params.NextNodeId,
-    //             Extra      : rule.Action.Params.Extra,
-    //         }
-    //     };
-    //     conditions = rule.
-    //     this.Condition = new CCondition(rule.Condition);
-    // }
 
 }
 
