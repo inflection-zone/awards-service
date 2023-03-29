@@ -1,4 +1,4 @@
-import { CompositionOperator, LogicalOperator } from '../../domain.types/engine/engine.enums';
+import { CompositionOperator, LogicalOperator, OperatorType } from '../../domain.types/engine/engine.enums';
 import {
     CCondition,
     CRule} from './execution.types';
@@ -7,7 +7,7 @@ export class RuleConverter {
 
     public static convertRule = (rule: CRule) =>{
 
-        var condition = rule.Condition as CCondition;
+        var condition = rule.RootCondition as CCondition;
 
         var decision: any = {
             conditions: RuleConverter.addCompositeCondition(condition),
@@ -21,7 +21,7 @@ export class RuleConverter {
     }
 
     private static addCompositeCondition(condition: CCondition) {
-        if(!condition.IsComposite) {
+        if(condition.OperatorType !== OperatorType.Composition) {
             throw new Error('Expecting a composite condition!');
         }
         var list = RuleConverter.addChildrenConditions(condition);
@@ -40,7 +40,7 @@ export class RuleConverter {
     private static addChildrenConditions(condition: CCondition) {
         var list: any = [];
         for (var child of condition.Children) {
-            if (child.IsComposite) {
+            if (child.OperatorType === OperatorType.Composition) {
                 const x = RuleConverter.addCompositeCondition(child);
                 list.push(x);
             }
@@ -53,7 +53,7 @@ export class RuleConverter {
     }
 
     private static addLogicalCondition(condition: CCondition) {
-        if (condition.IsComposite) {
+        if (condition.OperatorType === OperatorType.Composition) {
             throw new Error('Not expecting a composite condition!');
         }
         var operator = RuleConverter.translateLogicalOperator(condition.Operator as LogicalOperator);

@@ -7,21 +7,24 @@ import {
 import { EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
 import { logger } from '../../logger/logger';
 import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
+import { ExecutionTypesGenerator } from './execution.types.generator';
 
 ///////////////////////////////////////////////////////////////////////////////
 
 export class SchemaEngine {
 
-    public static execute = async (schema: SchemaInstanceResponseDto, facts: any) =>{
+    public static execute = async (dbSchemaInstance: SchemaInstanceResponseDto, facts: any) =>{
         
-        var schemaInstance = new CSchemaInstance(schema);
-        var rootNodeInstance = schemaInstance.RootNode;
+        const generator = new ExecutionTypesGenerator();
+        var schemaInstance = await generator.createSchemaInstance(dbSchemaInstance);
+
+        var rootNodeInstance = schemaInstance.RootNodeInstance;
         var currentNode = rootNodeInstance as CNodeInstance;
 
         logger.info(`\nCurrent node    : ${currentNode.Name}`);
         logger.info(`Current node Id : ${currentNode.id}\n`);
 
-        while (currentNode.Status === ExecutionStatus.Pending) {
+        while (currentNode.ExecutionStatus === ExecutionStatus.Pending) {
             currentNode = await SchemaEngine.traverse(
                 schemaInstance,
                 currentNode,
@@ -64,19 +67,19 @@ export class SchemaEngine {
             if (action === EventActionType.ExecuteNext && nextNodeId != null) {
                 var nextNode = schema.Nodes.find(x => x.NodeId === nextNodeId);
                 if (nextNode) {
-                    currentNode.Status = ExecutionStatus.Executed;
+                    currentNode.ExecutionStatus = ExecutionStatus.Executed;
                     currentNode = nextNode;
                     logger.info(`\nCurrent node    : ${currentNode.Name}`);
                     logger.info(`Current node Id : ${currentNode.id}\n`);
                 }
             }
             else if (action === EventActionType.WaitForInputEvents) {
-                currentNode.Status = ExecutionStatus.Waiting;
+                currentNode.ExecutionStatus = ExecutionStatus.Waiting;
                 logger.warn(`%cWaiting for input events for necessary facts!`);
             }
         }
         else {
-            currentNode.Status = ExecutionStatus.Executed;
+            currentNode.ExecutionStatus = ExecutionStatus.Executed;
         }
 
         return currentNode;
