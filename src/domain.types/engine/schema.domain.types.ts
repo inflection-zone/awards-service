@@ -1,4 +1,3 @@
-import { IncomingEventType } from "../../database/models/engine/incoming.event.type.model";
 import {
     BaseSearchFilters,
     BaseSearchResults

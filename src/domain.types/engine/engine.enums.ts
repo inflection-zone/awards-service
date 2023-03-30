@@ -125,7 +125,6 @@ export const EventActionTypeList: EventActionType[] = [
     EventActionType.Custom,
 ];
 
-
 export enum ExecutionStatus {
     Pending = "Pending",
     Executed = "Executed",

@@ -4,6 +4,8 @@ import * as asyncLib from 'async';
 import { ContextService } from "../../database/services/engine/context.service";
 import { ContextType } from "../../domain.types/engine/engine.enums";
 import { SchemaInstanceService } from "../../database/services/engine/schema.instance.service";
+import { ContextResponseDto } from "../../domain.types/engine/context.types";
+import { SchemaEngine } from "./schema.engine";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -57,14 +59,29 @@ export default class EventHandler {
                 Type        : ContextType.Person
             });
         }
+
+        //Execute long running schema instances
+
+        await EventHandler.executeLongRunningInstances(schemaInstanceService, context, event);
+
+    };
+
+    private static async executeLongRunningInstances(
+        schemaInstanceService: SchemaInstanceService,
+        context: ContextResponseDto,
+        event: IncomingEventResponseDto) {
+
         const schemaInstances = await schemaInstanceService.getByContextId(context.id);
-        const filtered = schemaInstances.filter(x =>
-            x.Schema.EventTypes.find(y => y.id === event.EventType.id) !== undefined);
+        const filtered = schemaInstances.filter(
+            x => x.Schema.EventTypes.find(y => y.id === event.EventType.id) !== undefined);
+        
+        //Alternatively
         //const filtered = await schemaInstanceService.getByContextAndEventType(context.id, event.EventType.id);
 
-        for await (var schemaInstance of filtered) {
-            //const instance = 
+        for await (var instance of filtered) {
+            SchemaEngine.execute(instance);
         }
-    };
+
+    }
 
 }

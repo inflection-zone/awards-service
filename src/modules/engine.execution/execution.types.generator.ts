@@ -1,6 +1,6 @@
 import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
-import { NodeInstanceResponseDto } from '../../domain.types/engine/node.instance.types';
-import { RuleResponseDto } from '../../domain.types/engine/rule.domain.types';
+// import { NodeInstanceResponseDto } from '../../domain.types/engine/node.instance.types';
+// import { RuleResponseDto } from '../../domain.types/engine/rule.domain.types';
 import { ConditionResponseDto } from '../../domain.types/engine/condition.types';
 import { NodeInstanceService } from '../../database/services/engine/node.instance.service';
 import { RuleService } from '../../database/services/engine/rule.service';
@@ -26,7 +26,6 @@ export class ExecutionTypesGenerator {
 
     _conditionService = new ConditionService();
 
-
     public createSchemaInstance = async (dto: SchemaInstanceResponseDto): Promise<CSchemaInstance> => {
 
         const instance = new CSchemaInstance();
@@ -36,7 +35,8 @@ export class ExecutionTypesGenerator {
         instance.SchemaId = dto.Schema.id;
         instance.Nodes = [];
     
-        const rootNodeId = dto.RootNodeInstance.Node.id;
+        //const rootNodeId = dto.RootNodeInstance.Node.id;
+        instance.ContextId = dto.Context.id;
     
         for (var ni of dto.NodeInstances) {
             const nodeInstance = await this.createNodeInstance(ni.id);
@@ -45,8 +45,13 @@ export class ExecutionTypesGenerator {
         instance.RootNodeInstance = instance.Nodes.find(x => x.NodeId === dto.RootNodeInstance.Node.id);
         instance.CurrentNodeInstance = instance.Nodes.find(x => x.NodeId === dto.CurrentNodeInstance.Node.id);
 
+        for (var nodeInstance of instance.Nodes) {
+            var facts = nodeInstance.extractFacts();
+            instance.FactNames.push(...facts);
+        }
+
         return instance;
-    }
+    };
 
     public createNodeInstance = async (nodeInstanceId: uuid)
         : Promise<CNodeInstance> => {
@@ -74,7 +79,7 @@ export class ExecutionTypesGenerator {
         }
 
         return instance;
-    }
+    };
 
     public createRule = async (ruleId: uuid): Promise<CRule> => {
         const instance = new CRule();
@@ -102,7 +107,7 @@ export class ExecutionTypesGenerator {
         instance.RootCondition = await this.createCondition(rootCondition);
 
         return instance;
-    }
+    };
 
     public getConditionsForRule = async (ruleId: uuid): Promise<CCondition[]> => {
         const conditions:CCondition[] = [];
@@ -112,7 +117,7 @@ export class ExecutionTypesGenerator {
             conditions.push(condition);
         }
         return conditions;
-    }
+    };
 
     public createCondition = async (dto: ConditionResponseDto): Promise<CCondition> => {
 
@@ -121,7 +126,7 @@ export class ExecutionTypesGenerator {
         condition.id = dto.id;
         condition.OperatorType = dto.Operator;
         condition.RuleId = dto.Rule.id;
-        condition.ParentConditionId = dto.ParentCondition? dto.ParentCondition.id : null;
+        condition.ParentConditionId = dto.ParentCondition ? dto.ParentCondition.id : null;
         condition.Children = [];
 
         if (condition.OperatorType === OperatorType.Composition) {
@@ -135,7 +140,7 @@ export class ExecutionTypesGenerator {
                 condition.Children.push(childCondition);
             }
         }
-        else if(condition.OperatorType === OperatorType.Logical) {
+        else if (condition.OperatorType === OperatorType.Logical) {
             condition.Operator = dto.LogicalOperator;
             condition.Fact = dto.Fact;
             condition.DataType = dto.DataType;
@@ -146,7 +151,7 @@ export class ExecutionTypesGenerator {
         }
 
         return condition;
-    }
+    };
 
 }
 

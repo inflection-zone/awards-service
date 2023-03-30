@@ -187,7 +187,11 @@ export class CSchemaInstance {
 
     SchemaId           : uuid;
 
+    ContextId          : uuid;
+
     Nodes              : CNodeInstance[];
+
+    FactNames          : string[];
 
     CurrentNodeInstance: CNodeInstance | undefined;
 
