@@ -15,7 +15,6 @@ import {
     ContextSearchResults
 } from '../../../domain.types/engine/context.types';
 import { ContextType } from '../../../domain.types/engine/engine.enums';
-import { contentType } from 'mime-types';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -35,12 +34,12 @@ export class ContextService extends BaseService {
         : Promise<ContextResponseDto> => {
 
         var obj: any = {
-            ReferenceId: createModel.ReferenceId,
+            ReferenceId : createModel.ReferenceId,
         };
         if (!createModel.Type) {
             obj.Type = ContextType.Person;
         }
-        if (obj.Type == ContextType.Person) {
+        if (obj.Type === ContextType.Person) {
             var participant = await this._participantRepository.findOne({
                 where : {
                     ReferenceId : createModel.ReferenceId
@@ -130,10 +129,10 @@ export class ContextService extends BaseService {
             where : {
             },
             select : {
-                id         : true,
-                ReferenceId: true,
-                Type       : true,
-                Participant: {
+                id          : true,
+                ReferenceId : true,
+                Type        : true,
+                Participant : {
                     id          : true,
                     ReferenceId : true,
                     Prefix      : true,

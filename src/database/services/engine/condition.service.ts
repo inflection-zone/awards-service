@@ -7,12 +7,12 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { ConditionMapper } from '../../mappers/engine/condition.mapper';
 import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { 
-    ConditionCreateModel, 
-    ConditionResponseDto, 
-    ConditionSearchFilters, 
-    ConditionSearchResults, 
-    ConditionUpdateModel 
+import {
+    ConditionCreateModel,
+    ConditionResponseDto,
+    ConditionSearchFilters,
+    ConditionSearchResults,
+    ConditionUpdateModel
 } from '../../../domain.types/engine/condition.types';
 
 ///////////////////////////////////////////////////////////////////////
@@ -34,17 +34,17 @@ export class ConditionService extends BaseService {
         const parentCondition = await this.getCondition(createModel.ParentConditionId);
 
         const condition = this._conditionRepository.create({
-            Name                : createModel.Name,
-            Description         : createModel.Description,
-            Rule                : rule,
-            ParentCondition     : parentCondition,
-            Operator         : createModel.Operator,
-            Fact                : createModel.Fact,
-            DataType            : createModel.DataType,
-            Value               : createModel.Value,
-            LogicalOperator     : createModel.LogicalOperator,
-            MathematicalOperator: createModel.MathematicalOperator,
-            CompositionOperator : createModel.CompositionOperator,
+            Name                 : createModel.Name,
+            Description          : createModel.Description,
+            Rule                 : rule,
+            ParentCondition      : parentCondition,
+            Operator             : createModel.Operator,
+            Fact                 : createModel.Fact,
+            DataType             : createModel.DataType,
+            Value                : createModel.Value,
+            LogicalOperator      : createModel.LogicalOperator,
+            MathematicalOperator : createModel.MathematicalOperator,
+            CompositionOperator  : createModel.CompositionOperator,
         });
         var record = await this._conditionRepository.save(condition);
         return ConditionMapper.toResponseDto(record);
@@ -78,7 +78,7 @@ export class ConditionService extends BaseService {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
         }
-    }
+    };
 
     public search = async (filters: ConditionSearchFilters)
         : Promise<ConditionSearchResults> => {
@@ -160,29 +160,29 @@ export class ConditionService extends BaseService {
             where : {
             },
             select : {
-                id      : true,
-                Name       : true,
-                Description: true,
-                Rule: {
-                    id         : true,
-                    Name       : true,
-                    Description: true,
-                    ParentNode : {
+                id          : true,
+                Name        : true,
+                Description : true,
+                Rule        : {
+                    id          : true,
+                    Name        : true,
+                    Description : true,
+                    ParentNode  : {
                         id : true,
                     }
                 },
-                ParentCondition       : {
-                    id  : true,
-                    Name: true,
-                    Description: true,
-                },
-                ChildrenConditions: {
+                ParentCondition : {
                     id          : true,
                     Name        : true,
                     Description : true,
                 },
-                CreatedAt  : true,
-                UpdatedAt  : true,
+                ChildrenConditions : {
+                    id          : true,
+                    Name        : true,
+                    Description : true,
+                },
+                CreatedAt : true,
+                UpdatedAt : true,
             }
         };
 
@@ -206,8 +206,8 @@ export class ConditionService extends BaseService {
             return null;
         }
         const rule = await this._ruleRepository.findOne({
-            where: {
-                id: ruleId
+            where : {
+                id : ruleId
             }
         });
         if (!rule) {
@@ -221,8 +221,8 @@ export class ConditionService extends BaseService {
             return null;
         }
         const condition = await this._conditionRepository.findOne({
-            where: {
-                id: conditionId
+            where : {
+                id : conditionId
             }
         });
         if (!condition) {
