@@ -7,15 +7,19 @@ import { EventActionType, ExecutionStatus } from '../../domain.types/engine/engi
 import { logger } from '../../logger/logger';
 import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
 import { ExecutionTypesGenerator } from './execution.types.generator';
+import FactCollector from './fact.collector';
 
 ///////////////////////////////////////////////////////////////////////////////
 
 export class SchemaEngine {
 
-    public static execute = async (dbSchemaInstance: SchemaInstanceResponseDto, facts: any) =>{
+    public static execute = async (dbSchemaInstance: SchemaInstanceResponseDto) =>{
         
         const generator = new ExecutionTypesGenerator();
         var schemaInstance = await generator.createSchemaInstance(dbSchemaInstance);
+
+        const factCollector = new FactCollector();
+        const facts = factCollector.collectFacts(schemaInstance.ContextId, schemaInstance.FactNames);
 
         var rootNodeInstance = schemaInstance.RootNodeInstance;
         var currentNode = rootNodeInstance as CNodeInstance;
@@ -28,7 +32,7 @@ export class SchemaEngine {
                 schemaInstance,
                 currentNode,
                 facts,
-                facts.Name);
+                schemaInstance.ContextId);
         }
         return currentNode;
     };

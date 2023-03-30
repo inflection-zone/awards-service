@@ -14,6 +14,8 @@ import {
     SchemaSearchResults,
     SchemaUpdateModel } from '../../../domain.types/engine/schema.domain.types';
 import { IncomingEventType } from '../../models/engine/incoming.event.type.model';
+import { Rule } from '../../models/engine/rule.model';
+import { Condition } from '../../models/engine/condition.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,12 @@ export class SchemaService extends BaseService {
     _clientRepository: Repository<Client> = Source.getRepository(Client);
 
     _eventTypeRepository: Repository<IncomingEventType> = Source.getRepository(IncomingEventType);
+
+    _nodeRepository: Repository<Node> = Source.getRepository(Node);
+
+    _ruleRepository: Repository<Rule> = Source.getRepository(Rule);
+
+    _conditionRepository: Repository<Condition> = Source.getRepository(Condition);
 
     //#endregion
 
