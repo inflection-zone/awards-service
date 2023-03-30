@@ -6,6 +6,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
+import { SchemaType } from "./engine.enums";
 import { IncomingEventTypeResponseDto } from "./incoming.event.type.types";
 
 //////////////////////////////////////////////////////////////
@@ -14,6 +15,7 @@ export interface SchemaCreateModel {
     ClientId     : uuid;
     Name         : string;
     Description? : string;
+    Type         : SchemaType;
     ValidFrom   ?: Date;
     ValidTill   ?: Date;
     IsValid     ?: boolean;
@@ -24,6 +26,7 @@ export interface SchemaUpdateModel {
     ClientId?    : uuid;
     Name?        : string;
     Description? : string;
+    Type        ?: SchemaType;
     ValidFrom   ?: Date;
     ValidTill   ?: Date;
     IsValid     ?: boolean;
@@ -34,6 +37,7 @@ export interface SchemaResponseDto {
     id         : uuid;
     Name       : string;
     Description: string;
+    Type       : SchemaType;
     ValidFrom  : Date;
     ValidTill  : Date;
     IsValid    : boolean;

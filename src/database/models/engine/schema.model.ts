@@ -14,6 +14,7 @@ import {
 import { Client } from "../client/client.model";
 import { Node } from "../engine/node.model";
 import { IncomingEventType } from "./incoming.event.type.model";
+import { SchemaType } from "../../../domain.types/engine/engine.enums";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +29,9 @@ export class Schema {
 
     @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
+
+    @Column({ type: 'enum', enum: SchemaType, nullable: false, default: SchemaType.CreateNewInstanceAlways })
+    Type : SchemaType;
 
     @ManyToOne(() => Client, { nullable: true })
     @JoinColumn()

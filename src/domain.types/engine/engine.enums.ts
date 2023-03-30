@@ -9,6 +9,20 @@ export const ContextTypeList: ContextType[] = [
     ContextType.Group,
 ];
 
+export enum SchemaType {
+    //Only one instance active at a time for a given context. This is for cases where a long running
+    //workflow is represented
+    OnlyOneInstanceActive = 'OnlyOneInstanceActive',
+
+    //On every incoming event, create a new instance. This is suitable for usecases,
+    //where on every event we want to check some light weight logic execution.
+    CreateNewInstanceAlways = 'CreateNewInstanceAlways',
+
+    //These kind of schemas are for cases where they get executed only once for a given context.
+    //For example, awarding some promotion coupons on a given occasion.
+    OnlyOneInstanceInLifetime = 'OnlyOneInstanceInLifetime'
+}
+
 export enum OperatorType {
     Logical      = 'Logical',
     Mathematical = 'Mathematical',

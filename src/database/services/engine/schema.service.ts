@@ -36,8 +36,8 @@ export class SchemaService extends BaseService {
         var eventTypes = [];
         if (createModel.EventTypeIds) {
             eventTypes = await this._eventTypeRepository.find({
-                where: {
-                    id: In(createModel.EventTypeIds)
+                where : {
+                    id : In(createModel.EventTypeIds)
                 }
             });
         }
@@ -45,6 +45,7 @@ export class SchemaService extends BaseService {
             Client      : client,
             Name        : createModel.Name,
             Description : createModel.Description,
+            Type        : createModel.Type,
             ValidFrom   : createModel.ValidFrom,
             ValidTill   : createModel.ValidTill,
             IsValid     : createModel.IsValid ?? true,
@@ -113,6 +114,9 @@ export class SchemaService extends BaseService {
             }
             if (model.Description != null) {
                 schema.Description = model.Description;
+            }
+            if (model.Type != null) {
+                schema.Type = model.Type;
             }
             if (model.ValidFrom != null) {
                 schema.ValidFrom = model.ValidFrom;

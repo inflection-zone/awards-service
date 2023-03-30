@@ -73,16 +73,17 @@ export class SchemaInstanceService extends BaseService {
         }
     };
 
-    public getByContextAndEventType = async (contextId: uuid, eventTypeId: uuid): Promise<SchemaInstanceResponseDto[]> => {
+    public getByContextAndEventType = async (contextId: uuid, eventTypeId: uuid)
+        : Promise<SchemaInstanceResponseDto[]> => {
         try {
             var instances = await this._schemaInstanceRepository.find({
                 where : {
                     Context : {
                         id : contextId
                     },
-                    Schema: {
-                        EventTypes: {
-                            id: eventTypeId
+                    Schema : {
+                        EventTypes : {
+                            id : eventTypeId
                         }
                     }
                 }

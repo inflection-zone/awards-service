@@ -58,7 +58,7 @@ export default class EventHandler {
             });
         }
         const schemaInstances = await schemaInstanceService.getByContextId(context.id);
-        const filtered = schemaInstances.filter(x => 
+        const filtered = schemaInstances.filter(x =>
             x.Schema.EventTypes.find(y => y.id === event.EventType.id) !== undefined);
         //const filtered = await schemaInstanceService.getByContextAndEventType(context.id, event.EventType.id);
 
