@@ -189,6 +189,8 @@ export class CSchemaInstance {
 
     ContextId          : uuid;
 
+    ContextReferenceId : uuid;
+
     Nodes              : CNodeInstance[];
 
     FactNames          : string[];
