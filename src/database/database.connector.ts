@@ -2,7 +2,7 @@
 import "reflect-metadata";
 import { Config } from './database.config';
 import { logger } from '../logger/logger';
-import { DataSource, Logger, QueryRunner } from "typeorm";
+import { DataSource } from "typeorm";
 import path from "path";
 import fs from 'fs';
 import { Client } from './models/client/client.model';
@@ -30,6 +30,7 @@ import { Person } from './models/user/person.model';
 import { UserLoginSession } from "./models/user/user.login.session.model";
 import { Role } from "./models/user/role.model";
 import { Privilege } from "./models/user/privilege.model";
+import { DBLogger } from "./database.logger";
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -38,38 +39,7 @@ logger.info(`db name     : ${Config.database}`);
 logger.info(`db username : ${Config.username}`);
 logger.info(`db host     : ${Config.host}`);
 
-class DBLogger implements Logger {
-
-    logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner) {
-        logger.info(`query: ${query}, params: ${JSON.stringify(parameters)}`);
-    }
-
-    logQueryError(error: string | Error, query: string, parameters?: any[], queryRunner?: QueryRunner) {
-        logger.error(`Error: ${JSON.stringify(error)}, query: ${query}, params: ${JSON.stringify(parameters)}`);
-    }
-
-    logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner) {
-        logger.warn(`Slow Query -> time: ${time.toFixed()}, query: ${query}, params: ${JSON.stringify(parameters)}`);
-    }
-
-    logSchemaBuild(message: string, queryRunner?: QueryRunner) {
-        logger.info(`Schema Build -> ${message}`);
-    }
-
-    logMigration(message: string, queryRunner?: QueryRunner) {
-        logger.info(`Migrations -> ${message}`);
-    }
-
-    log(level: "warn" | "info" | "log", message: any, queryRunner?: QueryRunner) {
-        if (level === 'warn') {
-            logger.warn(message);
-        }
-        else {
-            logger.info(message);
-        }
-    }
-
-}
+///////////////////////////////////////////////////////////////////////////////////
 
 class DatabaseConnector {
 

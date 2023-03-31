@@ -11,6 +11,7 @@ import { Scheduler } from './startup/scheduler';
 import { DbClient } from './database/db.clients/db.client';
 import { Seeder } from './startup/seeder';
 import { DBConnector } from "./database/database.connector";
+import { FactsDBConnector } from "./modules/fact.extractors/facts.db.connector";
 import { HttpLogger } from "./logger/HttpLogger";
 
 /////////////////////////////////////////////////////////////////////////
@@ -63,6 +64,8 @@ export default class Application {
         }
         await DbClient.createDatabase();
         await DBConnector.initialize();
+
+        await FactsDBConnector.initialize();
     };
 
     public start = async(): Promise<void> => {
