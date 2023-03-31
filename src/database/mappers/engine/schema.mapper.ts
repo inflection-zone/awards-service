@@ -13,6 +13,7 @@ export class SchemaMapper {
         }
         const dto: SchemaResponseDto = {
             id     : schema.id,
+            Type   : schema.Type,
             Client : {
                 id   : schema.Client.id,
                 Name : schema.Client.Name,

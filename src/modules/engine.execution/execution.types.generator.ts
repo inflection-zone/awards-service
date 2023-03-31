@@ -35,7 +35,7 @@ export class ExecutionTypesGenerator {
         instance.SchemaId = dto.Schema.id;
         instance.Nodes = [];
     
-        //const rootNodeId = dto.RootNodeInstance.Node.id;
+        instance.ContextReferenceId = dto.Context.ReferenceId;
         instance.ContextId = dto.Context.id;
     
         for (var ni of dto.NodeInstances) {

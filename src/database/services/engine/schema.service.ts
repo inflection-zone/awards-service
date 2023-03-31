@@ -15,6 +15,7 @@ import {
     SchemaUpdateModel } from '../../../domain.types/engine/schema.domain.types';
 import { IncomingEventType } from '../../models/engine/incoming.event.type.model';
 import { Rule } from '../../models/engine/rule.model';
+import { Node } from '../../models/engine/node.model';
 import { Condition } from '../../models/engine/condition.model';
 
 ///////////////////////////////////////////////////////////////////////
