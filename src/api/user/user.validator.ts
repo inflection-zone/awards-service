@@ -16,6 +16,7 @@ export class UserValidator extends BaseValidator {
         try {
             const schema = joi.object({
                 RoleId      : joi.number().integer().required(),
+                ClientId    : joi.string().uuid().required(),
                 UserName    : joi.string().max(16).optional(),
                 Prefix      : joi.string().max(16).optional(),
                 FirstName   : joi.string().max(64).optional(),
@@ -89,6 +90,7 @@ export class UserValidator extends BaseValidator {
         try {
             const schema = joi.object({
                 RoleId      : joi.number().integer().optional(),
+                ClientId    : joi.string().uuid().optional(),
                 UserName    : joi.string().max(16).optional(),
                 Prefix      : joi.string().max(16).optional(),
                 FirstName   : joi.string().max(64).optional(),
@@ -202,10 +204,11 @@ export class UserValidator extends BaseValidator {
 
     public getUserCreateModel = (request: express.Request): UserCreateModel => {
 
-        const birthDate = request.body.BirthDate ? Date.parse(request.body.BirthDate) : null;
+        const birthDate = request.body.BirthDate ? new Date(Date.parse(request.body.BirthDate)) : null;
 
         return {
             RoleId      : request.body.RoleId ? request.body.RoleId : null,
+            ClientId    : request.body.ClientId ? request.body.ClientId : null,
             Prefix      : request.body.Prefix ? request.body.Prefix : 'Mr',
             UserName    : request.body.UserName ? request.body.UserName : null,
             FirstName   : request.body.FirstName ? request.body.FirstName : null,
@@ -214,7 +217,7 @@ export class UserValidator extends BaseValidator {
             Phone       : request.body.Phone ? request.body.Phone : null,
             Email       : request.body.Email ? request.body.Email : null,
             Gender      : request.body.Gender ? request.body.Gender : 'Male',
-            BirthDate   : new Date(birthDate),
+            BirthDate   : birthDate,
             Password    : request.body.Password ? request.body.Password : null,
         };
     };
@@ -254,7 +257,7 @@ export class UserValidator extends BaseValidator {
             ErrorHandler.throwDuplicateUserError(`User with email ${request.body.Email} already exists!`);
         }
 
-        var userCreateModel: UserCreateModel = await this.getUserCreateModel(request.body);
+        var userCreateModel: UserCreateModel = await this.getUserCreateModel(request);
         return userCreateModel;
     };
 

@@ -1,204 +1,362 @@
 {
 	"info": {
-		"_postman_id": "fa675033-2ef6-4089-8644-ecae912f5a5d",
-		"name": "awards service",
+		"_postman_id": "5848c7c3-39b2-41cc-835e-ecac30a028da",
+		"name": "Awards service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5510218"
 	},
 	"item": [
 		{
-			"name": "Admin Login with password",
-			"event": [
+			"name": "Admin user",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"try {\r",
-							"    var jsonRes = pm.response.json();\r",
-							"    pm.environment.set(\"ADMIN_JWT\", jsonRes.Data.AccessToken);\r",
-							"}\r",
-							"catch (error) {\r",
-							"    console.log(error.message);\r",
-							"}\r",
-							"\r",
-							"pm.test(\"Request is successfull\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    var jsonRes = pm.response.json();\r",
-							"    pm.expect(jsonRes.Status).to.eql('success');\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{X_API_KEY}}",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"UserName\": \"admin\",\r\n    \"Password\": \"{{ADMIN_PASSWORD}}\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Admin log-in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"ADMIN_USER_JWT\", jsonRes.Data.AccessToken);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Admin login: Access token is returned\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('AccessToken');\r",
+									"    pm.expect(jsonRes.Data.AccessToken).to.not.be.null;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"    //pm.environment.set(\"ADMIN_PASSWORD\", jsonRes.Data.Client.id);"
+								],
+								"type": "text/javascript"
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/users/login-password",
-					"host": [
-						"{{BASE_URL}}"
 					],
-					"path": [
-						"users",
-						"login-password"
-					]
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserName\": \"admin\",\r\n    \"Password\": \"{{ADMIN_PASSWORD}}\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login-password",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login-password"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get user role types",
-			"event": [
+			"name": "Admin create a moderator",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"try {\r",
-							"    var jsonRes = pm.response.json();\r",
-							"    const data = jsonRes.Data;\r",
-							"    for(var i = 0; i < data.length; i++)\r",
-							"    {\r",
-							"        var role = data[i];\r",
-							"        const role_id = role.Name.toUpperCase() + \"_ROLE_ID\";\r",
-							"        pm.environment.set(role_id, role.id);\r",
-							"    }\r",
-							"}\r",
-							"catch (error) {\r",
-							"    console.log(error.message);\r",
-							"}\r",
-							"\r",
-							"pm.test(\"Request is successfull\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    var jsonRes = pm.response.json();\r",
-							"    pm.expect(jsonRes.Status).to.eql('success');\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{X_API_KEY}}",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Get user roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var roleTypes = jsonRes.Data;\r",
+									"    for(var i = 0; i < roleTypes.length; i++) {\r",
+									"        var r = roleTypes[i];\r",
+									"        var name = r.Name;\r",
+									"        var id = r.id;\r",
+									"        var str = name.toUpperCase() + \"_ROLE_ID\";\r",
+									"        pm.environment.set(str, id);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/users/role-types",
-					"host": [
-						"{{BASE_URL}}"
 					],
-					"path": [
-						"users",
-						"role-types"
-					]
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/users/role-types",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"role-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get clients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var clients = jsonRes.Data.Items;\r",
+									"    for(var i = 0; i < clients.length; i++) {\r",
+									"        var r = clients[i];\r",
+									"        var name = r.Name;\r",
+									"        var id = r.id;\r",
+									"        var str = \"CLIENT_ID\";\r",
+									"        pm.environment.set(str, id);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ADMIN_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/clients/search",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"clients",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create moderator",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var user = jsonRes.Data;\r",
+									"    pm.environment.set(\"MODERATOR_USER_ID\", user.id);\r",
+									"    pm.environment.set(\"MODERATOR_USER_NAME\", user.UserName);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var phonenumber = (Math.floor(Math.random() * 9000000000) + 1000000000).toString();\r",
+									"pm.environment.set(\"PHONE\", phonenumber);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RoleId\": \"{{CONTENTMODERATOR_ROLE_ID}}\",\r\n    \"ClientId\" : \"{{CLIENT_ID}}\",\r\n    \"Prefix\": \"Mr.\",\r\n    \"FirstName\": \"Sachin\",\r\n    \"LastName\": \"Tendulkar\",\r\n    \"Email\": \"sachin.tendulkar@gmail.com\",\r\n    \"CountryCode\": \"+91\",\r\n    \"Phone\": \"{{PHONE}}\",\r\n    \"Password\": \"{{PASSWORD}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Add new user",
-			"event": [
+			"name": "Moderator logs in",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"try {\r",
-							"    var jsonRes = pm.response.json();\r",
-							"    pm.environment.set(\"USER_ID\", jsonRes.Data.id);\r",
-							"}\r",
-							"catch (error) {\r",
-							"    console.log(error.message);\r",
-							"}\r",
-							"\r",
-							"pm.test(\"Request is successfull\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"    var jsonRes = pm.response.json();\r",
-							"    pm.expect(jsonRes.Status).to.eql('success');\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{X_API_KEY}}",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n            \"RoleId\"      : {{CONTENTMODERATOR_ROLE_ID}},\r\n            \"Prefix\"      : \"Mr.\",\r\n            \"UserName\"    : \"kk123400\",\r\n            \"FirstName\"   : \"Kiran\",\r\n            \"LastName\"    : \"Kharade\",\r\n            \"CountryCode\" : \"+91\",\r\n            \"Phone\"       : \"9876543212\",\r\n            \"Email\"       : \"kiran.a.kharade@inflectionzone.com\",\r\n            \"Gender\"      : \"Male\",\r\n            \"BirthDate\"   : \"01-01-1975\",\r\n            \"Password\"    : \"Test@123\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "moderator logs in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"MODERATOR_USER_JWT\", jsonRes.Data.AccessToken);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Moderator login: Access token is returned\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('AccessToken');\r",
+									"    pm.expect(jsonRes.Data.AccessToken).to.not.be.null;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"    //pm.environment.set(\"ADMIN_PASSWORD\", jsonRes.Data.Client.id);"
+								],
+								"type": "text/javascript"
+							}
 						}
-					}
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/users",
-					"host": [
-						"{{BASE_URL}}"
 					],
-					"path": [
-						"users"
-					]
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserName\": \"{{MODERATOR_USER_NAME}}\",\r\n    \"Password\": \"{{PASSWORD}}\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login-password",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login-password"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }

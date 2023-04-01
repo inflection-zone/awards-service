@@ -53,39 +53,39 @@ export class ErrorHandler {
             message = message + ' ' + Array.isArray(errorMessages) ? errorMessages.join(' ') : errorMessages.toString();
             message = message.split('"').join('');
         }
-        ErrorHandler.throwInternalServerError(message, 422);
+        throw new ApiError(message, 422);
     };
 
     static throwDuplicateUserError = (message) => {
-        ErrorHandler.throwInternalServerError(message, 422);
+        throw new ApiError(message, 422);
     };
 
     static throwNotFoundError = (message) => {
-        ErrorHandler.throwInternalServerError(message, 404);
+        throw new ApiError(message, 404);
     };
 
     static throwUnauthorizedUserError = (message) => {
-        ErrorHandler.throwInternalServerError(message, 401);
+        throw new ApiError(message, 401);
     };
 
     static throwForebiddenAccessError = (message) => {
-        ErrorHandler.throwInternalServerError(message, 403);
+        throw new ApiError(message, 403);
     };
 
     static throwDbAccessError = (message, error) => {
-        ErrorHandler.throwInternalServerError(message, error);
+        throw new ApiError(message, error);
     };
 
     static throwConflictError = (message) => {
-        ErrorHandler.throwInternalServerError(message, 409);
+        throw new ApiError(message, 409);
     };
 
     static throwFailedPreconditionError = (message) => {
-        ErrorHandler.throwInternalServerError(message, 412);
+        throw new ApiError(message, 412);
     };
 
     static throwInternalServerError = (message, error = null) => {
-        ErrorHandler.throwInternalServerError(message, error);
+        throw new ApiError(message, error);
     };
 
     static handleValidationError = (error) => {
