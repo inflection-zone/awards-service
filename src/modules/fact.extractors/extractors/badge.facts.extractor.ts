@@ -1,5 +1,5 @@
-import { uuid } from "../engine.execution/execution.types";
-import { IExtractor } from "./extractor.interface";
+import { uuid } from "../../engine.execution/execution.types";
+import { IExtractor } from "../extractor.interface";
 
 export class BadgeFactsExtractor implements IExtractor {
 
