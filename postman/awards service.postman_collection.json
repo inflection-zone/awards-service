@@ -820,6 +820,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_EVENT_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -887,6 +922,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_CONTEXT_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -954,6 +1024,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_CONDITION_OPERATOR_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -1021,6 +1126,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_LOGICAL_OPERATOR_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -1088,6 +1228,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_COMPOSITE_OPERATOR_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -1155,6 +1330,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_MATHEMATICAL_OPERATOR_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -1222,6 +1432,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_OPERAND_DATA_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -1289,6 +1534,41 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"isUpperCase = (str) => {\r",
+									"    return str.toUpperCase() === str;\r",
+									"};\r",
+									"\r",
+									"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+									"    if (str.length > 0) {\r",
+									"        var outstr = \"\";\r",
+									"        for (var i = 0; i < str.length; i++) {\r",
+									"            var c = str.charAt(i);\r",
+									"            if (isUpperCase(c) && i !== 0) {\r",
+									"                outstr += '_' + c.toUpperCase();\r",
+									"            }\r",
+									"            else {\r",
+									"                outstr += c.toUpperCase();\r",
+									"            }\r",
+									"        }\r",
+									"        return outstr;\r",
+									"    }\r",
+									"    return str;\r",
+									"};\r",
+									"\r",
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    var types = jsonRes.Data.Types;\r",
+									"    for(var i = 0; i < types.length; i++) {\r",
+									"        var r = types[i];\r",
+									"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+									"        var str = x + \"_EXECUTION_STATUS_TYPE\";\r",
+									"        console.log(str);\r",
+									"        pm.environment.set(str, types[i]);\r",
+									"    }\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
 									"\r",
 									"pm.test(\"Request is successfull\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -1364,89 +1644,6 @@
 									"try {\r",
 									"    var jsonRes = pm.response.json();\r",
 									"    pm.environment.set(\"SCHEMA_ID\", jsonRes.Data.id);\r",
-									"}\r",
-									"catch (error) {\r",
-									"    console.log(error.message);\r",
-									"}\r",
-									"\r",
-									"pm.test(\"Request is successfull\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.expect(jsonRes.Status).to.eql('success');\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Schema is created\", function () {\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
-									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"    //pm.environment.set(\"ADMIN_PASSWORD\", jsonRes.Data.Client.id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "x-api-key",
-								"value": "{{API_KEY}}",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{MODERATOR_USER_JWT}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"CreateNewInstanceAlways\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ]\r\n}\r\n"
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/engine/schema",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"engine",
-								"schema"
-							]
-						},
-						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
-					},
-					"response": []
-				},
-				{
-					"name": "Create rule",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"try {\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.environment.set(\"SCHEMA_ID\", jsonRes.Data.id);\r",
 									"    pm.environment.set(\"SCHEMA_ROOT_NODE_ID\", jsonRes.Data.RootNodeId);\r",
 									"}\r",
 									"catch (error) {\r",
@@ -1478,7 +1675,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"    //pm.environment.set(\"ADMIN_PASSWORD\", jsonRes.Data.Client.id);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -1505,7 +1702,92 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": [\r\n        \"ActionType\": {{}}\r\n    ]\r\n}\r\n"
+							"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"CreateNewInstanceAlways\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/schema",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"schema"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create rule",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"RULE_ID\", jsonRes.Data.id);\r",
+									"    pm.environment.set(\"ROOT_CONDITION_ID\", jsonRes.Data.Condition.id);\r",
+									"    pm.environment.set(\"RULE_ACTION_ID\", jsonRes.Data.Action.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n        \"Name\": \"Medication 7-Days Badge\",\r\n        \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n        \"Params\": {\r\n            \"Message\": \"Award medication 7-days badge.\",\r\n            \"Action\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n            \"NextNodeId\": null,\r\n            \"Extra\": {}\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/engine/rules",

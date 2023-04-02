@@ -102,6 +102,27 @@ export class StringUtils {
         return str;
     };
 
+    public static isUpperCase = (str): boolean => {
+        return str.toUpperCase() === str;
+    };
+
+    public static convertPascalCaseToCapitalSnakeCase = (str: string): string => {
+        if (str.length > 0) {
+            var outstr = "";
+            for (var i = 0; i < str.length; i++) {
+                var c = str.charAt(i);
+                if (this.isUpperCase(c) && i !== 0) {
+                    outstr += '_' + c.toUpperCase();
+                }
+                else {
+                    outstr += c.toUpperCase();
+                }
+            }
+            return outstr;
+        }
+        return str;
+    };
+
     //Reference: https://github.com/zishon89us/node-cheat/blob/master/stackoverflow_answers/crypto-create-cipheriv.js#L2
 
     public static encrypt = (str: string) => {

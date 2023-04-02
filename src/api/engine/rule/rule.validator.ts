@@ -24,7 +24,7 @@ export class RuleValidator extends BaseValidator {
                     Params      : {
                         Message    : joi.string().max(256).required(),
                         Action     : joi.string().valid(...Object.values(EventActionType)).optional(),
-                        NextNodeId : joi.string().uuid().optional(),
+                        NextNodeId : joi.any().optional(),
                         Extra      : joi.any().optional()
                     }
                 }
