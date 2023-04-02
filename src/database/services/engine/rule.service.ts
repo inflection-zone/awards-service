@@ -52,17 +52,48 @@ export class RuleService extends BaseService {
         });
         var conditionRecord = await this._conditionRepository.save(condition);
 
-        return this.getById(rule.id);
+        rule.Condition = condition;
+        record = await this._ruleRepository.save(rule);
+
+        return RuleMapper.toResponseDto(record);
     };
 
     public getById = async (id: uuid): Promise<RuleResponseDto> => {
         try {
-            var node = await this._ruleRepository.findOne({
+            var rule = await this._ruleRepository.findOne({
                 where : {
                     id : id
+                },
+                select : {
+                    id         : true,
+                    Name       : true,
+                    Description: true,
+                    ParentNode : {
+                        id         : true,
+                        Name       : true,
+                        Description: true,
+                    },
+                    Action: {
+                        id        : true,
+                        Name      : true,
+                        ActionType: true,
+                        Params    : {
+                            Action    : true,
+                            Message   : true,
+                            NextNodeId: true,
+                            Extra     : true,
+                        },
+                    },
+                    Condition: {
+                        id      : true,
+                        Name    : true,
+                        Operator: true,
+                    },
+                    CreatedAt  : true,
+                    UpdatedAt  : true,
                 }
             });
-            return RuleMapper.toResponseDto(node);
+            return RuleMapper.toResponseDto(rule);
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
@@ -209,7 +240,8 @@ export class RuleService extends BaseService {
             Description: actionModel.Description,
             Params: actionModel.Params
         });
-        return action;
+        const record = await this._actionRepository.save(action);
+        return record;
     }
 
     private async updateAction(actionId: uuid, actionModel: any) {
