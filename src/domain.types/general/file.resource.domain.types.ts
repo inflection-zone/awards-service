@@ -14,6 +14,7 @@ export interface FileResourceCreateModel {
 
 export interface FileResourceResponseDto {
     id              : uuid;
+    StorageKey      : string;
     MimeType        : string;
     OriginalFilename: string;
     Size            : number;
