@@ -13,6 +13,7 @@ export class FileResourceMapper {
         }
         const dto: FileResourceResponseDto = {
             id               : fileResource.id,
+            StorageKey       : fileResource.StorageKey,
             OriginalFilename : fileResource.OriginalFilename,
             DownloadCount    : fileResource.DownloadCount,
             MimeType         : fileResource.MimeType,

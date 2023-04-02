@@ -357,6 +357,478 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Moderator creates incoming event types",
+			"item": [
+				{
+					"name": "Create medication event type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"MEDICATION_EVENT_TYPE_ID\", jsonRes.Data.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Event type is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data.Name).to.not.be.null;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Medication\",\r\n    \"Description\": \"This event is triggered when a patient marks medication consumption as taken or missed\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/event-types",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"event-types"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create exercise event type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"EXERCISE_EVENT_TYPE_ID\", jsonRes.Data.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Event type is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data.Name).to.not.be.null;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Exercise\",\r\n    \"Description\": \"This event is triggered when a patient performs some exercise\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/event-types",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"event-types"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create nutrition event type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"NUTRITION_EVENT_TYPE_ID\", jsonRes.Data.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Event type is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data.Name).to.not.be.null;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Nutrition\",\r\n    \"Description\": \"This event is triggered when a patient marks consumption of healthy nutrition.\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/event-types",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"event-types"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create health journey task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"HEALTH_JOURNEY_EVENT_TYPE_ID\", jsonRes.Data.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Event type is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data.Name).to.not.be.null;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Health Journey\",\r\n    \"Description\": \"This event is triggered when a patient marks health journey task as done\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/event-types",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"event-types"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Search all event types",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"All event types are returned\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Items');\r",
+									"    pm.expect(jsonRes.Data.Items.length).greaterThan(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/engine/event-types/search",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"event-types",
+								"search"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Moderator creates schema",
+			"item": [
+				{
+					"name": "Create schema",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"SCHEMA_ID\", jsonRes.Data.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"    //pm.environment.set(\"ADMIN_PASSWORD\", jsonRes.Data.Client.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"CreateNewInstanceAlways\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ]\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/schema",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"schema"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

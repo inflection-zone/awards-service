@@ -50,7 +50,12 @@ export class ErrorHandler {
     static throwInputValidationError = (errorMessages) => {
         var message = 'Validation error has occurred!\n';
         if (errorMessages) {
-            message = message + ' ' + Array.isArray(errorMessages) ? errorMessages.join(' ') : errorMessages.toString();
+            if (this.isArrayOfStrings(errorMessages)) {
+                message += ' ' + errorMessages.join(' ');
+            }
+            else {
+                message += ' ' +  errorMessages.toString();
+            }
             message = message.split('"').join('');
         }
         throw new ApiError(message, 422);
@@ -108,5 +113,9 @@ export class ErrorHandler {
         }
         ErrorHandler.throwInputValidationError(errorMessages);
     };
+
+    static isArrayOfStrings = (arr) => {
+        return Array.isArray(arr) && arr.every(item => typeof item === 'string');
+    }
 
 }
