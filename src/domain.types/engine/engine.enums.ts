@@ -23,11 +23,23 @@ export enum SchemaType {
     OnlyOneInstanceInLifetime = 'OnlyOneInstanceInLifetime'
 }
 
+export const SchemaTypeList: SchemaType[] = [
+    SchemaType.CreateNewInstanceAlways,
+    SchemaType.OnlyOneInstanceActive,
+    SchemaType.OnlyOneInstanceInLifetime,
+];
+
 export enum OperatorType {
     Logical      = 'Logical',
     Mathematical = 'Mathematical',
     Composition  = 'Composition',
 }
+
+export const OperatorList: OperatorType[] = [
+    OperatorType.Logical,
+    OperatorType.Mathematical,
+    OperatorType.Composition,
+];
 
 export enum CompositionOperator {
     And  = 'And',
@@ -115,6 +127,8 @@ export enum EventActionType {
     ExecuteNext = "ExecuteNext",
     WaitForInputEvents = "WaitForInputEvents",
     Exit = "Exit",
+    AwardBadge = "AwardBadge",
+    AwardPoints = "AwardPoints",
     Custom = "Custom",
 }
 
@@ -122,6 +136,8 @@ export const EventActionTypeList: EventActionType[] = [
     EventActionType.ExecuteNext,
     EventActionType.WaitForInputEvents,
     EventActionType.Exit,
+    EventActionType.AwardBadge,
+    EventActionType.AwardPoints,
     EventActionType.Custom,
 ];
 

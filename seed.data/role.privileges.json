@@ -97,7 +97,10 @@
             "Redemption.Search",
             "Redemption.GetById",
             "Redemption.Update",
-            "Redemption.Delete"
+            "Redemption.Delete",
+
+            "Types.GetEventActionTypes",
+            "Types.GetRoles"
         ]
     }
 ]
