@@ -50,6 +50,15 @@ export class SchemaService extends BaseService {
                 }
             });
         }
+
+        const rootNodeName = 'Root Node' + createModel.Name.substring(0, 25);
+        var rootNode = await this._nodeRepository.create({
+            Name: rootNodeName,
+            ParentNode: null,
+            Description: `Root node for ${createModel.Name}`,
+        });
+        var rootNodeRecord = await this._nodeRepository.save(rootNode);
+
         const schema = this._schemaRepository.create({
             Client      : client,
             Name        : createModel.Name,
@@ -59,9 +68,14 @@ export class SchemaService extends BaseService {
             ValidTill   : createModel.ValidTill,
             IsValid     : createModel.IsValid ?? true,
             EventTypes  : eventTypes,
+            RootNodeId  : rootNodeRecord.id,
         });
-        var record = await this._schemaRepository.save(schema);
-        return SchemaMapper.toResponseDto(record);
+        var schemaRecord = await this._schemaRepository.save(schema);
+
+        rootNode.Schema = schemaRecord;
+        rootNodeRecord = await this._nodeRepository.save(rootNode);
+
+        return SchemaMapper.toResponseDto(schemaRecord);
     };
 
     public getById = async (id: uuid): Promise<SchemaResponseDto> => {

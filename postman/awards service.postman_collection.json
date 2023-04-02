@@ -775,6 +775,7 @@
 									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
 									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
 									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
 									"});\r",
 									""
 								],
