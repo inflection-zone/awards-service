@@ -17,7 +17,7 @@ export class SchemaValidator extends BaseValidator {
                 Description  : joi.string().max(256).optional(),
                 Type         : joi.string().valid(...Object.values(SchemaType)).required(),
                 ValidFrom    : joi.date().iso().greater('now').optional(),
-                ValidTill    : joi.date().iso().greater(joi.ref('ValidTill')).optional(),
+                ValidTill    : joi.date().iso().greater(joi.ref('ValidFrom')).optional(),
                 IsValid      : joi.boolean().optional(),
                 EventTypeIds : joi.array().items(joi.string().uuid()).optional(),
             });
@@ -44,7 +44,7 @@ export class SchemaValidator extends BaseValidator {
                 Type         : joi.string().valid(...Object.values(SchemaType)).optional(),
                 Description  : joi.string().max(256).optional(),
                 ValidFrom    : joi.date().iso().greater('now').optional(),
-                ValidTill    : joi.date().iso().greater(joi.ref('ValidTill')).optional(),
+                ValidTill    : joi.date().iso().greater(joi.ref('ValidFrom')).optional(),
                 IsValid      : joi.boolean().optional(),
                 EventTypeIds : joi.array().items(joi.string().uuid()).optional(),
             });
