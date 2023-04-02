@@ -13,6 +13,7 @@ import { register as registerConditionRoutes } from '../api/engine/condition/con
 import { register as registerIncomingEventRoutes } from '../api/engine/incoming.event/incoming.event.routes';
 import { register as registerIncomingEventTypeRoutes } from '../api/engine/incoming.event.type/incoming.event.type.routes';
 import { register as registerSchemaInstanceRoutes } from '../api/engine/schema.instance/schema.instance.routes';
+import { register as registerTypesRoutes } from '../api/types/types.routes';
 
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +49,7 @@ export class Router {
                 registerIncomingEventTypeRoutes(this._app);
                 registerIncomingEventRoutes(this._app);
                 registerSchemaInstanceRoutes(this._app);
+                registerTypesRoutes(this._app);
 
                 resolve(true);
 
