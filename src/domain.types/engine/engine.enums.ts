@@ -33,12 +33,14 @@ export enum OperatorType {
     Logical      = 'Logical',
     Mathematical = 'Mathematical',
     Composition  = 'Composition',
+    Iterate      = 'Iterate'
 }
 
 export const OperatorList: OperatorType[] = [
     OperatorType.Logical,
     OperatorType.Mathematical,
     OperatorType.Composition,
+    OperatorType.Iterate,
 ];
 
 export enum CompositionOperator {
@@ -54,21 +56,23 @@ export const CompositionOperatorList: CompositionOperator[] = [
 ];
 
 export enum LogicalOperator {
-    Equal              = 'Equal',
-    NotEqual           = 'NotEqual',
-    GreaterThan        = 'GreaterThan',
-    GreaterThanOrEqual = 'GreaterThanOrEqual',
-    LessThan           = 'LessThan',
-    LessThanOrEqual    = 'LessThanOrEqual',
-    In                 = 'In',
-    NotIn              = 'NotIn',
-    Contains           = 'Contains',
-    DoesNotContain     = 'DoesNotContain',
-    Between            = 'Between',
-    IsTrue             = 'IsTrue',
-    IsFalse            = 'IsFalse',
-    Exists             = 'Exists',
-    None               = 'None',
+    Equal                     = 'Equal',
+    NotEqual                  = 'NotEqual',
+    GreaterThan               = 'GreaterThan',
+    GreaterThanOrEqual        = 'GreaterThanOrEqual',
+    LessThan                  = 'LessThan',
+    LessThanOrEqual           = 'LessThanOrEqual',
+    In                        = 'In',
+    NotIn                     = 'NotIn',
+    Contains                  = 'Contains',
+    DoesNotContain            = 'DoesNotContain',
+    Between                   = 'Between',
+    IsTrue                    = 'IsTrue',
+    IsFalse                   = 'IsFalse',
+    Exists                    = 'Exists',
+    HasConsecutiveOccurrences = 'HasConsecutiveOccurrences', //array, checkFor, numTimes
+    RangesOverlap             = 'RangesOverlap',
+    None                      = 'None',
 }
 
 export const LogicalOperatorList: LogicalOperator[] = [
@@ -86,6 +90,8 @@ export const LogicalOperatorList: LogicalOperator[] = [
     LogicalOperator.IsTrue,
     LogicalOperator.IsFalse,
     LogicalOperator.Exists,
+    LogicalOperator.HasConsecutiveOccurrences,
+    LogicalOperator.RangesOverlap,
     LogicalOperator.None,
 ];
 

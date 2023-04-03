@@ -9,22 +9,59 @@ export class MedicationFactsExtractor implements IExtractor {
     _medicationRepository: Repository<MedicationFact> = Source.getRepository(MedicationFact);
 
     extract = async (contextReferenceId: uuid, factName: string): Promise<any> => {
-        if (factName === 'MedicationsMissed') {
-            const records = await this._medicationRepository.find({
-                where: {
-                    ContextReferenceId: contextReferenceId
-                }
-            });
-            const filtered = records.filter(x => x.Taken === false);
-            const transformed = filtered.map(x => {
+        if (factName === 'Medication') {
+            // const records = await this._medicationRepository.find({
+            //     where: {
+            //         ContextReferenceId: contextReferenceId
+            //     }
+            // });
+            // const filtered = records.filter(x => x.Taken === false);
+            // const transformed = filtered.map(x => {
+            //     return {
+            //         MedicationId : x.MedicationId,
+            //         RecordDate : new Date(x.RecrodDateStr)
+            //     };
+            // });
+            // return transformed;
+            const records = await this._medicationRepository
+               .createQueryBuilder()
+               .select('medicationFact')
+               .from(MedicationFact, 'medicationFact')
+               .where("medicationFact.ContextReferenceId = :id", { id: contextReferenceId })
+               .groupBy('RecrodDateStr')
+               .getRawMany();
+
+            const transformed = records.map(x => {
                 return {
                     MedicationId : x.MedicationId,
                     RecordDate : new Date(x.RecrodDateStr)
                 };
             });
-            return transformed;
         }
         return [];
     }
+
+    getConsecutiveOccurrences = (records: any[], predicate, numOccurrences: number) => {
+        let count = 0;
+        const foundBundles = [];
+        var bundle = [];
+        for (let i = 0; i < records.length; i++) {
+            if (predicate(records[i])) {
+                count++;
+                bundle.push(records[i]);
+                if (count === numOccurrences) {
+                    foundBundles.push(bundle);
+                    count = 0;
+                    bundle = [];
+                }
+            } else {
+                count = 0;
+                bundle = [];
+            }
+        }
+        return foundBundles;
+    }
+
+
 
 }
