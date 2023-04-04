@@ -11,6 +11,7 @@ export const register = (app: express.Application): void => {
     const controller = new TypesController();
 
     router.get('/role-types', controller.getRoleTypes);
+    router.get('/event-types', controller.getEventTypes);
     router.get('/event-action-types', controller.getEventActionTypes);
     router.get('/context-types', controller.getContextTypes);
     router.get('/condition-operator-types', controller.getConditionOperatorTypes);

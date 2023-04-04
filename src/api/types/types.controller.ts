@@ -4,6 +4,7 @@ import { ErrorHandler } from '../../common/handlers/error.handler';
 import { BaseController } from '../base.controller';
 import { RoleService } from '../../database/services/user/role.service';
 import { CompositionOperatorList, ConditionOperandDataTypeList, ContextTypeList, EventActionTypeList, ExecutionStatusList, LogicalOperatorList, MathematicalOperatorList, OperatorList } from '../../domain.types/engine/engine.enums';
+import { IncomingEventService } from '../../database/services/engine/incoming.event.service';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,9 +14,12 @@ export class TypesController extends BaseController {
 
     _roleService: RoleService = null;
 
+    _eventService: IncomingEventService = null;
+
     constructor() {
         super();
         this._roleService = new RoleService();
+        this._eventService = new IncomingEventService();
     }
 
     //#endregion
@@ -29,6 +33,19 @@ export class TypesController extends BaseController {
             if (types === null || types.length === 0) {
                 ErrorHandler.throwInternalServerError(`Unable to retrieve user role types!`);
             }
+            ResponseHandler.success(request, response, 'User role types retrieved successfully!', 200, {
+                Types : types,
+            });
+
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getEventTypes = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            await this.authorize('Types.GetEventTypes', request, response, false);
+            const types = await this._eventService.getAll();
             ResponseHandler.success(request, response, 'User role types retrieved successfully!', 200, {
                 Types : types,
             });

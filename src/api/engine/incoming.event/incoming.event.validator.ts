@@ -11,12 +11,12 @@ export class IncomingEventValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request)
         : Promise<IncomingEventCreateModel> => {
         try {
-            const condition = joi.object({
+            const event = joi.object({
                 TypeId      : joi.string().uuid().required(),
                 ReferenceId : joi.string().uuid().required(),
                 Payload     : joi.any().required(),
             });
-            await condition.validateAsync(request.body);
+            await event.validateAsync(request.body);
             const model: IncomingEventCreateModel = {
                 TypeId      : request.body.IncomingEventTypeId,
                 ReferenceId : request.body.ReferenceId,
