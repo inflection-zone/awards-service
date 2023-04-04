@@ -58,18 +58,6 @@ export class IncomingEventService extends BaseService {
         }
     };
 
-    public getAll = async ()
-        : Promise<IncomingEventResponseDto[]> => {
-        try {
-            const list = await this._eventRepository.find();
-            const events = list.map(x => IncomingEventMapper.toResponseDto(x));
-            return events;
-        } catch (error) {
-            logger.error(error.message);
-            ErrorHandler.throwDbAccessError('DB Error: Unable to get records!', error);
-        }
-    };
-
     public search = async (filters: IncomingEventSearchFilters)
         : Promise<IncomingEventSearchResults> => {
         try {
