@@ -16,9 +16,10 @@ export class IncomingEventValidator extends BaseValidator {
                 ReferenceId : joi.string().uuid().required(),
                 Payload     : joi.any().required(),
             });
+            console.log(request.body);
             await event.validateAsync(request.body);
             const model: IncomingEventCreateModel = {
-                TypeId      : request.body.IncomingEventTypeId,
+                TypeId      : request.body.TypeId,
                 ReferenceId : request.body.ReferenceId,
                 Payload     : request.body.Payload,
             };

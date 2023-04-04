@@ -5,6 +5,7 @@ import { BaseController } from '../base.controller';
 import { RoleService } from '../../database/services/user/role.service';
 import { CompositionOperatorList, ConditionOperandDataTypeList, ContextTypeList, EventActionTypeList, ExecutionStatusList, LogicalOperatorList, MathematicalOperatorList, OperatorList } from '../../domain.types/engine/engine.enums';
 import { IncomingEventService } from '../../database/services/engine/incoming.event.service';
+import { IncomingEventTypeService } from '../../database/services/engine/incoming.event.type.service';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -14,12 +15,12 @@ export class TypesController extends BaseController {
 
     _roleService: RoleService = null;
 
-    _eventService: IncomingEventService = null;
+    _eventTypeService: IncomingEventTypeService = null;
 
     constructor() {
         super();
         this._roleService = new RoleService();
-        this._eventService = new IncomingEventService();
+        this._eventTypeService = new IncomingEventTypeService();
     }
 
     //#endregion
@@ -36,7 +37,6 @@ export class TypesController extends BaseController {
             ResponseHandler.success(request, response, 'User role types retrieved successfully!', 200, {
                 Types : types,
             });
-
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -45,11 +45,10 @@ export class TypesController extends BaseController {
     getEventTypes = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
             await this.authorize('Types.GetEventTypes', request, response, false);
-            const types = await this._eventService.getAll();
+            const types = await this._eventTypeService.getAll();
             ResponseHandler.success(request, response, 'User role types retrieved successfully!', 200, {
                 Types : types,
             });
-
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
