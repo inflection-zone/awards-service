@@ -39,6 +39,7 @@ export class IncomingEventService extends BaseService {
             Context   : context,
             EventType : eventType,
             Payload   : createModel.Payload,
+            ReferenceId : createModel.ReferenceId,
         });
         var record = await this._eventRepository.save(event);
         return IncomingEventMapper.toResponseDto(record);

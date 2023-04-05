@@ -14,6 +14,8 @@ import {
     SchemaInstanceSearchResults,
     SchemaInstanceUpdateModel } from '../../../domain.types/engine/schema.instance.types';
 import { Context } from '../../models/engine/context.model';
+import { NodeInstance } from '../../models/engine/node.instance.model';
+import { Node } from '../../models/engine/node.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,10 @@ export class SchemaInstanceService extends BaseService {
     _schemaRepository: Repository<Schema> = Source.getRepository(Schema);
 
     _contextRepository: Repository<Context> = Source.getRepository(Context);
+
+    _nodeRepository: Repository<Node> = Source.getRepository(Node);
+
+    _nodeInstanceRepository: Repository<NodeInstance> = Source.getRepository(NodeInstance);
 
     //#endregion
 
@@ -40,7 +46,34 @@ export class SchemaInstanceService extends BaseService {
             Context : context,
         });
         var record = await this._schemaInstanceRepository.save(schemaInstance);
-        return SchemaInstanceMapper.toResponseDto(record);
+        const rootNodeId: uuid = schema.RootNodeId;
+        const rootNode = await this._nodeRepository.findOne({
+            where: {
+                id : rootNodeId
+            }
+        });
+        const rootNodeInstance = await this._nodeInstanceRepository.create({
+                Node: rootNode,
+                SchemaInstance: schemaInstance
+            }
+        );
+        const rootNodeInstanceRecord = await this._nodeInstanceRepository.save(rootNodeInstance);
+
+        record.RootNodeInstance = rootNodeInstanceRecord;
+        record.CurrentNodeInstance = rootNodeInstanceRecord;
+        var nodeInstances: NodeInstance[] = [];
+        for await (var node of schema.Nodes) {
+            var nodeInstance = await this._nodeInstanceRepository.create({
+                Node: node,
+                SchemaInstance: schemaInstance
+            });
+            const nodeInstanceRecord = await this._nodeInstanceRepository.save(nodeInstance);
+            nodeInstances.push(nodeInstanceRecord);
+        }
+        record.NodeInstances = nodeInstances;
+        record = await this._schemaInstanceRepository.save(record);
+
+        return SchemaInstanceMapper.toResponseDto(record, );
     };
 
     public getById = async (id: uuid): Promise<SchemaInstanceResponseDto> => {
@@ -48,6 +81,12 @@ export class SchemaInstanceService extends BaseService {
             var schemaInstance = await this._schemaInstanceRepository.findOne({
                 where : {
                     id : id
+                },
+                relations: {
+                    Context            : true,
+                    CurrentNodeInstance: true,
+                    RootNodeInstance   : true,
+                    NodeInstances      : true,
                 }
             });
             return SchemaInstanceMapper.toResponseDto(schemaInstance);
@@ -81,11 +120,6 @@ export class SchemaInstanceService extends BaseService {
                     Context : {
                         id : contextId
                     },
-                    Schema : {
-                        EventTypes : {
-                            id : eventTypeId
-                        }
-                    }
                 }
             });
             return instances.map(x => SchemaInstanceMapper.toResponseDto(x));
@@ -238,6 +272,20 @@ export class SchemaInstanceService extends BaseService {
         const schema = await this._schemaRepository.findOne({
             where : {
                 id : schemaId
+            },
+            select: {
+                id         : true,
+                RootNodeId : true,
+                Name       : true,
+                Description: true,
+                IsValid    : true,
+                Type       : true,
+                Client     : {
+                    id: true,
+                    Name: true,
+                    Code: true,
+                },
+                Nodes: true,
             }
         });
         if (!schema) {

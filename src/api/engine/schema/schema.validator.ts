@@ -30,6 +30,7 @@ export class SchemaValidator extends BaseValidator {
                 ValidFrom   : request.body.ValidFrom ?? new Date(),
                 ValidTill   : request.body.ValidTill ?? null,
                 IsValid     : request.body.IsValid ?? true,
+                EventTypeIds: request.body.EventTypeIds ?? [],
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);

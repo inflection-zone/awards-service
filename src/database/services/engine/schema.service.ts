@@ -17,6 +17,7 @@ import { IncomingEventType } from '../../models/engine/incoming.event.type.model
 import { Rule } from '../../models/engine/rule.model';
 import { Node } from '../../models/engine/node.model';
 import { Condition } from '../../models/engine/condition.model';
+import { SchemaEventType } from '../../models/engine/schema.event.type.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -36,20 +37,14 @@ export class SchemaService extends BaseService {
 
     _conditionRepository: Repository<Condition> = Source.getRepository(Condition);
 
+    _schemaEventTypeRepository: Repository<SchemaEventType> = Source.getRepository(SchemaEventType);
+
     //#endregion
 
     public create = async (createModel: SchemaCreateModel)
         : Promise<SchemaResponseDto> => {
 
         const client = await this.getClient(createModel.ClientId);
-        var eventTypes = [];
-        if (createModel.EventTypeIds) {
-            eventTypes = await this._eventTypeRepository.find({
-                where : {
-                    id : In(createModel.EventTypeIds)
-                }
-            });
-        }
 
         const rootNodeName = 'Root Node' + createModel.Name.substring(0, 25);
         var rootNode = await this._nodeRepository.create({
@@ -67,7 +62,6 @@ export class SchemaService extends BaseService {
             ValidFrom   : createModel.ValidFrom,
             ValidTill   : createModel.ValidTill,
             IsValid     : createModel.IsValid ?? true,
-            EventTypes  : eventTypes,
             RootNodeId  : rootNodeRecord.id,
         });
         var schemaRecord = await this._schemaRepository.save(schema);
@@ -75,7 +69,10 @@ export class SchemaService extends BaseService {
         rootNode.Schema = schemaRecord;
         rootNodeRecord = await this._nodeRepository.save(rootNode);
 
-        return SchemaMapper.toResponseDto(schemaRecord);
+        await this.addEventTypesToSchema(createModel, schema);
+        const eventTypeRecords = await this.getEventTypesForSchema(schemaRecord.id);
+
+        return SchemaMapper.toResponseDto(schemaRecord, eventTypeRecords);
     };
 
     public getById = async (id: uuid): Promise<SchemaResponseDto> => {
@@ -83,9 +80,14 @@ export class SchemaService extends BaseService {
             var schema = await this._schemaRepository.findOne({
                 where : {
                     id : id
+                },
+                relations: {
+                    Client    : true,
+                    Nodes     : true,
                 }
             });
-            return SchemaMapper.toResponseDto(schema);
+            const eventTypes = await this.getEventTypesForSchema(id);
+            return SchemaMapper.toResponseDto(schema, eventTypes);
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
@@ -209,6 +211,40 @@ export class SchemaService extends BaseService {
 
         return search;
     };
+
+    private async addEventTypesToSchema(createModel: SchemaCreateModel, schema: Schema) {
+        var eventTypes = [];
+        if (createModel.EventTypeIds) {
+            eventTypes = await this._eventTypeRepository.find({
+                where: {
+                    id: In(createModel.EventTypeIds)
+                }
+            });
+        }
+        for await (var eventType of eventTypes) {
+            const se = await this._schemaEventTypeRepository.create({
+                EventType: eventType,
+                Schema: schema
+            });
+            const seRecord = await this._schemaEventTypeRepository.save(se);
+        }
+    }
+
+    private async getEventTypesForSchema(id: string) {
+        const schemaEventTypes = await this._schemaEventTypeRepository.find({
+            where: {
+                Schema: {
+                    id: id
+                }
+            },
+            relations: {
+                Schema   : true,
+                EventType: true,
+            }
+        });
+        const eventTypes = await schemaEventTypes.map(x => x.EventType);
+        return eventTypes;
+    }
 
     //#endregion
 

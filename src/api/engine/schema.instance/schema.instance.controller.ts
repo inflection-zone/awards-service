@@ -25,7 +25,7 @@ export class SchemaInstanceController extends BaseController {
 
     create = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('SchemaInstance.Create', request, response);
+            await this.authorize('SchemaInstance.Create', request, response, false);
             var model: SchemaInstanceCreateModel = await this._validator.validateCreateRequest(request);
             const record = await this._service.create(model);
             if (record === null) {
@@ -40,7 +40,7 @@ export class SchemaInstanceController extends BaseController {
 
     getById = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('SchemaInstance.GetById', request, response);
+            await this.authorize('SchemaInstance.GetById', request, response, false);
             var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
             const record = await this._service.getById(id);
             const message = 'SchemaInstance retrieved successfully!';
@@ -52,7 +52,7 @@ export class SchemaInstanceController extends BaseController {
 
     update = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('SchemaInstance.Update', request, response);
+            await this.authorize('SchemaInstance.Update', request, response, false);
             const id = await this._validator.validateParamAsUUID(request, 'id');
             var model: SchemaInstanceUpdateModel = await this._validator.validateUpdateRequest(request);
             const updatedRecord = await this._service.update(id, model);
@@ -65,7 +65,7 @@ export class SchemaInstanceController extends BaseController {
 
     search = async (request: express.Request, response: express.Response) => {
         try {
-            await this.authorize('SchemaInstance.Search', request, response);
+            await this.authorize('SchemaInstance.Search', request, response, false);
             var filters: SchemaInstanceSearchFilters = await this._validator.validateSearchRequest(request);
             const searchResults = await this._service.search(filters);
             const message = 'SchemaInstance records retrieved successfully!';
@@ -77,7 +77,7 @@ export class SchemaInstanceController extends BaseController {
 
     delete = async (request: express.Request, response: express.Response): Promise < void > => {
         try {
-            await this.authorize('SchemaInstance.Delete', request, response);
+            await this.authorize('SchemaInstance.Delete', request, response, false);
             var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
             const result = await this._service.delete(id);
             const message = 'SchemaInstance deleted successfully!';
