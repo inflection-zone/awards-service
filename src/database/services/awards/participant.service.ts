@@ -59,16 +59,29 @@ export class ParticipantService extends BaseService {
         });
         var record = await this._participantRepository.save(participant);
 
-        //Keep person context for this participant
-        const context = this._contextRepository.create({
-            Type: ContextType.Person,
-            ReferenceId : createModel.ReferenceId,
-            Participant : record,
-        })
-        const contextRecord = await this._contextRepository.save(context);
-        logger.info(JSON.stringify(contextRecord, null, 2));
+        var context = await this._contextRepository.findOne({
+            where: {
+                ReferenceId : createModel.ReferenceId
+            }
+        });
 
-        return ParticipantMapper.toResponseDto(record);
+        if (context) {
+            context.Participant = record;
+            const contextRecord = await this._contextRepository.save(context);
+            logger.info(JSON.stringify(contextRecord, null, 2));
+        }
+        else {
+            //Keep person context for this participant
+            context = this._contextRepository.create({
+                Type: ContextType.Person,
+                ReferenceId : createModel.ReferenceId,
+                Participant : record,
+            })
+            const contextRecord = await this._contextRepository.save(context);
+            logger.info(JSON.stringify(contextRecord, null, 2));
+        }
+
+        return ParticipantMapper.toResponseDto(record, context);
     };
 
     public getById = async (id: uuid): Promise<ParticipantResponseDto> => {
@@ -76,9 +89,74 @@ export class ParticipantService extends BaseService {
             var participant = await this._participantRepository.findOne({
                 where : {
                     id : id
+                },
+                relations: {
+                    Client: true,
                 }
             });
-            return ParticipantMapper.toResponseDto(participant);
+            var context = await this._contextRepository.findOne({
+                where: {
+                    ReferenceId: participant.ReferenceId
+                }
+            });
+            return ParticipantMapper.toResponseDto(participant, context);
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
+    public getByReferenceId = async (referenceId: uuid): Promise<ParticipantResponseDto> => {
+        try {
+            var participant = await this._participantRepository.findOne({
+                where : {
+                    ReferenceId : referenceId
+                },
+                select: {
+                    id         : true,
+                    ReferenceId: true,
+                    Client     : {
+                        id   : true,
+                        Name : true,
+                        Code : true,
+                        Email: true,
+                    },
+                    BirthDate     : true,
+                    Prefix        : true,
+                    FirstName     : true,
+                    LastName      : true,
+                    CountryCode   : true,
+                    Phone         : true,
+                    Email         : true,
+                    Gender        : true,
+                    OnboardingDate: true,
+                },
+                relations: {
+                    Client: true,
+                }
+            });
+            var context = await this._contextRepository.findOne({
+                where: {
+                    ReferenceId: participant.ReferenceId
+                }
+            });
+            return ParticipantMapper.toResponseDto(participant, context);
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
+    public getByClientId = async (clientId: uuid): Promise<ParticipantResponseDto[]> => {
+        try {
+            var participants = await this._participantRepository.find({
+                where : {
+                    Client : {
+                        id : clientId
+                    }
+                },
+            });
+            return participants.map(x => ParticipantMapper.toResponseDto(x));
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
@@ -118,6 +196,7 @@ export class ParticipantService extends BaseService {
             if (!participant) {
                 ErrorHandler.throwNotFoundError('participant not found!');
             }
+
             //Participant code is not modifiable
             //Use renew key to update ApiKey, ValidFrom and ValidTill
 

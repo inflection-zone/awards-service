@@ -30,6 +30,7 @@ import { Person } from './models/user/person.model';
 import { UserLoginSession } from "./models/user/user.login.session.model";
 import { Role } from "./models/user/role.model";
 import { Privilege } from "./models/user/privilege.model";
+import { SchemaEventType } from "./models/engine/schema.event.type.model";
 import { DBLogger } from "./database.logger";
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,7 @@ class DatabaseConnector {
             UserLoginSession,
             Role,
             Privilege,
+            SchemaEventType,
         ],
         migrations  : [],
         subscribers : [],

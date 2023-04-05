@@ -4,12 +4,14 @@ import {
 } from '../../../domain.types/awards/participant.domain.types';
 import { ClientMapper } from '../client/client.mapper';
 import { ParticipantBadge } from '../../models/awards/participant.badge.model';
+import { Context } from '../../models/engine/context.model';
+import { Client } from '../../models/client/client.model';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
 export class ParticipantMapper {
 
-    static toResponseDto = (participant: Participant): ParticipantResponseDto => {
+    static toResponseDto = (participant: Participant, context?: Context): ParticipantResponseDto => {
         if (participant == null) {
             return null;
         }
@@ -17,6 +19,7 @@ export class ParticipantMapper {
         const dto: ParticipantResponseDto = {
             id              : participant.id,
             ReferenceId     : participant.ReferenceId,
+            Context         : context,
             Client          : client,
             Prefix          : participant.Prefix,
             FirstName       : participant.FirstName,

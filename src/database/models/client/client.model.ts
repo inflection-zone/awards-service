@@ -6,8 +6,11 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
+    ManyToOne,
+    OneToMany,
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
+import { Participant } from "../awards/participant.model";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +50,9 @@ export class Client {
 
     @Column({ type: 'date', nullable: true })
     ValidTill : Date;
+
+    @OneToMany(() => Participant, (participant) => participant.Client)
+    Participants: Participant[];
 
     @CreateDateColumn()
     CreatedAt : Date;

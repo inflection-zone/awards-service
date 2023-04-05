@@ -1,3 +1,4 @@
+import { ContextType } from "../engine/engine.enums";
 import {
     BaseSearchResults
 } from "../miscellaneous/base.search.types";
@@ -19,10 +20,14 @@ export interface ParticipantUpdateModel extends PersonModel {
 }
 
 export interface ParticipantResponseDto extends PersonResponseDto {
-    Client        : {
+    Client ?: {
         id  : uuid;
         Name: string;
         Code: string;
+    };
+    Context ?: {
+        id  : uuid;
+        Type: ContextType;
     };
     OnboardingDate: Date;
 }

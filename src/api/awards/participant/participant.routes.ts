@@ -14,14 +14,16 @@ export const register = (app: express.Application): void => {
     const authenticator = Loader.Authenticator;
     const controller = new ParticipantController();
 
-    router.post('/', authenticator.authenticateClient, authenticator.authenticateUser, controller.create);
-    router.get('/search', authenticator.authenticateClient, authenticator.authenticateUser, controller.search);
+    router.post('/', authenticator.authenticateClient, controller.create);
+    router.get('/search', authenticator.authenticateClient, controller.search);
 
-    router.get('/:id/badges', authenticator.authenticateClient, authenticator.authenticateUser, controller.getBadges);
+    router.get('/:id/badges', authenticator.authenticateClient, controller.getBadges);
+    router.get('/by-reference-id/:referenceId', authenticator.authenticateClient, controller.getByReferenceId);
+    router.get('/by-client-id/:clientId', authenticator.authenticateClient, controller.getByClientId);
 
-    router.get('/:id', authenticator.authenticateClient, authenticator.authenticateUser, controller.getById);
-    router.put('/:id', authenticator.authenticateClient, authenticator.authenticateUser, controller.update);
-    router.delete('/:id', authenticator.authenticateClient, authenticator.authenticateUser, controller.delete);
+    router.get('/:id', authenticator.authenticateClient, controller.getById);
+    router.put('/:id', authenticator.authenticateClient, controller.update);
+    router.delete('/:id', authenticator.authenticateClient, controller.delete);
 
     app.use('/api/v1/participants', router);
 };

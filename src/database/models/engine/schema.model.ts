@@ -42,12 +42,8 @@ export class Schema {
 
     @OneToMany(() => Node, (node) => node.Schema, {
         cascade  : true,
-        nullable : true,
     })
     Nodes: Node[];
-
-    @ManyToMany(() => IncomingEventType)
-    EventTypes: IncomingEventType[];
 
     @Column({ type: 'date', nullable: true })
     ValidFrom : Date;

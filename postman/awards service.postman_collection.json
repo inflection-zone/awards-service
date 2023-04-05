@@ -128,6 +128,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
 							}
 						],
 						"url": {
@@ -1797,6 +1802,582 @@
 							"path": [
 								"engine",
 								"rules"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create child condition - find consecutive days",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"RULE_ID\", jsonRes.Data.id);\r",
+									"    pm.environment.set(\"ROOT_CONDITION_ID\", jsonRes.Data.Condition.id);\r",
+									"    pm.environment.set(\"RULE_ACTION_ID\", jsonRes.Data.Action.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RuleId\": \"{{RULE_ID}}\",\r\n    \"Name\": \"Atleast one instance 7 consecutive days of medication adherence found\",\r\n    \"Description\": \"From the list of medication consumption records, atleast 1 consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n        \"Name\": \"Medication 7-Days Badge\",\r\n        \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n        \"Params\": {\r\n            \"Message\": \"Award medication 7-days badge.\",\r\n            \"Action\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n            \"NextNodeId\": null,\r\n            \"Extra\": {}\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/conditions",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"conditions"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Create child condition - check if badge already exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"RULE_ID\", jsonRes.Data.id);\r",
+									"    pm.environment.set(\"ROOT_CONDITION_ID\", jsonRes.Data.Condition.id);\r",
+									"    pm.environment.set(\"RULE_ACTION_ID\", jsonRes.Data.Action.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n        \"Name\": \"Medication 7-Days Badge\",\r\n        \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n        \"Params\": {\r\n            \"Message\": \"Award medication 7-days badge.\",\r\n            \"Action\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n            \"NextNodeId\": null,\r\n            \"Extra\": {}\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/conditions",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"conditions"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create participant",
+			"item": [
+				{
+					"name": "Create participant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"PARTICIPANT_ID\", jsonRes.Data.id);\r",
+									"    pm.environment.set(\"CONTEXT_ID\", jsonRes.Data.Context.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Participant is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Prefix');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('FirstName');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('LastName');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Email');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Phone');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var today = (new Date()).toISOString().split('T')[0];\r",
+									"pm.environment.set(\"TODAY\", today);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{MODERATOR_USER_JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"ReferenceId\": \"{{REFERENCE_ID}}\",\r\n    \"Prefix\": \"Mr.\",\r\n    \"FirstName\": \"Sachin\",\r\n    \"LastName\": \"Tendulkar\",\r\n    \"Gender\": \"Male\",\r\n    \"BirthDate\": \"1974-04-24\",\r\n    \"Email\": \"sachin.tendulkar@gmail.com\",\r\n    \"CountryCode\": \"+91\",\r\n    \"Phone\": \"1234567890\",\r\n    \"OnboardingDate\": \"{{TODAY}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/participants",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"participants"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get participant by reference id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"PARTICIPANT_ID\", jsonRes.Data.id);\r",
+									"    pm.environment.set(\"CONTEXT_ID\", jsonRes.Data.Context.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"PArticipant is retrieved\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Context');\r",
+									"    pm.expect(jsonRes.Data.Context).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Prefix');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('FirstName');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('LastName');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Email');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n        \"Name\": \"Medication 7-Days Badge\",\r\n        \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n        \"Params\": {\r\n            \"Message\": \"Award medication 7-days badge.\",\r\n            \"Action\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n            \"NextNodeId\": null,\r\n            \"Extra\": {}\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/participants/by-reference-id/{{REFERENCE_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"participants",
+								"by-reference-id",
+								"{{REFERENCE_ID}}"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get participants by client id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data.length).greaterThan(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n        \"Name\": \"Medication 7-Days Badge\",\r\n        \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n        \"Params\": {\r\n            \"Message\": \"Award medication 7-days badge.\",\r\n            \"Action\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n            \"NextNodeId\": null,\r\n            \"Extra\": {}\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/participants/by-client-id/{{CLIENT_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"participants",
+								"by-client-id",
+								"{{CLIENT_ID}}"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get context for participant / reference id",
+			"item": [
+				{
+					"name": "Create schema instances",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"SCHEMA_INSTANCE_ID\", jsonRes.Data.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is created\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"ContextId\": \"{{CONTEXT_ID}}\"\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/engine/schema-instances",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"engine",
+								"schema-instances"
+							]
+						},
+						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get schema instance by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"try {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.environment.set(\"SCHEMA_INSTANCE_ID\", jsonRes.Data.id);\r",
+									"}\r",
+									"catch (error) {\r",
+									"    console.log(error.message);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Request is successfull\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Status).to.eql('success');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema instance is returned\", function () {\r",
+									"    var jsonRes = pm.response.json();\r",
+									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n        \"Name\": \"Medication 7-Days Badge\",\r\n        \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n        \"Params\": {\r\n            \"Message\": \"Award medication 7-days badge.\",\r\n            \"Action\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n            \"NextNodeId\": null,\r\n            \"Extra\": {}\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/schema-instances/{{SCHEMA_INSTANCE_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"schema-instances",
+								"{{SCHEMA_INSTANCE_ID}}"
 							]
 						},
 						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
