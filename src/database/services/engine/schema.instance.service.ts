@@ -64,13 +64,15 @@ export class SchemaInstanceService extends BaseService {
         record.CurrentNodeInstance = rootNodeInstanceRecord;
         record = await this._schemaInstanceRepository.save(record);
 
-        for await (var node of schema.Nodes) {
-            if (node.id !== rootNode.id) {
-                var nodeInstance = await this._nodeInstanceRepository.create({
-                    Node: node,
-                    SchemaInstance: schemaInstance
-                });
-                const nodeInstanceRecord = await this._nodeInstanceRepository.save(nodeInstance);
+        if (schema.Nodes && schema.Nodes.length > 0) {
+            for await (var node of schema.Nodes) {
+                if (node.id !== rootNode.id) {
+                    var nodeInstance = await this._nodeInstanceRepository.create({
+                        Node: node,
+                        SchemaInstance: schemaInstance
+                    });
+                    const nodeInstanceRecord = await this._nodeInstanceRepository.save(nodeInstance);
+                }
             }
         }
 
@@ -290,6 +292,10 @@ export class SchemaInstanceService extends BaseService {
                     Code: true,
                 },
                 Nodes: true,
+            },
+            relations: {
+                Nodes: true,
+                Client: true,
             }
         });
         if (!schema) {
