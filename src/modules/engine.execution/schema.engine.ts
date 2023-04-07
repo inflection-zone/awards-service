@@ -24,8 +24,8 @@ export class SchemaEngine {
         var rootNodeInstance = schemaInstance.RootNodeInstance;
         var currentNode = rootNodeInstance as CNodeInstance;
 
-        logger.info(`\nCurrent node    : ${currentNode.Name}`);
-        logger.info(`Current node Id : ${currentNode.id}\n`);
+        logger.info(`Current node    : ${currentNode.Name}`);
+        logger.info(`Current node Id : ${currentNode.id}`);
 
         while (currentNode.ExecutionStatus === ExecutionStatus.Pending) {
             currentNode = await SchemaEngine.traverse(
