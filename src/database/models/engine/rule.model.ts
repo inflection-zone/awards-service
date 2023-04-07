@@ -35,11 +35,11 @@ export class Rule {
     @ManyToOne(() => Schema, (schema) => schema.Nodes)
     Schema: Schema;
 
-    @OneToOne(() => RuleAction, (action) => action.ParentRule)
+    @OneToOne(() => RuleAction, (action) => action.ParentRule, { cascade: true })
     @JoinColumn()
     Action: RuleAction;
 
-    @OneToOne(() => Condition, (condition) => condition.Rule, { nullable: true })
+    @OneToOne(() => Condition, (condition) => condition.Rule, { nullable: true, cascade: true })
     @JoinColumn()
     Condition: Condition;
 
