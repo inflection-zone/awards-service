@@ -6,6 +6,8 @@ import { ContextType } from "../../domain.types/engine/engine.enums";
 import { SchemaInstanceService } from "../../database/services/engine/schema.instance.service";
 import { ContextResponseDto } from "../../domain.types/engine/context.types";
 import { SchemaEngine } from "./schema.engine";
+import { SchemaService } from "../../database/services/engine/schema.service";
+import { SchemaInstanceSearchFilters } from "../../domain.types/engine/schema.instance.types";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -51,6 +53,7 @@ export default class EventHandler {
 
         const contextService = new ContextService();
         const schemaInstanceService = new SchemaInstanceService();
+        const schemaService = new SchemaService();
         const referenceId = event.ReferenceId;
         var context = await contextService.getByReferenceId(referenceId);
         if (!context) {
@@ -60,28 +63,35 @@ export default class EventHandler {
             });
         }
 
-        //Execute long running schema instances
-
-        await EventHandler.executeLongRunningInstances(schemaInstanceService, context, event);
-
-    };
-
-    private static async executeLongRunningInstances(
-        schemaInstanceService: SchemaInstanceService,
-        context: ContextResponseDto,
-        event: IncomingEventResponseDto) {
-
-        const schemaInstances = await schemaInstanceService.getByContextId(context.id);
-        const filtered = schemaInstances.filter(
-            x => x.Schema.EventTypes.find(y => y.id === event.EventType.id) !== undefined);
-        
-        //Alternatively
-        //const filtered = await schemaInstanceService.getByContextAndEventType(context.id, event.EventType.id);
+        const eventType = event.EventType;
+        const schemaForEventType = await schemaService.getByEventType(eventType.id)
+        for await (var s of schemaForEventType) {
+            const schemaId = s.id;
+            const filters: SchemaInstanceSearchFilters = {
+                ContextId: context.id,
+                SchemaId: schemaId
+            };
+            const searchResults = await schemaInstanceService.search(filters);
+            const schemaInstances = searchResults.Items;
+            if (schemaInstances.length === 0) {
+                const schemaInstance = await schemaInstanceService.create({
+                    SchemaId: schemaId,
+                    ContextId: context.id
+                });
+                if (schemaInstance) {
+                    logger.info(`Schema instance created successfully!`);
+                }
+            }
+        }
+        const filtered = await schemaInstanceService.getByContextAndEventType(
+            context.id,
+            eventType.id
+        );
 
         for await (var instance of filtered) {
             SchemaEngine.execute(instance);
         }
 
-    }
+    };
 
 }

@@ -30,7 +30,7 @@ export class Schema {
     @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
 
-    @Column({ type: 'enum', enum: SchemaType, nullable: false, default: SchemaType.CreateNewInstanceAlways })
+    @Column({ type: 'enum', enum: SchemaType, nullable: false, default: SchemaType.ReuseExistingInstance })
     Type : SchemaType;
 
     @ManyToOne(() => Client, { nullable: true })
