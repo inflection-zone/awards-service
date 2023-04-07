@@ -7,7 +7,7 @@ import { SchemaInstanceService } from "../../database/services/engine/schema.ins
 import { ContextResponseDto } from "../../domain.types/engine/context.types";
 import { SchemaEngine } from "./schema.engine";
 import { SchemaService } from "../../database/services/engine/schema.service";
-import { SchemaInstanceSearchFilters } from "../../domain.types/engine/schema.instance.types";
+import { SchemaInstanceResponseDto, SchemaInstanceSearchFilters } from "../../domain.types/engine/schema.instance.types";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -48,48 +48,55 @@ export default class EventHandler {
 
     private static processEvent = async (event: IncomingEventResponseDto) => {
 
-        logger.info(JSON.stringify(event, null, 2));
-        //Process incoming event here...
+        try {
+            logger.info(JSON.stringify(event, null, 2));
+            //Process incoming event here...
 
-        const contextService = new ContextService();
-        const schemaInstanceService = new SchemaInstanceService();
-        const schemaService = new SchemaService();
-        const referenceId = event.ReferenceId;
-        var context = await contextService.getByReferenceId(referenceId);
-        if (!context) {
-            context = await contextService.create({
-                ReferenceId : referenceId,
-                Type        : ContextType.Person
-            });
-        }
-
-        const eventType = event.EventType;
-        const schemaForEventType = await schemaService.getByEventType(eventType.id)
-        for await (var s of schemaForEventType) {
-            const schemaId = s.id;
-            const filters: SchemaInstanceSearchFilters = {
-                ContextId: context.id,
-                SchemaId: schemaId
-            };
-            const searchResults = await schemaInstanceService.search(filters);
-            const schemaInstances = searchResults.Items;
-            if (schemaInstances.length === 0) {
-                const schemaInstance = await schemaInstanceService.create({
-                    SchemaId: schemaId,
-                    ContextId: context.id
+            const contextService = new ContextService();
+            const schemaInstanceService = new SchemaInstanceService();
+            const schemaService = new SchemaService();
+            const referenceId = event.ReferenceId;
+            var context = await contextService.getByReferenceId(referenceId);
+            if (!context) {
+                context = await contextService.create({
+                    ReferenceId : referenceId,
+                    Type        : ContextType.Person
                 });
-                if (schemaInstance) {
-                    logger.info(`Schema instance created successfully!`);
+            }
+
+            const eventType = event.EventType;
+            const schemaForEventType = await schemaService.getByEventType(eventType.id)
+            const filtered: SchemaInstanceResponseDto[] = [];
+            for await (var s of schemaForEventType) {
+                const schemaId = s.id;
+                const filters: SchemaInstanceSearchFilters = {
+                    ContextId: context.id,
+                    SchemaId: schemaId
+                };
+                const searchResults = await schemaInstanceService.search(filters);
+                const schemaInstances = searchResults.Items;
+                if (schemaInstances.length === 0) {
+                    const schemaInstance = await schemaInstanceService.create({
+                        SchemaId: schemaId,
+                        ContextId: context.id
+                    });
+                    if (schemaInstance) {
+                        logger.info(`Schema instance created successfully!`);
+                    }
+                    filtered.push(schemaInstance);
+                }
+                else {
+                    filtered.push(...schemaInstances);
                 }
             }
-        }
-        const filtered = await schemaInstanceService.getByContextAndEventType(
-            context.id,
-            eventType.id
-        );
 
-        for await (var instance of filtered) {
-            SchemaEngine.execute(instance);
+            for await (var instance of filtered) {
+                SchemaEngine.execute(instance);
+            }
+        }
+        catch (error) {
+            logger.error(`Error: ${error.message}`);
+            logger.error(`Error: ${error.stack}`);
         }
 
     };

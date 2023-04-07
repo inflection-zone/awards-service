@@ -64,10 +64,10 @@ export class SchemaInstanceMapper {
             NodeInstances : instance.NodeInstances.map(x => {
                 return {
                     id   : x.id,
-                    Node : {
+                    Node : x.Node ? {
                         id   : x.Node.id,
                         Name : x.Node.Name,
-                    }
+                    }: null
                 };
             }),
             CreatedAt : instance.CreatedAt,

@@ -34,9 +34,11 @@ export class SchemaInstance {
     NodeInstances : NodeInstance[];
 
     @OneToOne(() => NodeInstance)
+    @JoinColumn()
     RootNodeInstance: NodeInstance;
 
     @OneToOne(() => NodeInstance)
+    @JoinColumn()
     CurrentNodeInstance: NodeInstance;
 
     @CreateDateColumn()

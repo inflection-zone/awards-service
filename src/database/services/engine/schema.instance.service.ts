@@ -16,6 +16,7 @@ import {
 import { Context } from '../../models/engine/context.model';
 import { NodeInstance } from '../../models/engine/node.instance.model';
 import { Node } from '../../models/engine/node.model';
+import { IncomingEventType } from '../../models/engine/incoming.event.type.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -61,17 +62,17 @@ export class SchemaInstanceService extends BaseService {
 
         record.RootNodeInstance = rootNodeInstanceRecord;
         record.CurrentNodeInstance = rootNodeInstanceRecord;
-        var nodeInstances: NodeInstance[] = [];
-        for await (var node of schema.Nodes) {
-            var nodeInstance = await this._nodeInstanceRepository.create({
-                Node: node,
-                SchemaInstance: schemaInstance
-            });
-            const nodeInstanceRecord = await this._nodeInstanceRepository.save(nodeInstance);
-            nodeInstances.push(nodeInstanceRecord);
-        }
-        record.NodeInstances = nodeInstances;
         record = await this._schemaInstanceRepository.save(record);
+
+        for await (var node of schema.Nodes) {
+            if (node.id !== rootNode.id) {
+                var nodeInstance = await this._nodeInstanceRepository.create({
+                    Node: node,
+                    SchemaInstance: schemaInstance
+                });
+                const nodeInstanceRecord = await this._nodeInstanceRepository.save(nodeInstance);
+            }
+        }
 
         return SchemaInstanceMapper.toResponseDto(record, );
     };
@@ -83,6 +84,7 @@ export class SchemaInstanceService extends BaseService {
                     id : id
                 },
                 relations: {
+                    Schema             : true,
                     Context            : true,
                     CurrentNodeInstance: true,
                     RootNodeInstance   : true,
@@ -103,23 +105,13 @@ export class SchemaInstanceService extends BaseService {
                     Context : {
                         id : contextId
                     }
-                }
-            });
-            return instances.map(x => SchemaInstanceMapper.toResponseDto(x));
-        } catch (error) {
-            logger.error(error.message);
-            ErrorHandler.throwInternalServerError(error.message, 500);
-        }
-    };
-
-    public getByContextAndEventType = async (contextId: uuid, eventTypeId: uuid)
-        : Promise<SchemaInstanceResponseDto[]> => {
-        try {
-            var instances = await this._schemaInstanceRepository.find({
-                where : {
-                    Context : {
-                        id : contextId
-                    },
+                },
+                relations: {
+                    Schema             : true,
+                    Context            : true,
+                    CurrentNodeInstance: true,
+                    RootNodeInstance   : true,
+                    NodeInstances      : true,
                 }
             });
             return instances.map(x => SchemaInstanceMapper.toResponseDto(x));
@@ -147,6 +139,7 @@ export class SchemaInstanceService extends BaseService {
             return searchResults;
         } catch (error) {
             logger.error(error.message);
+            logger.error(error.stack);
             ErrorHandler.throwDbAccessError('DB Error: Unable to search records!', error);
         }
     };
@@ -198,7 +191,12 @@ export class SchemaInstanceService extends BaseService {
     private getSearchModel = (filters: SchemaInstanceSearchFilters) => {
 
         var search : FindManyOptions<SchemaInstance> = {
-            relations : {
+            relations: {
+                Context            : true,
+                CurrentNodeInstance: true,
+                RootNodeInstance   : true,
+                Schema             : true,
+                NodeInstances      : true,
             },
             where : {
             },
@@ -253,13 +251,19 @@ export class SchemaInstanceService extends BaseService {
                 },
                 CreatedAt : true,
                 UpdatedAt : true,
-            }
+            },
         };
 
         if (filters.SchemaId) {
+            search.where['Schema'] = {
+                id: ''
+            }
             search.where['Schema'].id = filters.SchemaId;
         }
         if (filters.ContextId) {
+            search.where['Context'] = {
+                id: ''
+            }
             search.where['Context'].id = filters.ContextId;
         }
 
