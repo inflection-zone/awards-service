@@ -91,7 +91,7 @@ export default class EventHandler {
             }
 
             for await (var instance of filtered) {
-                SchemaEngine.execute(instance);
+                await SchemaEngine.execute(instance);
             }
         }
         catch (error) {

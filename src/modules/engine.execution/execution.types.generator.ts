@@ -9,6 +9,7 @@ import { SchemaService } from '../../database/services/engine/schema.service';
 import { ConditionService } from '../../database/services/engine/condition.service';
 import { OperatorType } from '../../domain.types/engine/engine.enums';
 import { CSchemaInstance, uuid, CNodeInstance, CRule, CCondition } from './execution.types';
+import { logger } from '../../logger/logger';
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -28,29 +29,34 @@ export class ExecutionTypesGenerator {
 
     public createSchemaInstance = async (dto: SchemaInstanceResponseDto): Promise<CSchemaInstance> => {
 
-        const instance = new CSchemaInstance();
-    
-        instance.id = dto.id;
-        instance.Name = dto.Schema.Name;
-        instance.SchemaId = dto.Schema.id;
-        instance.Nodes = [];
-    
-        instance.ContextReferenceId = dto.Context.ReferenceId;
-        instance.ContextId = dto.Context.id;
-    
-        for (var ni of dto.NodeInstances) {
-            const nodeInstance = await this.createNodeInstance(ni.id);
-            instance.Nodes.push(nodeInstance);
-        }
-        instance.RootNodeInstance = instance.Nodes.find(x => x.NodeId === dto.RootNodeInstance.Node.id);
-        instance.CurrentNodeInstance = instance.Nodes.find(x => x.NodeId === dto.CurrentNodeInstance.Node.id);
+        try {
+            const instance = new CSchemaInstance();
+        
+            instance.id = dto.id;
+            instance.Name = dto.Schema.Name;
+            instance.SchemaId = dto.Schema.id;
+            instance.Nodes = [];
+        
+            instance.ContextReferenceId = dto.Context.ReferenceId;
+            instance.ContextId = dto.Context.id;
+        
+            for await (var ni of dto.NodeInstances) {
+                const nodeInstance = await this.createNodeInstance(ni.id);
+                instance.Nodes.push(nodeInstance);
+            }
+            instance.RootNodeInstance = instance.Nodes.find(x => x.NodeId === dto.RootNodeInstance?.Node?.id);
+            instance.CurrentNodeInstance = instance.Nodes.find(x => x.NodeId === dto.CurrentNodeInstance?.Node?.id);
 
-        for (var nodeInstance of instance.Nodes) {
-            var facts = nodeInstance.extractFacts();
-            instance.FactNames.push(...facts);
-        }
+            for (var nodeInstance of instance.Nodes) {
+                var facts = nodeInstance.extractFacts();
+                instance.FactNames.push(...facts);
+            }
 
-        return instance;
+            return instance;
+        }
+        catch (error) {
+            logger.error(`${error.message}`);
+        }
     };
 
     public createNodeInstance = async (nodeInstanceId: uuid)
@@ -68,7 +74,9 @@ export class ExecutionTypesGenerator {
         instance.ParentNodeId = dto.ParentNodeInstance?.Node?.id,
         instance.ParentNodeInstanceId = dto.ParentNodeInstance?.id;
         instance.UpdatedAt = new Date();
-        instance.ApplicableRule = await this.createRule(dto.ApplicableRule.id);
+        if (dto.ApplicableRule) {
+            instance.ApplicableRule = await this.createRule(dto.ApplicableRule.id);
+        }
         instance.AvailableFacts = dto.AvailableFacts;
         instance.ExecutionStatus = dto.ExecutionStatus;
 
