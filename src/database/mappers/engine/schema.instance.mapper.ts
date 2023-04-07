@@ -49,17 +49,17 @@ export class SchemaInstanceMapper {
             },
             RootNodeInstance : instance.RootNodeInstance ? {
                 id   : instance.RootNodeInstance.id,
-                Node : {
+                Node : instance.RootNodeInstance.Node ? {
                     id   : instance.RootNodeInstance.Node.id,
                     Name : instance.RootNodeInstance.Node.Name,
-                }
+                } : null,
             } : null,
             CurrentNodeInstance : instance.CurrentNodeInstance ? {
                 id   : instance.CurrentNodeInstance.id,
-                Node : {
+                Node : instance.CurrentNodeInstance.Node ? {
                     id   : instance.CurrentNodeInstance.Node.id,
                     Name : instance.CurrentNodeInstance.Node.Name,
-                }
+                } : null,
             } : null,
             NodeInstances : instance.NodeInstances.map(x => {
                 return {

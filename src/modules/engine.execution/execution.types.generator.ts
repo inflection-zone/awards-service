@@ -36,6 +36,7 @@ export class ExecutionTypesGenerator {
             instance.Name = dto.Schema.Name;
             instance.SchemaId = dto.Schema.id;
             instance.Nodes = [];
+            instance.FactNames = [];
         
             instance.ContextReferenceId = dto.Context.ReferenceId;
             instance.ContextId = dto.Context.id;
@@ -49,7 +50,9 @@ export class ExecutionTypesGenerator {
 
             for (var nodeInstance of instance.Nodes) {
                 var facts = nodeInstance.extractFacts();
-                instance.FactNames.push(...facts);
+                if (facts.length > 0) {
+                    instance.FactNames.push(...facts);
+                }
             }
 
             return instance;
