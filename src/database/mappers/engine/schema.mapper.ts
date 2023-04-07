@@ -15,11 +15,11 @@ export class SchemaMapper {
         const dto: SchemaResponseDto = {
             id     : schema.id,
             Type   : schema.Type,
-            Client : {
+            Client : schema.Client ? {
                 id   : schema.Client.id,
                 Name : schema.Client.Name,
                 Code : schema.Client.Code,
-            },
+            }: null,
             Name        : schema.Name,
             Description : schema.Description,
             ValidFrom   : schema.ValidFrom,

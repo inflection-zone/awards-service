@@ -10,23 +10,22 @@ export const ContextTypeList: ContextType[] = [
 ];
 
 export enum SchemaType {
-    //Only one instance active at a time for a given context. This is for cases where a long running
-    //workflow is represented
-    OnlyOneInstanceActive = 'OnlyOneInstanceActive',
-
-    //On every incoming event, create a new instance. This is suitable for usecases,
-    //where on every event we want to check some light weight logic execution.
-    CreateNewInstanceAlways = 'CreateNewInstanceAlways',
-
     //These kind of schemas are for cases where they get executed only once for a given context.
     //For example, awarding some promotion coupons on a given occasion.
-    OnlyOneInstanceInLifetime = 'OnlyOneInstanceInLifetime'
+    ExecuteOnce = 'ExecuteOnce',
+
+    //On every incoming event, reuse the same instance. This is suitable for usecases,
+    //where on every event we want to check some light weight logic execution.
+    ReuseExistingInstance = 'ReuseExistingInstance',
+
+    //Recreate new instance after the execution of the previous one.
+    RecreateNewAfterExecution = 'RecreateNewAfterExecution'
 }
 
 export const SchemaTypeList: SchemaType[] = [
-    SchemaType.CreateNewInstanceAlways,
-    SchemaType.OnlyOneInstanceActive,
-    SchemaType.OnlyOneInstanceInLifetime,
+    SchemaType.ExecuteOnce,
+    SchemaType.ReuseExistingInstance,
+    SchemaType.RecreateNewAfterExecution,
 ];
 
 export enum OperatorType {

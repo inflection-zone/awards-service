@@ -94,6 +94,25 @@ export class SchemaService extends BaseService {
         }
     };
 
+    public getByEventType = async (eventTypeId: uuid): Promise<SchemaResponseDto[]> => {
+        try {
+            var records = await this._schemaEventTypeRepository.find({
+                where : {
+                    EventType: {
+                        id: eventTypeId
+                    }
+                },
+                relations: {
+                    Schema : true,
+                }
+            });
+            return records.map(x => SchemaMapper.toResponseDto(x.Schema));
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
     public search = async (filters: SchemaSearchFilters)
         : Promise<SchemaSearchResults> => {
         try {
