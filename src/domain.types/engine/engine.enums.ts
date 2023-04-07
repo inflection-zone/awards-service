@@ -135,6 +135,8 @@ export enum EventActionType {
     Exit = "Exit",
     AwardBadge = "AwardBadge",
     AwardPoints = "AwardPoints",
+    CalculateContinuityBadges = "CalculateContinuityBadges",
+    ExtractExistingBadges = "ExtractExistingBadges",
     Custom = "Custom",
 }
 
@@ -144,6 +146,8 @@ export const EventActionTypeList: EventActionType[] = [
     EventActionType.Exit,
     EventActionType.AwardBadge,
     EventActionType.AwardPoints,
+    EventActionType.CalculateContinuityBadges,
+    EventActionType.ExtractExistingBadges,
     EventActionType.Custom,
 ];
 

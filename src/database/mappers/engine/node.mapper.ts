@@ -25,13 +25,13 @@ export class NodeMapper {
                 Name        : node.ParentNode.Name,
                 Description : node.ParentNode.Description,
             }          : null,
-            Children : node.Children.map(x => {
+            Children : node.Children? node.Children.map(x => {
                 return {
                     id          : x.id,
                     Name        : x.Name,
                     Description : x.Description,
                 };
-            }),
+            }): [],
             Rules         : node.Rules,
             DefaultAction : node.DefaultAction ? {
                 id          : node.DefaultAction.id,

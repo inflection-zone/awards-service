@@ -55,6 +55,13 @@ export class NodeService extends BaseService {
             var node = await this._nodeRepository.findOne({
                 where : {
                     id : id
+                },
+                relations: {
+                    DefaultAction: true,
+                    ParentNode   : true,
+                    Schema       : true,
+                    Rules        : true,
+                    Children     : true,
                 }
             });
             return NodeMapper.toResponseDto(node);

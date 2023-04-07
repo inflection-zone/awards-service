@@ -36,14 +36,14 @@ export class NodeValidator extends BaseValidator {
                 ParentNodeId: request.body.ParentNodeId,
                 SchemaId    : request.body.SchemaId,
                 DefaultAction      : {
-                    Name       : request.body.Action.Name,
-                    Description: request.body.Action.Description ?? null,
-                    ActionType : request.body.Action.ActionType,
+                    Name       : request.body.DefaultAction.Name,
+                    Description: request.body.DefaultAction.Description ?? null,
+                    ActionType : request.body.DefaultAction.ActionType,
                     Params     : {
-                        Message   : request.body.Action.Params.Message,
-                        Action    : request.body.Action.Params.Action ?? request.body.Action.ActionType,
-                        NextNodeId: request.body.Action.Params.NextNodeId ?? null,
-                        Extra     : request.body.Action.Params.Extra ?? null,
+                        Message   : request.body.DefaultAction.Params.Message,
+                        Action    : request.body.DefaultAction.Params.Action ?? request.body.Action.ActionType,
+                        NextNodeId: request.body.DefaultAction.Params.NextNodeId ?? null,
+                        Extra     : request.body.DefaultAction.Params.Extra ?? null,
                     }
                 },
             };
