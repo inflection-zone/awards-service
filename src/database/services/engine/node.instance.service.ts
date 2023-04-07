@@ -50,7 +50,22 @@ export class NodeInstanceService extends BaseService {
             var nodeInstance = await this._nodeInstanceRepository.findOne({
                 where : {
                     id : id
-                }
+                },
+                relations : {
+                    SchemaInstance       : {
+                        Schema : true,
+                        Context: true,
+                    },
+                    ChildrenNodeInstances: {
+                        Node: true
+                    },
+                    Node                 : {
+                        Rules: true
+                    },
+                    ParentNodeInstance   : {
+                        Node: true
+                    }
+                },
             });
             return NodeInstanceMapper.toResponseDto(nodeInstance);
         } catch (error) {
@@ -129,6 +144,10 @@ export class NodeInstanceService extends BaseService {
 
         var search : FindManyOptions<NodeInstance> = {
             relations : {
+                SchemaInstance       : true,
+                ChildrenNodeInstances: true,
+                Node                 : true,
+                ParentNodeInstance   : true
             },
             where : {
             },

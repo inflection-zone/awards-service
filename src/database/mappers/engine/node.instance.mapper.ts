@@ -32,7 +32,7 @@ export class NodeInstanceMapper {
                     ActionType: instance.Node.DefaultAction.ActionType,
                     Params    : instance.Node.DefaultAction.Params,
                 } : null,
-                Rules: instance.Node.Rules.map(x => {
+                Rules: instance.Node.Rules? instance.Node.Rules.map(x => {
                     return {
                         id: x.id,
                         Name: x.Name,
@@ -50,37 +50,37 @@ export class NodeInstanceMapper {
                             Fact: x.Condition.Fact,
                         }
                     }
-                }),
+                }): [],
             },
             SchemaInstance : {
                 id    : instance.SchemaInstance.id,
-                Schema: {
+                Schema: instance.SchemaInstance.Schema ? {
                     id         : instance.SchemaInstance.Schema.id,
-                    Name       : instance.SchemaInstance.Schema.id,
-                    Description: instance.SchemaInstance.Schema.id,
-                }
+                    Name       : instance.SchemaInstance.Schema.Name,
+                    Description: instance.SchemaInstance.Schema.Description,
+                } : null
             },
-            Context : {
+            Context : instance.SchemaInstance.Context ? {
                 id : instance.SchemaInstance.Context.id,
                 ReferenceId: instance.SchemaInstance.Context.ReferenceId,
                 Type : instance.SchemaInstance.Context.Type,
-            },
-            ParentNodeInstance : {
+            } : null,
+            ParentNodeInstance : instance.ParentNodeInstance ? {
                 id         : instance.ParentNodeInstance.id,
-                Node : {
+                Node : instance.ParentNodeInstance.Node ? {
                     id: instance.ParentNodeInstance.Node.id,
                     Name: instance.ParentNodeInstance.Node.Name,
-                }
-            },
-            ChildrenNodeInstances : instance.ChildrenNodeInstances.map(x => {
+                } : null
+            } : null,
+            ChildrenNodeInstances : instance.ChildrenNodeInstances ? instance.ChildrenNodeInstances.map(x => {
                 return {
-                    id         : x.id,
-                    Node : {
+                    id : x.id,
+                    Node : x.Node ? {
                         id: x.Node.id,
                         Name: x.Node.Name,
-                    }
+                    } : null
                 };
-            }),
+            }) : [],
             CreatedAt: instance.CreatedAt,
             UpdatedAt: instance.UpdatedAt,
         };
