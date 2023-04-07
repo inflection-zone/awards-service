@@ -86,11 +86,22 @@ export class SchemaInstanceService extends BaseService {
                     id : id
                 },
                 relations: {
-                    Schema             : true,
-                    Context            : true,
-                    CurrentNodeInstance: true,
-                    RootNodeInstance   : true,
-                    NodeInstances      : true,
+                    Schema             : {
+                        Client: true,
+                        Nodes: true,
+                    },
+                    Context            : {
+                        Participant: true,
+                    },
+                    CurrentNodeInstance: {
+                        Node: true,
+                    },
+                    RootNodeInstance   : {
+                        Node: true,
+                    },
+                    NodeInstances      : {
+                        Node: true,
+                    },
                 }
             });
             return SchemaInstanceMapper.toResponseDto(schemaInstance);
@@ -109,11 +120,22 @@ export class SchemaInstanceService extends BaseService {
                     }
                 },
                 relations: {
-                    Schema             : true,
-                    Context            : true,
-                    CurrentNodeInstance: true,
-                    RootNodeInstance   : true,
-                    NodeInstances      : true,
+                    Schema             : {
+                        Client: true,
+                        Nodes: true,
+                    },
+                    Context            : {
+                        Participant: true,
+                    },
+                    CurrentNodeInstance: {
+                        Node: true,
+                    },
+                    RootNodeInstance   : {
+                        Node: true,
+                    },
+                    NodeInstances      : {
+                        Node: true,
+                    },
                 }
             });
             return instances.map(x => SchemaInstanceMapper.toResponseDto(x));
@@ -194,11 +216,22 @@ export class SchemaInstanceService extends BaseService {
 
         var search : FindManyOptions<SchemaInstance> = {
             relations: {
-                Context            : true,
-                CurrentNodeInstance: true,
-                RootNodeInstance   : true,
-                Schema             : true,
-                NodeInstances      : true,
+                Schema             : {
+                    Client: true,
+                    Nodes: true,
+                },
+                Context            : {
+                    Participant: true,
+                },
+                CurrentNodeInstance: {
+                    Node: true,
+                },
+                RootNodeInstance   : {
+                    Node: true,
+                },
+                NodeInstances      : {
+                    Node: true,
+                },
             },
             where : {
             },
