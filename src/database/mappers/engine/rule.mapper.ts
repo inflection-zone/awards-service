@@ -26,15 +26,15 @@ export class RuleMapper {
                 Operator    : rule.Condition.Operator,
             },
             Action : rule.Action ? {
-                id          : rule.Action.id,
-                Name        : rule.Action.Name,
-                Description : rule.Action.Description,
-                ActionType  : rule.Action.ActionType,
-                Params : {
-                    Message: rule.Action.Params.Message,
-                    Action : rule.Action.Params.Action,
+                id           : rule.Action.id,
+                Name         : rule.Action.Name,
+                Description  : rule.Action.Description,
+                ActionType   : rule.Action.ActionType,
+                ActionSubject: rule.Action.ActionSubject,
+                Params       : {
+                    Message   : rule.Action.Params.Message,
                     NextNodeId: rule.Action.Params.NextNodeId,
-                    Extra: rule.Action.Params.Extra,
+                    Extra     : rule.Action.Params.Extra,
                 }
             } : null,
             CreatedAt : rule.CreatedAt,

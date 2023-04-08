@@ -44,22 +44,33 @@ export class SchemaEngine {
         context: string) {
 
         const rules = currentNode.Rules;
-        var facts: any = SchemaEngine.extractFactsForNode(facts, currentNode);
-        var successEvent: any = undefined;
-
-        for (var r of rules) {
-            const engine = new Engine();
-            var rule = RuleConverter.convertRule(r);
-            engine.addRule(rule);
-            engine.on('success', async (event, almanac) => {
-                successEvent = event;
-                logger.info(`%cRule Execution Result: '${r.Name}' has passed for context '${context}'.`);
-            });
-            engine.on('failure', async (event, almanac)=> {
-                logger.error(`%cRule Execution Result: '${r.Name}' has failed for context '${context}'.`);
-            });
-            const results = await engine.run(facts);
+        if (rules.length > 0) {
+            var facts: any = SchemaEngine.extractFactsForNode(facts, currentNode);
+            var successEvent: any = undefined;
+    
+            for (var r of rules) {
+                const engine = new Engine();
+                var rule = RuleConverter.convertRule(r);
+                engine.addRule(rule);
+                engine.on('success', async (event, almanac) => {
+                    successEvent = event;
+                    logger.info(`%cRule Execution Result: '${r.Name}' has passed for context '${context}'.`);
+                });
+                engine.on('failure', async (event, almanac)=> {
+                    logger.error(`%cRule Execution Result: '${r.Name}' has failed for context '${context}'.`);
+                });
+                const results = await engine.run(facts);
+            }
         }
+        else if (currentNode.Action) {
+            // Execute this node's default action and then move onto the next node
+            const defaultAction = currentNode.Action;
+            const actionType = defaultAction.ActionType;
+            if (actionType === EventActionType.ProcessData) {
+                //
+            }
+        }
+
 
         if (successEvent) {
 

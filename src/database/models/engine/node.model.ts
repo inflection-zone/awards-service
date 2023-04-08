@@ -46,7 +46,7 @@ export class Node {
 
     @OneToOne(() => NodeDefaultAction, (action) => action.ParentNode)
     @JoinColumn()
-    DefaultAction: NodeDefaultAction;
+    Action: NodeDefaultAction;
 
     @CreateDateColumn()
     CreatedAt : Date;

@@ -24,37 +24,38 @@ export interface NodeInstanceResponseDto {
     ExecutionStatus : ExecutionStatus;
     StatusUpdateTimestamp : Date;
     ApplicableRule: {
-        id: uuid;
-        Name : string;
+        id         : uuid;
+        Name       : string;
         Description: string;
     };
-    AvailableFacts: any[];
+    AvailableFacts       : any[];
     ExecutedDefaultAction: boolean;
-    ExecutionResult : any;
-    Node : {
+    ExecutionResult      : any;
+    Node                 : {
         id: uuid;
         Name: string;
-        DefaultAction: {
-            id: uuid;
-            Name: string;
-            ActionType: EventActionType;
-            Params: any;
+        Action: {
+            id           : uuid;
+            Name         : string;
+            ActionType   : EventActionType;
+            ActionSubject: any;
+            Params       : any;
         } | null,
         Rules: {
-            id: uuid,
-            Name: string;
+            id    : uuid,
+            Name  : string;
             Action: {
-                id: uuid;
-                Name: string;
-                ActionType : EventActionType;
-                Params: any;
+                id        : uuid;
+                Name      : string;
+                ActionType: EventActionType;
+                Params    : any;
             },
             Condition: {
-                id: uuid;
-                Name: string;
-                Operator : OperatorType,
+                id      : uuid;
+                Name    : string;
+                Operator: OperatorType,
                 DataType: OperandDataType,
-                Fact : string;
+                Fact    : string;
             }
         }[],
     };

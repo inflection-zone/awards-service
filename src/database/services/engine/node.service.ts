@@ -36,7 +36,7 @@ export class NodeService extends BaseService {
         : Promise<NodeResponseDto> => {
 
         const schema = await this.getSchema(createModel.SchemaId);
-        const defaultAction = await this.createAction(createModel.DefaultAction);
+        const action = await this.createAction(createModel.Action);
         const parentNode = await this.getNode(createModel.ParentNodeId);
 
         const node = this._nodeRepository.create({
@@ -44,7 +44,7 @@ export class NodeService extends BaseService {
             ParentNode : parentNode,
             Name       : createModel.Name,
             Description: createModel.Description,
-            DefaultAction   : defaultAction,
+            Action     : action,
         });
         var record = await this._nodeRepository.save(node);
         return NodeMapper.toResponseDto(record);
@@ -57,7 +57,7 @@ export class NodeService extends BaseService {
                     id : id
                 },
                 relations: {
-                    DefaultAction: true,
+                    Action: true,
                     ParentNode   : true,
                     Schema       : true,
                     Rules        : true,
@@ -118,9 +118,9 @@ export class NodeService extends BaseService {
             if (model.Description != null) {
                 node.Description = model.Description;
             }
-            if (model.DefaultAction != null) {
-                const defaultAction = await this.updateAction(node.DefaultAction.id, model.DefaultAction);
-                node.DefaultAction = defaultAction;
+            if (model.Action != null) {
+                const defaultAction = await this.updateAction(node.Action.id, model.Action);
+                node.Action = defaultAction;
             }
             var record = await this._nodeRepository.save(node);
             return NodeMapper.toResponseDto(record);
@@ -178,7 +178,7 @@ export class NodeService extends BaseService {
                     Name        : true,
                     Description : true,
                 },
-                DefaultAction   : {
+                Action   : {
                     id          : true,
                     Name        : true,
                     Description : true,   
@@ -263,9 +263,6 @@ export class NodeService extends BaseService {
         }
         if(actionModel && actionModel.Params && actionModel.Params.Message) {
             action.Params.Message = actionModel.Params.Message;
-        }
-        if(actionModel && actionModel.Params && actionModel.Params.Action) {
-            action.Params.Action = actionModel.Params.Action;
         }
         if(actionModel && actionModel.Params && actionModel.Params.NextNodeId) {
             action.Params.NextNodeId = actionModel.Params.NextNodeId;

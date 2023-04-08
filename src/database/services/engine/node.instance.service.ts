@@ -157,14 +157,14 @@ export class NodeInstanceService extends BaseService {
                     id         : true,
                     Name       : true,
                     Description: true,
-                    DefaultAction: {
-                        id: true,
-                        Name: true,
-                        ActionType: true,
-                        Params: {
-                            Action: true,
-                            Extra: true,
-                            Message: true,
+                    Action: {
+                        id           : true,
+                        Name         : true,
+                        ActionType   : true,
+                        ActionSubject: true,
+                        Params       : {
+                            Extra     : true,
+                            Message   : true,
                             NextNodeId: true,
                         }
                     },
@@ -172,13 +172,13 @@ export class NodeInstanceService extends BaseService {
                         id: true,
                         Name: true,
                         Action: {
-                            id: true,
-                            Name: true,
-                            ActionType: true,
-                            Params: {
-                                Action: true,
-                                Extra: true,
-                                Message: true,
+                            id           : true,
+                            Name         : true,
+                            ActionType   : true,
+                            ActionSubject: true,
+                            Params       : {
+                                Extra     : true,
+                                Message   : true,
                                 NextNodeId: true,
                             }
                         },

@@ -8,7 +8,7 @@ import { SchemaInstanceService } from '../../database/services/engine/schema.ins
 import { SchemaService } from '../../database/services/engine/schema.service';
 import { ConditionService } from '../../database/services/engine/condition.service';
 import { OperatorType } from '../../domain.types/engine/engine.enums';
-import { CSchemaInstance, uuid, CNodeInstance, CRule, CCondition } from './execution.types';
+import { CSchemaInstance, uuid, CNodeInstance, CRule, CCondition, CAction } from './execution.types';
 import { logger } from '../../logger/logger';
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +89,17 @@ export class ExecutionTypesGenerator {
             instance.Rules.push(rule);
         }
 
+        if (dto.Node.Action) {
+            const action                    = dto.Node.Action;
+            instance.Action               = new CAction();
+            instance.Action.id            = action.id;
+            instance.Action.ActionType    = action.ActionType;
+            instance.Action.ActionSubject = action.ActionSubject;
+            instance.Action.Name          = action.Name;
+            instance.Action.Params        = action.Params;
+            instance.Action.ParentNodeId  = dto.Node.id;
+        }
+
         return instance;
     };
 
@@ -101,11 +112,11 @@ export class ExecutionTypesGenerator {
         instance.Name = rule.Name;
         instance.Action = {
             ActionType  : rule.Action.ActionType,
+            ActionSubject  : rule.Action.ActionSubject,
             Name        : rule.Action.Name,
             Description : rule.Description,
             Params      : {
                 Message    : rule.Action.Params.Message,
-                Action     : rule.Action.Params.Action,
                 NextNodeId : rule.Action.Params.NextNodeId,
                 Extra      : rule.Action.Params.Extra,
             }

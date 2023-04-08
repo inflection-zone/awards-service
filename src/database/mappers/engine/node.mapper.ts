@@ -33,16 +33,16 @@ export class NodeMapper {
                 };
             }): [],
             Rules         : node.Rules,
-            DefaultAction : node.DefaultAction ? {
-                id          : node.DefaultAction.id,
-                Name        : node.DefaultAction.Name,
-                Description : node.DefaultAction.Description,
-                ActionType  : node.DefaultAction.ActionType,
-                Params      : node.DefaultAction.Params ? {
-                    Action     : node.DefaultAction.Params.Action,
-                    Message    : node.DefaultAction.Params.Message,
-                    NextNodeId : node.DefaultAction.Params.NextNodeId,
-                    Extra      : node.DefaultAction.Params.Extra,
+            Action : node.Action ? {
+                id           : node.Action.id,
+                Name         : node.Action.Name,
+                Description  : node.Action.Description,
+                ActionType   : node.Action.ActionType,
+                ActionSubject: node.Action.ActionSubject,
+                Params       : node.Action.Params ? {
+                    Message   : node.Action.Params.Message,
+                    NextNodeId: node.Action.Params.NextNodeId,
+                    Extra     : node.Action.Params.Extra,
                 } : null,
             } : null,
             CreatedAt : node.CreatedAt,
