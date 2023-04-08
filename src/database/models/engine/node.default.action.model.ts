@@ -23,7 +23,10 @@ export class NodeDefaultAction {
     @Column({ type: 'enum', enum: EventActionType, nullable: false })
     ActionType : EventActionType;
 
-    @OneToOne(() => Node, (node) => node.DefaultAction, { nullable: true })
+    @Column({ type: 'simple-json', nullable: true })
+    ActionSubject : string;
+
+    @OneToOne(() => Node, (node) => node.Action, { nullable: true })
     ParentNode: Node;
 
     @Column({ type: 'varchar', length: 256, nullable: false })

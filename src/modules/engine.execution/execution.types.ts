@@ -51,6 +51,16 @@ export class CCondition {
 
 }
 
+export class CAction {
+    id           : uuid;
+    ActionType   : EventActionType;
+    ActionSubject: any;
+    ParentNodeId : uuid | undefined;
+    Name         : string | undefined;
+    Description  : string | undefined;
+    Params       : EventActionParams;
+}
+
 export class CNode {
 
     id          : uuid;
@@ -64,6 +74,8 @@ export class CNode {
     Description : string | undefined;
 
     Rules       : CRule[] = [];
+
+    Action : CAction = undefined;
 
     constructor(
         schemaId: uuid,
@@ -79,16 +91,18 @@ export class CNode {
     }
 
     public extractFacts = () => {
-        var facts: string[] = [];
-        for (var r of this.Rules) {
-            var f = r.RootCondition?.getFacts();
-            if (Array.isArray(f))
-            {
-                facts.push(...f);
+        if (this.Rules.length > 0) {
+            var facts: string[] = [];
+            for (var r of this.Rules) {
+                var f = r.RootCondition?.getFacts();
+                if (Array.isArray(f)) {
+                    facts.push(...f);
+                }
             }
+            var s = new Set(facts);
+            return Array.from(s);
         }
-        var s = new Set(facts);
-        return Array.from(s);
+        return [];
     };
 
 }
@@ -108,10 +122,11 @@ export class CRule {
     AllConditions: CCondition[];
 
     Action      : {
-        ActionType  : EventActionType;
-        Name        : string;
-        Description?: string;
-        Params      : EventActionParams;
+        ActionType    : EventActionType;
+        ActionSubject?: any;
+        Name          : string;
+        Description  ?: string;
+        Params        : EventActionParams;
     };
 
 }
@@ -146,17 +161,21 @@ export class CNodeInstance {
 
     Rules               : CRule[] = [];
 
+    Action              : CAction = undefined;
+
     public extractFacts = () => {
-        var facts: string[] = [];
-        for (var r of this.Rules) {
-            var f = r.RootCondition?.getFacts();
-            if (Array.isArray(f))
-            {
-                facts.push(...f);
+        if (this.Rules.length > 0) {
+            var facts: string[] = [];
+            for (var r of this.Rules) {
+                var f = r.RootCondition?.getFacts();
+                if (Array.isArray(f)) {
+                    facts.push(...f);
+                }
             }
+            var s = new Set(facts);
+            return Array.from(s);
         }
-        var s = new Set(facts);
-        return Array.from(s);
+        return [];
     };
 
 }

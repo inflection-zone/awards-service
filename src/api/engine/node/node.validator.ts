@@ -17,13 +17,13 @@ export class NodeValidator extends BaseValidator {
                 Description : joi.string().max(256).optional(),
                 ParentNodeId    : joi.string().uuid().required(),
                 SchemaId    : joi.string().uuid().required(),
-                DefaultAction   : {
-                    ActionType : joi.string().valid(...Object.values(EventActionType)).required(),
-                    Name       : joi.string().max(32).required(),
-                    Description: joi.string().max(256).optional(),
-                    Params     : {
+                Action   : {
+                    ActionType   : joi.string().valid(...Object.values(EventActionType)).required(),
+                    ActionSubject: joi.any().optional(),
+                    Name         : joi.string().max(32).required(),
+                    Description  : joi.string().max(256).optional(),
+                    Params       : {
                         Message   : joi.string().max(256).required(),
-                        Action    : joi.string().valid(...Object.values(EventActionType)).optional(),
                         NextNodeId: joi.string().uuid().optional(),
                         Extra     : joi.any().optional()
                     }
@@ -35,15 +35,15 @@ export class NodeValidator extends BaseValidator {
                 Description : request.body.Description ?? null,
                 ParentNodeId: request.body.ParentNodeId,
                 SchemaId    : request.body.SchemaId,
-                DefaultAction      : {
-                    Name       : request.body.DefaultAction.Name,
-                    Description: request.body.DefaultAction.Description ?? null,
-                    ActionType : request.body.DefaultAction.ActionType,
+                Action      : {
+                    Name       : request.body.Action.Name,
+                    ActionSubject : request.body.Action.ActionSubject ?? null,
+                    Description: request.body.Action.Description ?? null,
+                    ActionType : request.body.Action.ActionType,
                     Params     : {
-                        Message   : request.body.DefaultAction.Params.Message,
-                        Action    : request.body.DefaultAction.Params.Action ?? request.body.Action.ActionType,
-                        NextNodeId: request.body.DefaultAction.Params.NextNodeId ?? null,
-                        Extra     : request.body.DefaultAction.Params.Extra ?? null,
+                        Message   : request.body.Action.Params.Message,
+                        NextNodeId: request.body.Action.Params.NextNodeId ?? null,
+                        Extra     : request.body.Action.Params.Extra ?? null,
                     }
                 },
             };
@@ -59,13 +59,13 @@ export class NodeValidator extends BaseValidator {
                 Description  : joi.string().max(256).optional(),
                 ParentNodeId : joi.string().uuid().optional(),
                 SchemaId     : joi.string().uuid().optional(),
-                DefaultAction: {
+                Action: {
                     ActionType : joi.string().valid(...Object.values(EventActionType)).optional(),
+                    ActionSubject: joi.any().optional(),
                     Name       : joi.string().max(32).optional(),
                     Description: joi.string().max(256).optional(),
                     Params     : {
                         Message   : joi.string().max(256).optional(),
-                        Action    : joi.string().valid(...Object.values(EventActionType)).optional(),
                         NextNodeId: joi.string().uuid().optional(),
                         Extra     : joi.any().optional()
                     }
@@ -77,16 +77,16 @@ export class NodeValidator extends BaseValidator {
                 Description : request.body.Description ?? null,
                 ParentNodeId: request.body.ParentNodeId ?? null,
                 SchemaId    : request.body.SchemaId ?? null,
-                DefaultAction      : request.body.Action ? {
+                Action      : request.body.Action ? {
                     Name       : request.body.Action.Name ?? null,
                     Description: request.body.Action.Description ?? null,
                     ActionType : request.body.Action.ActionType ?? null,
+                    ActionSubject : request.body.Action.ActionSubject ?? null,
                     Params     : request.body.Action?.Params? {
-                    Message   : request.body.Action.Params.Message ?? null,
-                    Action    : request.body.Action.Params.Action ?? null,
-                    NextNodeId: request.body.Action.Params.NextNodeId ?? null,
-                    Extra     : request.body.Action.Params.Extra ?? null,
-                    }         : null,
+                        Message   : request.body.Action.Params.Message ?? null,
+                        NextNodeId: request.body.Action.Params.NextNodeId ?? null,
+                        Extra     : request.body.Action.Params.Extra ?? null,
+                    } : null,
                 }: null,
             };
         } catch (error) {

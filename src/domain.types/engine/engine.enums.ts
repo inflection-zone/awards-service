@@ -129,14 +129,15 @@ export const ConditionOperandDataTypeList: OperandDataType[] = [
 ];
 
 export enum EventActionType {
-    ExecuteNext = "ExecuteNext",
-    WaitForInputEvents = "WaitForInputEvents",
-    Exit = "Exit",
-    AwardBadge = "AwardBadge",
-    AwardPoints = "AwardPoints",
-    CalculateContinuityBadges = "CalculateContinuityBadges",
-    ExtractExistingBadges = "ExtractExistingBadges",
-    Custom = "Custom",
+    ExecuteNext        = "Execute-Next",
+    WaitForInputEvents = "Wait-For-Input-Events",
+    Exit               = "Exit",
+    AwardBadge         = "Award-Badge",
+    AwardPoints        = "Award-Points",
+    ProcessData        = "Process-Data",
+    ExtractData        = "Extract-Data",
+    CompareData        = "Compare-Data",
+    Custom             = "Custom",
 }
 
 export const EventActionTypeList: EventActionType[] = [
@@ -145,8 +146,9 @@ export const EventActionTypeList: EventActionType[] = [
     EventActionType.Exit,
     EventActionType.AwardBadge,
     EventActionType.AwardPoints,
-    EventActionType.CalculateContinuityBadges,
-    EventActionType.ExtractExistingBadges,
+    EventActionType.ProcessData,
+    EventActionType.ExtractData,
+    EventActionType.CompareData,
     EventActionType.Custom,
 ];
 

@@ -19,11 +19,11 @@ export class RuleValidator extends BaseValidator {
                 SchemaId     : joi.string().uuid().required(),
                 Action       : {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
+                    ActionSubject: joi.any().optional(),
                     Name        : joi.string().max(32).required(),
                     Description : joi.string().max(256).optional(),
                     Params      : {
                         Message    : joi.string().max(256).required(),
-                        Action     : joi.string().valid(...Object.values(EventActionType)).optional(),
                         NextNodeId : joi.any().optional(),
                         Extra      : joi.any().optional()
                     }
@@ -37,11 +37,11 @@ export class RuleValidator extends BaseValidator {
                 SchemaId     : request.body.SchemaId,
                 Action       : {
                     Name        : request.body.Action.Name,
+                    ActionSubject : request.body.Action.ActionSubject ?? null,
                     Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType,
                     Params      : {
                         Message    : request.body.Action.Params.Message,
-                        Action     : request.body.Action.Params.Action ?? request.body.Action.ActionType,
                         NextNodeId : request.body.Action.Params.NextNodeId ?? null,
                         Extra      : request.body.Action.Params.Extra ?? null,
                     }
@@ -62,6 +62,7 @@ export class RuleValidator extends BaseValidator {
                 Action       : {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).optional(),
                     Name        : joi.string().max(32).optional(),
+                    ActionSubject: joi.any().optional(),
                     Description : joi.string().max(256).optional(),
                     Params      : {
                         Message    : joi.string().max(256).optional(),
@@ -81,12 +82,12 @@ export class RuleValidator extends BaseValidator {
                     Name        : request.body.Action.Name ?? null,
                     Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType ?? null,
+                    ActionSubject : request.body.Action.ActionSubject ?? null,
                     Params      : request.body.Action?.Params ? {
                         Message    : request.body.Action.Params.Message ?? null,
-                        Action     : request.body.Action.Params.Action ?? null,
                         NextNodeId : request.body.Action.Params.NextNodeId ?? null,
                         Extra      : request.body.Action.Params.Extra ?? null,
-                    }         : null,
+                    } : null,
                 } : null,
             };
         } catch (error) {

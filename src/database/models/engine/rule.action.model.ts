@@ -23,6 +23,9 @@ export class RuleAction {
     @Column({ type: 'enum', enum: EventActionType, nullable: false })
     ActionType : EventActionType;
 
+    @Column({ type: 'simple-json', nullable: true })
+    ActionSubject : string;
+
     @OneToOne(() => Rule, (rule) => rule.Action, { nullable: true })
     ParentRule: Rule;
 

@@ -26,11 +26,12 @@ export class NodeInstanceMapper {
             Node: {
                 id           : instance.Node.id,
                 Name         : instance.Node.Name,
-                DefaultAction: instance.Node.DefaultAction ? {
-                    id        : instance.Node.DefaultAction.id,
-                    Name      : instance.Node.DefaultAction.Name,
-                    ActionType: instance.Node.DefaultAction.ActionType,
-                    Params    : instance.Node.DefaultAction.Params,
+                Action: instance.Node.Action ? {
+                    id        : instance.Node.Action.id,
+                    Name      : instance.Node.Action.Name,
+                    ActionType: instance.Node.Action.ActionType,
+                    ActionSubject: instance.Node.Action.ActionSubject,
+                    Params    : instance.Node.Action.Params,
                 } : null,
                 Rules: instance.Node.Rules? instance.Node.Rules.map(x => {
                     return {

@@ -77,11 +77,11 @@ export class RuleService extends BaseService {
                         Description: true,
                     },
                     Action: {
-                        id        : true,
-                        Name      : true,
-                        ActionType: true,
-                        Params    : {
-                            Action    : true,
+                        id           : true,
+                        Name         : true,
+                        ActionType   : true,
+                        ActionSubject: true,
+                        Params       : {
                             Message   : true,
                             NextNodeId: true,
                             Extra     : true,
@@ -270,9 +270,6 @@ export class RuleService extends BaseService {
         }
         if(actionModel && actionModel.Params && actionModel.Params.Message) {
             action.Params.Message = actionModel.Params.Message;
-        }
-        if(actionModel && actionModel.Params && actionModel.Params.Action) {
-            action.Params.Action = actionModel.Params.Action;
         }
         if(actionModel && actionModel.Params && actionModel.Params.NextNodeId) {
             action.Params.NextNodeId = actionModel.Params.NextNodeId;

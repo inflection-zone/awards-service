@@ -16,12 +16,12 @@ export interface RuleCreateModel {
     ParentNodeId: uuid;
     SchemaId    : uuid;
     Action      : {
-        ActionType  : EventActionType;
-        Name        : string;
-        Description?: string;
-        Params      : {
+        ActionType    : EventActionType;
+        ActionSubject?: any;
+        Name          : string;
+        Description  ?: string;
+        Params        : {
             Message    : string;
-            Action    ?: EventActionType;
             NextNodeId?: uuid;
             Extra     ?: any;
         }
@@ -35,11 +35,11 @@ export interface RuleUpdateModel {
     SchemaId     ?: uuid;
     Action       ?: {
         ActionType   ?: EventActionType;
+        ActionSubject?: any;
         Name         ?: string;
         Description  ?: string;
         Params       ?: {
             Message   ?: string;
-            Action    ?: EventActionType;
             NextNodeId?: uuid;
             Extra     ?: any;
         }
@@ -51,21 +51,22 @@ export interface RuleResponseDto {
     Name       : string;
     Description: string;
     ParentNode : {
-        id: uuid;
-        Name: string;
+        id         : uuid;
+        Name       : string;
         Description: string;
     }
     Condition : {
-        id  : uuid;
-        Name: string;
+        id      : uuid;
+        Name    : string;
         Operator: OperatorType;
     };
     Action: {
-        id: uuid;
-        Name: string;
-        Description: string;
-        ActionType: EventActionType;
-        Params: EventActionParams;
+        id            : uuid;
+        Name          : string;
+        Description   : string;
+        ActionType    : EventActionType;
+        ActionSubject?: any;
+        Params       ?: EventActionParams;
     },
     CreatedAt: Date;
     UpdatedAt: Date;

@@ -14,13 +14,13 @@ export interface NodeCreateModel {
     Description? : string;
     ParentNodeId : uuid;
     SchemaId     : uuid;
-    DefaultAction: {
-        ActionType  : EventActionType;
-        Name        : string;
-        Description?: string;
-        Params      : {
+    Action: {
+        ActionType    : EventActionType;
+        ActionSubject?: any;
+        Name          : string;
+        Description  ?: string;
+        Params        : {
             Message    : string;
-            Action    ?: EventActionType;
             NextNodeId?: uuid;
             Extra     ?: any;
         }
@@ -32,13 +32,13 @@ export interface NodeUpdateModel {
     Description     ?: string;
     ParentNodeId    ?: uuid;
     SchemaId        ?: uuid;
-    DefaultAction       ?: {
+    Action       ?: {
         ActionType   ?: EventActionType;
+        ActionSubject?: any;
         Name         ?: string;
         Description  ?: string;
         Params       ?: {
             Message   ?: string;
-            Action    ?: EventActionType;
             NextNodeId?: uuid;
             Extra     ?: any;
         }
@@ -69,14 +69,14 @@ export interface NodeResponseDto {
         Name: string;
         Description: string;
     }[];
-    DefaultAction: {
-        id: uuid;
-        Name: string;
-        Description: string;
-        ActionType: EventActionType;
-        Params: {
+    Action: {
+        id           : uuid;
+        Name         : string;
+        ActionSubject: any;
+        Description  : string;
+        ActionType   : EventActionType;
+        Params       : {
             Message    : string;
-            Action     : EventActionType;
             NextNodeId : uuid;
             Extra      : any;
         }
