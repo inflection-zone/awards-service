@@ -13,6 +13,7 @@ export class NodeMapper {
         }
         const dto: NodeResponseDto = {
             id          : node.id,
+            Type        : node.Type,
             Name        : node.Name,
             Description : node.Description,
             Schema      : {

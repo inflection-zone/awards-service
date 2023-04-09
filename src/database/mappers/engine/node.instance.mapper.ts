@@ -25,6 +25,7 @@ export class NodeInstanceMapper {
             ExecutionResult      : instance.ExecutionResult ?? null,
             Node: {
                 id           : instance.Node.id,
+                Type         : instance.Node.Type,
                 Name         : instance.Node.Name,
                 Action: instance.Node.Action ? {
                     id        : instance.Node.Action.id,

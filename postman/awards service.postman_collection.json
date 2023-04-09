@@ -1963,7 +1963,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"Get Existing badges\",\r\n    \"Description\": \"Extract existing 7-day medication badges for the participant.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\" : \"Extract-Data\",\r\n        \"Name\": \"Extract-Badges\",\r\n        \"ActionSubject\": {\r\n            \"BadgeCategory\": \"Medication\",\r\n            \"BadgeTitle\": \"7-Day Medication Adherence\",\r\n            \"ContextId\": null\r\n        },\r\n        \"Params\": {\r\n            \"Action\": \"Extract-Data\",\r\n            \"Message\": \"Extracting 7-day medication adherence badges\"\r\n        }\r\n    }\r\n}"
+							"raw": "{\r\n    \"Name\": \"Get Existing badges\",\r\n    \"Description\": \"Extract existing 7-day medication badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\" : \"Extract-Data\",\r\n        \"Name\": \"Extract-Badges\",\r\n        \"ActionSubject\": {\r\n            \"BadgeCategory\": \"Medication\",\r\n            \"BadgeTitle\": \"7-Day Medication Adherence\",\r\n            \"ContextId\": null\r\n        },\r\n        \"Params\": {\r\n            \"Action\": \"Extract-Data\",\r\n            \"Message\": \"Extracting 7-day medication adherence badges\"\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/engine/nodes",
@@ -2050,7 +2050,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\" : \"Process-Data\",\r\n        \"Name\": \"Calculate Continuity\",\r\n        \"ActionSubject\": {\r\n            \"RecordType\": \"Medication\",\r\n            \"ValueName\": \"Taken\",\r\n            \"OperandDataType\": \"Boolean\",\r\n            \"OperandValue\": true,\r\n            \"Operator\": \"Equal\",\r\n            \"ContinuityCount\": 7\r\n        },\r\n        \"Params\": {\r\n            \"Action\": \"Process-Data\",\r\n            \"Message\": \"Processing records for 7-day medication adherence continuity\"\r\n        }\r\n    }\r\n}"
+							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\" : \"Process-Data\",\r\n        \"Name\": \"Calculate Continuity\",\r\n        \"ActionSubject\": {\r\n            \"RecordType\": \"Medication\",\r\n            \"ValueName\": \"Taken\",\r\n            \"OperandDataType\": \"Boolean\",\r\n            \"OperandValue\": true,\r\n            \"Operator\": \"Equal\",\r\n            \"ContinuityCount\": 7\r\n        },\r\n        \"Params\": {\r\n            \"Action\": \"Process-Data\",\r\n            \"Message\": \"Processing records for 7-day medication adherence continuity\"\r\n        }\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/engine/nodes/{{SCHEMA_ROOT_NODE_ID}}",

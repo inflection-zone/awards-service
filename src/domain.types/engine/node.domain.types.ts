@@ -5,11 +5,12 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { EventActionType } from "./engine.enums";
+import { EventActionType, NodeType } from "./engine.enums";
 
 //////////////////////////////////////////////////////////////
 
 export interface NodeCreateModel {
+    Type         : NodeType;
     Name         : string;
     Description? : string;
     ParentNodeId : uuid;
@@ -28,6 +29,7 @@ export interface NodeCreateModel {
 }
 
 export interface NodeUpdateModel {
+    Type            ?: NodeType;
     Name            ?: string;
     Description     ?: string;
     ParentNodeId    ?: uuid;
@@ -47,6 +49,7 @@ export interface NodeUpdateModel {
 
 export interface NodeResponseDto {
     id         : uuid;
+    Type       : NodeType;
     Name       : string;
     Description: string;
     ParentNode : {
@@ -86,6 +89,7 @@ export interface NodeResponseDto {
 }
 
 export interface NodeSearchFilters extends BaseSearchFilters {
+    Type         ?: NodeType;
     Name         ?: string;
     ParentNodeId ?: uuid;
     SchemaId     ?: uuid;

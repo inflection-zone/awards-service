@@ -71,6 +71,7 @@ export class ExecutionTypesGenerator {
         const dto = await this._nodeInstanceService.getById(nodeInstanceId);
 
         instance.id = dto.id;
+        instance.Type = dto.Node.Type;
         instance.Name = dto.Node.Name;
         instance.NodeId = dto.Node.id;
         instance.SchemaId = dto.SchemaInstance.Schema.id;

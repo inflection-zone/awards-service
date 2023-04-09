@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { ContextType, EventActionType, ExecutionStatus, OperandDataType, OperatorType } from "./engine.enums";
+import { ContextType, EventActionType, ExecutionStatus, NodeType, OperandDataType, OperatorType } from "./engine.enums";
 
 //////////////////////////////////////////////////////////////
 
@@ -32,8 +32,9 @@ export interface NodeInstanceResponseDto {
     ExecutedDefaultAction: boolean;
     ExecutionResult      : any;
     Node                 : {
-        id: uuid;
-        Name: string;
+        id    : uuid;
+        Type  : NodeType;
+        Name  : string;
         Action: {
             id           : uuid;
             Name         : string;
