@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { Source } from "../../../database/database.connector";
 import { MedicationFact } from "../models/medication.fact.model";
-import { uuid } from "../../engine.execution/execution.types";
+import { uuid } from "../../../domain.types/miscellaneous/system.types";
 import { IExtractor } from "../extractor.interface";
 
 export class MedicationFactsExtractor implements IExtractor {

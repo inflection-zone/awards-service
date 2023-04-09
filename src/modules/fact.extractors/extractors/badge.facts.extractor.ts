@@ -1,4 +1,4 @@
-import { uuid } from "../../engine.execution/execution.types";
+import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { IExtractor } from "../extractor.interface";
 
 export class BadgeFactsExtractor implements IExtractor {
