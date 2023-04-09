@@ -1,4 +1,4 @@
-import { uuid } from "../engine.execution/execution.types";
+import { uuid } from "../../domain.types/miscellaneous/system.types";
 
 export interface IExtractor {
 

@@ -1,5 +1,5 @@
-export type uuid    = string | null;
 import { EventActionParams } from '../../domain.types/engine/event.action.params';
+import { uuid } from '../../domain.types/miscellaneous/system.types';
 import {
     CompositionOperator,
     EventActionType,

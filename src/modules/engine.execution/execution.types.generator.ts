@@ -8,8 +8,9 @@ import { SchemaInstanceService } from '../../database/services/engine/schema.ins
 import { SchemaService } from '../../database/services/engine/schema.service';
 import { ConditionService } from '../../database/services/engine/condition.service';
 import { OperatorType } from '../../domain.types/engine/engine.enums';
-import { CSchemaInstance, uuid, CNodeInstance, CRule, CCondition, CAction } from './execution.types';
+import { CSchemaInstance, CNodeInstance, CRule, CCondition, CAction } from './execution.types';
 import { logger } from '../../logger/logger';
+import { uuid } from '../../domain.types/miscellaneous/system.types';
 
 /////////////////////////////////////////////////////////////////////////////////
 

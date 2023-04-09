@@ -1,4 +1,4 @@
-import { uuid } from "./execution.types";
+import { uuid } from "../../domain.types/miscellaneous/system.types";
 import { IExtractor } from "../fact.extractors/extractor.interface";
 
 ///////////////////////////////////////////////////////////////////////////
