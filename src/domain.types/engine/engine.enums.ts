@@ -12,14 +12,27 @@ export const ContextTypeList: ContextType[] = [
 export enum SchemaType {
     //These kind of schemas are for cases where they get executed only once for a given context.
     //For example, awarding some promotion coupons on a given occasion.
-    ExecuteOnce = 'ExecuteOnce',
+    ExecuteOnce = 'Execute-Once',
 
     //On every incoming event, reuse the same instance. This is suitable for usecases,
     //where on every event we want to check some light weight logic execution.
-    ReuseExistingInstance = 'ReuseExistingInstance',
+    ReuseExistingInstance = 'Reuse-Existing-Instance',
 
     //Recreate new instance after the execution of the previous one.
-    RecreateNewAfterExecution = 'RecreateNewAfterExecution'
+    RecreateNewAfterExecution = 'Recreate-New-After-Execution'
+}
+
+export enum NodeType {
+    //This node type has set of rules to be executed.
+    //Based on rule execution results, an action is taken at the end.
+    RuleNode = 'Rule-Node',
+
+    //This node type contains some execution steps and once processed, 
+    //the control moves to next node defined or schema exits.
+    ExecutionNode = 'Execution-Node',
+
+    //This node type is meant to send messages to the listening parties.
+    MessageNode = 'Message-Node'
 }
 
 export const SchemaTypeList: SchemaType[] = [

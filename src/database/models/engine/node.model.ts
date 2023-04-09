@@ -14,6 +14,7 @@ import {
 import { NodeDefaultAction } from "./node.default.action.model";
 import { Rule } from "./rule.model";
 import { Schema } from "./schema.model";
+import { NodeType } from "../../../domain.types/engine/engine.enums";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +23,9 @@ export class Node {
 
     @PrimaryGeneratedColumn('uuid')
     id : string;
+
+    @Column({ type: 'enum', enum: NodeType, nullable: false, default: NodeType.ExecutionNode })
+    Type : NodeType;
 
     @Column({ type: 'varchar', length: 256, nullable: false })
     Name : string;

@@ -3,7 +3,7 @@ import express from 'express';
 import { NodeCreateModel, NodeUpdateModel, NodeSearchFilters } from '../../../domain.types/engine/node.domain.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
-import { EventActionType } from '../../../domain.types/engine/engine.enums';
+import { EventActionType, NodeType } from '../../../domain.types/engine/engine.enums';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,6 +13,7 @@ export class NodeValidator extends BaseValidator {
         : Promise<NodeCreateModel> => {
         try {
             const node = joi.object({
+                Type        : joi.string().valid(...Object.values(NodeType)).required(),
                 Name        : joi.string().max(32).required(),
                 Description : joi.string().max(256).optional(),
                 ParentNodeId    : joi.string().uuid().required(),
@@ -31,6 +32,7 @@ export class NodeValidator extends BaseValidator {
             });
             await node.validateAsync(request.body);
             return {
+                Type        : request.body.Type,
                 Name        : request.body.Name,
                 Description : request.body.Description ?? null,
                 ParentNodeId: request.body.ParentNodeId,
@@ -55,6 +57,7 @@ export class NodeValidator extends BaseValidator {
     public validateUpdateRequest = async (request: express.Request): Promise<NodeUpdateModel|undefined> => {
         try {
             const node = joi.object({
+                Type         : joi.string().valid(...Object.values(NodeType)).optional(),
                 Name         : joi.string().max(32).optional(),
                 Description  : joi.string().max(256).optional(),
                 ParentNodeId : joi.string().uuid().optional(),
@@ -73,6 +76,7 @@ export class NodeValidator extends BaseValidator {
             });
             await node.validateAsync(request.body);
             return {
+                Type        : request.body.Type ?? null,
                 Name        : request.body.Name ?? null,
                 Description : request.body.Description ?? null,
                 ParentNodeId: request.body.ParentNodeId ?? null,
@@ -98,6 +102,7 @@ export class NodeValidator extends BaseValidator {
         : Promise<NodeSearchFilters> => {
         try {
             const node = joi.object({
+                type        : joi.string().valid(...Object.values(NodeType)).optional(),
                 parentNodeId: joi.string().uuid().optional(),
                 schemaId    : joi.string().uuid().optional(),
                 name        : joi.string().max(64).optional()
@@ -114,6 +119,10 @@ export class NodeValidator extends BaseValidator {
 
         var filters = {};
 
+        var type = query.type ? query.type : null;
+        if (type != null) {
+            filters['Type'] = type;
+        }
         var name = query.name ? query.name : null;
         if (name != null) {
             filters['Name'] = name;

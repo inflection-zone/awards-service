@@ -6,6 +6,7 @@ import {
     ExecutionStatus,
     LogicalOperator,
     MathematicalOperator,
+    NodeType,
     OperandDataType,
     OperatorType
 } from '../../domain.types/engine/engine.enums';
@@ -70,6 +71,8 @@ export class CNode {
 
     id          : uuid;
 
+    Type        : NodeType;
+
     SchemaId    : uuid;
 
     ParentNodeId: uuid | undefined;
@@ -83,11 +86,14 @@ export class CNode {
     Action : CAction = undefined;
 
     constructor(
+        id: uuid,
         schemaId: uuid,
         parentNodeId: uuid,
+        type: NodeType,
         name:string,
         description: string) {
-        this.id = uuidv4();
+        this.id = id;
+        this.Type = type;
         this.SchemaId = schemaId;
         this.ParentNodeId = parentNodeId;
         this.Name = name;
@@ -139,6 +145,8 @@ export class CRule {
 export class CNodeInstance {
 
     id                  : uuid;
+
+    Type                : NodeType;
 
     SchemaId            : uuid;
 
