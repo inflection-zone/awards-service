@@ -13,6 +13,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 ///////////////////////////////////////////////////////////////////////////
 
+export interface AlmanacObject {
+    Name: string;
+    Data: any[];
+}
+
 export class CCondition {
 
     id               : uuid;
@@ -218,8 +223,14 @@ export class CSchemaInstance {
 
     RootNodeInstance   : CNodeInstance | undefined;
 
+    Almanac            : AlmanacObject[];
+
     public setCurrent = (instance: CNodeInstance) => {
         this.CurrentNodeInstance = instance;
     };
+
+    public fetchAlmanacData = (tag: string) => {
+        return this.Almanac.find(x => x.Name === tag);
+    }
 
 }
