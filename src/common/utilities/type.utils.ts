@@ -5,6 +5,11 @@ export class TypeUtils {
         return Object.prototype.hasOwnProperty.call(obj, prop);
     };
 
+    static isObject = (obj) => {
+        var type = typeof obj;
+        return type === 'function' || type === 'object' && !!obj;
+    };
+
     static isUrl = (str): boolean => {
         if (!str) {
             return false;
