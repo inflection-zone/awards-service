@@ -25,7 +25,23 @@ export class SchemaMapper {
             ValidFrom   : schema.ValidFrom,
             ValidTill   : schema.ValidTill,
             IsValid     : schema.IsValid,
-            RootNodeId  : schema.RootNodeId,
+            RootNode    : schema.RootNode ? {
+                id         : schema.RootNode.id,
+                Description: schema.RootNode.Description,
+                Name       : schema.RootNode.Name,
+                Type       : schema.RootNode.Type,
+                Action     : schema.RootNode.Action ? {
+                    Name         : schema.RootNode.Action.Name,
+                    Description  : schema.RootNode.Action.Description,
+                    ActionType   : schema.RootNode.Action.ActionType,
+                    ActionSubject: schema.RootNode.Action.ActionSubject,
+                    Params       : schema.RootNode.Action.Params ? {
+                        Message   : schema.RootNode.Action.Params.Message,
+                        NextNodeId: schema.RootNode.Action.Params.NextNodeId,
+                        Extra     : schema.RootNode.Action.Params.Extra,
+                    } : null,
+                } : null,
+            } : null,
             EventTypes  : eventTypes? eventTypes.map(x => {
                 return {
                     id         : x.id,

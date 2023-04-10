@@ -15,6 +15,7 @@ import {
     NodeSearchFilters, 
     NodeSearchResults, 
     NodeUpdateModel } from '../../../domain.types/engine/node.domain.types';
+import { CommonUtilsService } from './common.utils.service';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -30,13 +31,15 @@ export class NodeService extends BaseService {
 
     _actionRepository: Repository<NodeDefaultAction> = Source.getRepository(NodeDefaultAction);
 
+    _commonUtils: CommonUtilsService = new CommonUtilsService();
+
     //#endregion
 
     public create = async (createModel: NodeCreateModel)
         : Promise<NodeResponseDto> => {
 
-        const schema = await this.getSchema(createModel.SchemaId);
-        const action = await this.createAction(createModel.Action);
+        const schema = await this._commonUtils.getSchema(createModel.SchemaId);
+        const action = await this._commonUtils.createAction(createModel.Action);
         const parentNode = await this.getNode(createModel.ParentNodeId);
 
         const node = this._nodeRepository.create({
@@ -57,11 +60,11 @@ export class NodeService extends BaseService {
                     id : id
                 },
                 relations: {
-                    Action: true,
-                    ParentNode   : true,
-                    Schema       : true,
-                    Rules        : true,
-                    Children     : true,
+                    Action    : true,
+                    ParentNode: true,
+                    Schema    : true,
+                    Rules     : true,
+                    Children  : true,
                 }
             });
             return NodeMapper.toResponseDto(node);
@@ -105,7 +108,7 @@ export class NodeService extends BaseService {
                 ErrorHandler.throwNotFoundError('Node not found!');
             }
             if (model.SchemaId != null) {
-                const schema = await this.getSchema(model.SchemaId);
+                const schema = await this._commonUtils.getSchema(model.SchemaId);
                 node.Schema = schema;
             }
             if (model.ParentNodeId != null) {
@@ -203,18 +206,6 @@ export class NodeService extends BaseService {
 
     //#endregion
 
-    private async getSchema(schemaId: uuid) {
-        const schema = await this._schemaRepository.findOne({
-            where: {
-                id: schemaId
-            }
-        });
-        if (!schema) {
-            ErrorHandler.throwNotFoundError('Schema cannot be found');
-        }
-        return schema;
-    }
-
     private async getNode(nodeId: uuid) {
         if (!nodeId) {
             return null;
@@ -228,16 +219,6 @@ export class NodeService extends BaseService {
             ErrorHandler.throwNotFoundError('Node cannot be found');
         }
         return node;
-    }
-
-    private async createAction(actionModel: any) {
-        const action = await this._actionRepository.create({
-            ActionType: actionModel.ActionType,
-            Name: actionModel.Name,
-            Description: actionModel.Description,
-            Params: actionModel.Params
-        });
-        return action;
     }
 
     private async updateAction(actionId: uuid, actionModel: any) {

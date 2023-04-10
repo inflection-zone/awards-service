@@ -150,6 +150,7 @@ export enum EventActionType {
     ProcessData        = "Process-Data",
     ExtractData        = "Extract-Data",
     CompareData        = "Compare-Data",
+    StoreData          = "Store-Data",
     Custom             = "Custom",
 }
 
@@ -162,6 +163,7 @@ export const EventActionTypeList: EventActionType[] = [
     EventActionType.ProcessData,
     EventActionType.ExtractData,
     EventActionType.CompareData,
+    EventActionType.StoreData,
     EventActionType.Custom,
 ];
 

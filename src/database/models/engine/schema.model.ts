@@ -10,6 +10,7 @@ import {
     OneToMany,
     JoinColumn,
     ManyToMany,
+    OneToOne,
 } from 'typeorm';
 import { Client } from "../client/client.model";
 import { Node } from "../engine/node.model";
@@ -37,8 +38,8 @@ export class Schema {
     @JoinColumn()
     Client : Client;
 
-    @Column({ type: 'uuid', nullable: true })
-    RootNodeId: string;
+    @OneToOne(() => Node, (node) => node.Schema, { nullable: true })
+    RootNode: Node;
 
     @OneToMany(() => Node, (node) => node.Schema, {
         cascade  : true,

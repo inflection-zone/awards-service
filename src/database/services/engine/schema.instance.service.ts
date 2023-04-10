@@ -47,14 +47,8 @@ export class SchemaInstanceService extends BaseService {
             Context : context,
         });
         var record = await this._schemaInstanceRepository.save(schemaInstance);
-        const rootNodeId: uuid = schema.RootNodeId;
-        const rootNode = await this._nodeRepository.findOne({
-            where: {
-                id : rootNodeId
-            }
-        });
         const rootNodeInstance = await this._nodeInstanceRepository.create({
-                Node: rootNode,
+                Node: schema.RootNode,
                 SchemaInstance: schemaInstance
             }
         );
@@ -64,9 +58,11 @@ export class SchemaInstanceService extends BaseService {
         record.CurrentNodeInstance = rootNodeInstanceRecord;
         record = await this._schemaInstanceRepository.save(record);
 
+        const rootNodeId = rootNodeInstance.Node.id;
+
         if (schema.Nodes && schema.Nodes.length > 0) {
             for await (var node of schema.Nodes) {
-                if (node.id !== rootNode.id) {
+                if (node.id !== rootNodeId) {
                     var nodeInstance = await this._nodeInstanceRepository.create({
                         Node: node,
                         SchemaInstance: schemaInstance
@@ -314,7 +310,24 @@ export class SchemaInstanceService extends BaseService {
             },
             select: {
                 id         : true,
-                RootNodeId : true,
+                RootNode   : {
+                    id    : true,
+                    Name  : true,
+                    Type  : true,
+                    Rules : true,
+                    Action: {
+                        id           : true,
+                        ActionType   : true,
+                        ActionSubject: true,
+                        Name         : true,
+                        Description  : true,
+                        Params       : {
+                           Message   : true,
+                           Extra     : true,
+                           NextNodeId: true,
+                        }
+                    }
+                },
                 Name       : true,
                 Description: true,
                 IsValid    : true,

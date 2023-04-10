@@ -5,8 +5,9 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { SchemaType } from "./engine.enums";
+import { EventActionType, NodeType, SchemaType } from "./engine.enums";
 import { IncomingEventTypeResponseDto } from "./incoming.event.type.types";
+import { NodeCreateModel } from "./node.domain.types";
 
 //////////////////////////////////////////////////////////////
 
@@ -19,6 +20,7 @@ export interface SchemaCreateModel {
     ValidTill   ?: Date;
     IsValid     ?: boolean;
     EventTypeIds?: uuid[];
+    RootNode    ?: NodeCreateModel;
 }
 
 export interface SchemaUpdateModel {
@@ -40,7 +42,23 @@ export interface SchemaResponseDto {
     ValidFrom  : Date;
     ValidTill  : Date;
     IsValid    : boolean;
-    RootNodeId : uuid;
+    RootNode  ?: {
+       id         : uuid,
+       Name       : string;
+       Description: string;
+       Type       : NodeType;
+        Action ?  : {
+            ActionType   : EventActionType;
+            ActionSubject: any;
+            Name         : string;
+            Description  : string;
+            Params       : {
+                Message   : string;
+                NextNodeId: uuid;
+                Extra     : any;
+            }
+        }
+    };
     Client     : {
         id  : uuid;
         Name: string;
