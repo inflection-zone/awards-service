@@ -3,7 +3,7 @@ import express from 'express';
 import { SchemaCreateModel, SchemaUpdateModel, SchemaSearchFilters } from '../../../domain.types/engine/schema.domain.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
-import { SchemaType } from '../../../domain.types/engine/engine.enums';
+import { EventActionType, NodeType, SchemaType } from '../../../domain.types/engine/engine.enums';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,8 +20,32 @@ export class SchemaValidator extends BaseValidator {
                 ValidTill    : joi.date().iso().greater(joi.ref('ValidFrom')).optional(),
                 IsValid      : joi.boolean().optional(),
                 EventTypeIds : joi.array().items(joi.string().uuid()).optional(),
+                RootNode     : joi.object({
+                    Type        : joi.string().valid(...Object.values(NodeType)).required(),
+                    Name        : joi.string().max(32).required(),
+                    Description : joi.string().max(256).optional(),
+                    Action   : {
+                        ActionType   : joi.string().valid(...Object.values(EventActionType)).required(),
+                        ActionSubject: joi.any().optional(),
+                        Name         : joi.string().max(32).required(),
+                        Description  : joi.string().max(256).optional(),
+                        Params       : {
+                            Message   : joi.string().max(256).required(),
+                            NextNodeId: joi.string().uuid().optional(),
+                            Extra     : joi.any().optional()
+                        }
+                    }
+                }).optional()
             });
+
             await schema.validateAsync(request.body);
+
+            const node = request.body.RootNode;
+            // if (node) {
+            //     node.Type = node.NodeType;
+            //     delete node.NodeType;
+            // }
+
             return {
                 ClientId    : request.body.ClientId,
                 Name        : request.body.Name,
@@ -31,7 +55,9 @@ export class SchemaValidator extends BaseValidator {
                 ValidTill   : request.body.ValidTill ?? null,
                 IsValid     : request.body.IsValid ?? true,
                 EventTypeIds: request.body.EventTypeIds ?? [],
+                RootNode    : node ?? null,
             };
+
         } catch (error) {
             ErrorHandler.handleValidationError(error);
         }

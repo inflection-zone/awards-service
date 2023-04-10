@@ -18,6 +18,8 @@ import { Rule } from '../../models/engine/rule.model';
 import { Node } from '../../models/engine/node.model';
 import { Condition } from '../../models/engine/condition.model';
 import { SchemaEventType } from '../../models/engine/schema.event.type.model';
+import { CommonUtilsService } from './common.utils.service';
+import { NodeDefaultAction } from '../../../database/models/engine/node.default.action.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,8 @@ export class SchemaService extends BaseService {
     //#region Repositories
 
     _schemaRepository: Repository<Schema> = Source.getRepository(Schema);
+
+    _actionRepository: Repository<NodeDefaultAction> = Source.getRepository(NodeDefaultAction);
 
     _clientRepository: Repository<Client> = Source.getRepository(Client);
 
@@ -39,6 +43,8 @@ export class SchemaService extends BaseService {
 
     _schemaEventTypeRepository: Repository<SchemaEventType> = Source.getRepository(SchemaEventType);
 
+    _commonUtils: CommonUtilsService = new CommonUtilsService();
+
     //#endregion
 
     public create = async (createModel: SchemaCreateModel)
@@ -47,22 +53,36 @@ export class SchemaService extends BaseService {
         const client = await this.getClient(createModel.ClientId);
 
         const rootNodeName = 'Root Node' + createModel.Name.substring(0, 25);
-        var rootNode = await this._nodeRepository.create({
-            Name: rootNodeName,
-            ParentNode: null,
-            Description: `Root node for ${createModel.Name}`,
-        });
+        let rootNode;
+        if (createModel.RootNode) {
+            const action = await this._commonUtils.createAction(createModel.RootNode.Action);  
+            const actionRecord = await this. _actionRepository.save(action);
+            rootNode = this._nodeRepository.create({
+                ParentNode : null,
+                Name       : createModel.RootNode.Name,
+                Type       : createModel.RootNode.Type,
+                Description: createModel.RootNode.Description,
+                Action     : actionRecord,
+            });
+        }
+        else {
+            rootNode = await this._nodeRepository.create({
+                Name: rootNodeName,
+                ParentNode: null,
+                Description: `Root node for ${createModel.Name}`,
+            });
+        }
         var rootNodeRecord = await this._nodeRepository.save(rootNode);
 
         const schema = this._schemaRepository.create({
-            Client      : client,
-            Name        : createModel.Name,
-            Description : createModel.Description,
-            Type        : createModel.Type,
-            ValidFrom   : createModel.ValidFrom,
-            ValidTill   : createModel.ValidTill,
-            IsValid     : createModel.IsValid ?? true,
-            RootNodeId  : rootNodeRecord.id,
+            Client     : client,
+            Name       : createModel.Name,
+            Description: createModel.Description,
+            Type       : createModel.Type,
+            ValidFrom  : createModel.ValidFrom,
+            ValidTill  : createModel.ValidTill,
+            IsValid    : createModel.IsValid ?? true,
+            RootNode   : rootNodeRecord,
         });
         var schemaRecord = await this._schemaRepository.save(schema);
 
@@ -84,6 +104,9 @@ export class SchemaService extends BaseService {
                 relations: {
                     Client    : true,
                     Nodes     : true,
+                    RootNode  : {
+                        Action : true,
+                    },
                 }
             });
             const eventTypes = await this.getEventTypesForSchema(id);
@@ -212,7 +235,24 @@ export class SchemaService extends BaseService {
                 },
                 Name        : true,
                 Description : true,
-                RootNodeId  : true,
+                RootNode  : {
+                    id    : true,
+                    Name  : true,
+                    Type  : true,
+                    Rules : true,
+                    Action: {
+                        id           : true,
+                        ActionType   : true,
+                        ActionSubject: true,
+                        Name         : true,
+                        Description  : true,
+                        Params       : {
+                           Message   : true,
+                           Extra     : true,
+                           NextNodeId: true,
+                        }
+                    }
+                },
                 ValidFrom   : true,
                 ValidTill   : true,
                 IsValid     : true,

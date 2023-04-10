@@ -11,8 +11,9 @@ export default class BaseValidator {
 
     public validateParamAsUUID = async (request: express.Request, paramName: string): Promise<uuid> => {
         try {
-            const schema = joi.string().uuid().required();
-            schema.validateAsync(request.params[paramName]);
+            const schema = joi.string().uuid({version: 'uuidv4'}).required();
+            const param = request.params[paramName];
+            await schema.validateAsync(param);
             return request.params[paramName];
         } catch (error) {
             ErrorHandler.handleValidationError(error);
