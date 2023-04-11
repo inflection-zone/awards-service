@@ -1,0 +1,26 @@
+import { uuid } from "../../../../domain.types/miscellaneous/system.types";
+import { IDataExtractor } from "../../interfaces/data.extractor.interface";
+import { Repository } from "typeorm";
+import { FactsSource } from '../../../fact.extractors/facts.db.connector';
+import { Source } from '../../../../database/database.connector';
+import { MedicationFact } from '../../../fact.extractors/models/medication.fact.model';
+import { BadgeFact } from '../../../fact.extractors/models/bedge.facts.model';
+import { Context } from "../../../../database/models/engine/context.model";
+import { logger } from "../../../../logger/logger";
+import { ErrorHandler } from "../../../../common/handlers/error.handler";
+import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
+
+//////////////////////////////////////////////////////////////////////
+
+export class MockDataExtractor implements IDataExtractor {
+
+
+    extractData = async (contextId: uuid, subject: any): Promise<any[]> => {
+        throw new Error("Method not implemented.");
+    };
+
+    //#region Private methods
+
+    //#endregion
+
+}

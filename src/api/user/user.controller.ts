@@ -250,8 +250,8 @@ export class UserController extends BaseController {
 
     private getLoginModel = async (requestBody) => {
 
-        const countryCode = (typeof requestBody.CountryCode !== 'undefined') ? requestBody.CountryCode : '+91';
-        const phone = (typeof requestBody.Phone !== 'undefined') ? requestBody.Phone : null;
+        const countryCode = requestBody.Phone && requestBody.Phone.CountryCode ? requestBody.Phone.CountryCode : '+91';
+        const phone = requestBody.Phone && requestBody.Phone.PhoneNumber ? requestBody.Phone.PhoneNumber : null;
         const email = (typeof requestBody.Email !== 'undefined') ? requestBody.Email : null;
         const userName = (typeof requestBody.UserName !== 'undefined') ? requestBody.UserName : null;
         const password = (typeof requestBody.Password !== 'undefined') ? requestBody.Password : null;

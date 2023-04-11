@@ -9,6 +9,7 @@ export type FileStorageProvider = 'AWS-S3' | 'GCP-FileStore' | 'Custom';
 export type SMSServiceProvider = 'Twilio' | 'Mock';
 export type EmailServiceProvider = 'SendGrid' | 'Mock';
 export type InAppNotificationServiceProvider = 'Firebase' | 'Mock';
+export type ProcessorsProvider = 'Custom' | 'Mock';
 export type EHRProvider = FHIRProvider | OpenEHRProvider;
 export type AuthorizationType = 'Custom'; //TBD: Other options need to be supported
 export type AuthenticationType = 'Custom'; //TBD: Other options need to be supported
@@ -24,6 +25,10 @@ export interface DatabaseConfig {
     Type   : DatabaseType;
     ORM    : DatabaseORM;
     Flavour: DatabaseFlavour;
+}
+
+export interface Processor {
+    Provider   : ProcessorsProvider;
 }
 
 export interface EHRConfig {
@@ -65,6 +70,7 @@ export interface Configurations {
     SystemIdentifier    : string;
     BaseUrl             : string;
     Auth                : AuthConfig;
+    Processor          : Processor;
     FileStorage         : FileStorageConfig;
     TemporaryFolders    : TemporaryFoldersConfig;
     MaxUploadFileSize   : number;

@@ -7,6 +7,9 @@
     "FileStorage" : {
         "Provider": "AWS-S3"
     },
+    "Processor" : {
+        "Provider": "Custom"
+    },
     "Communication" : {
         "SMS": {
             "Provider": "Twilio"

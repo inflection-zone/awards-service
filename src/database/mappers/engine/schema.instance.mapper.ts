@@ -61,7 +61,7 @@ export class SchemaInstanceMapper {
                     Name : instance.CurrentNodeInstance.Node.Name,
                 } : null,
             } : null,
-            NodeInstances : instance.NodeInstances.map(x => {
+            NodeInstances : instance.NodeInstances ? instance.NodeInstances.map(x => {
                 return {
                     id   : x.id,
                     Node : x.Node ? {
@@ -69,7 +69,7 @@ export class SchemaInstanceMapper {
                         Name : x.Node.Name,
                     }: null
                 };
-            }),
+            }) : [],
             CreatedAt : instance.CreatedAt,
             UpdatedAt : instance.UpdatedAt,
         };

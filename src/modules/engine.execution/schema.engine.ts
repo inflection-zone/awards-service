@@ -1,6 +1,7 @@
 import { Engine } from 'json-rules-engine';
 import { RuleConverter } from './rule.converter';
 import {
+    CContext,
     CNodeInstance,
     CSchemaInstance } from './execution.types';
 import { EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
@@ -8,6 +9,8 @@ import { logger } from '../../logger/logger';
 import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
 import { ExecutionTypesGenerator } from './execution.types.generator';
 import FactCollector from './fact.collector';
+import { Loader } from '../../startup/loader';
+import { ProcessorService } from '../processor/processor.service';
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +22,7 @@ export class SchemaEngine {
         var schemaInstance = await generator.createSchemaInstance(dbSchemaInstance);
 
         const factCollector = new FactCollector();
-        const facts = factCollector.collectFacts(schemaInstance.ContextReferenceId, schemaInstance.FactNames);
+        const facts = factCollector.collectFacts(schemaInstance.Context.ReferenceId, schemaInstance.FactNames);
 
         var rootNodeInstance = schemaInstance.RootNodeInstance;
         var currentNode = rootNodeInstance as CNodeInstance;
@@ -29,19 +32,23 @@ export class SchemaEngine {
 
         while (currentNode.ExecutionStatus === ExecutionStatus.Pending) {
             currentNode = await SchemaEngine.traverse(
+                schemaInstance.Context,
                 schemaInstance,
                 currentNode,
                 facts,
-                schemaInstance.ContextId);
+            );
         }
         return currentNode;
     };
 
     private static async traverse(
+        context: CContext,
         schema: CSchemaInstance,
         currentNode: CNodeInstance,
-        facts: any,
-        context: string) {
+        facts: any
+        ) {
+
+        const processor = Loader.Container.resolve(ProcessorService);
 
         const rules = currentNode.Rules;
         if (rules.length > 0) {
@@ -63,10 +70,40 @@ export class SchemaEngine {
             }
         }
         else if (currentNode.Action) {
+
             // Execute this node's default action and then move onto the next node
-            const defaultAction = currentNode.Action;
-            const actionType = defaultAction.ActionType;
-            if (actionType === EventActionType.ProcessData) {
+            const action = currentNode.Action;
+            const actionType = action.ActionType;
+
+            if (actionType === EventActionType.ExtractData) {
+                //Extract data based on the action subject filters
+                const subject = action.ActionSubject;
+                if (subject.RecordType === 'Medication') {
+                    
+                }
+                else if (subject.RecordType === 'Badge') {
+
+                }
+            }
+            else if (actionType === EventActionType.ProcessData) {
+                //
+            }
+            else if (actionType === EventActionType.CompareData) {
+                //
+            }
+            else if (actionType === EventActionType.StoreData) {
+                //
+            }
+            else if (actionType === EventActionType.Custom) {
+                //
+            }
+            else if (actionType === EventActionType.Exit) {
+                //
+            }
+            else if (actionType === EventActionType.ExecuteNext) {
+                //
+            }
+            else if (actionType === EventActionType.WaitForInputEvents) {
                 //
             }
         }

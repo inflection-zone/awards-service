@@ -2,6 +2,7 @@ import { EventActionParams } from '../../domain.types/engine/event.action.params
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import {
     CompositionOperator,
+    ContextType,
     EventActionType,
     ExecutionStatus,
     LogicalOperator,
@@ -55,6 +56,22 @@ export class CCondition {
         return facts;
     };
 
+}
+
+export class CContext {
+    id          : uuid;
+    ReferenceId : uuid;
+    Type        : ContextType;
+    Participant?: {
+        id       : uuid;
+        FirstName: string;
+        LastName : string;
+    };
+    ParticipantGroup ?: {
+        id         : uuid;
+        Name       : string;
+        Description: string;
+    }
 }
 
 export class CAction {
@@ -219,9 +236,7 @@ export class CSchemaInstance {
 
     SchemaId           : uuid;
 
-    ContextId          : uuid;
-
-    ContextReferenceId : uuid;
+    Context            : CContext;
 
     Nodes              : CNodeInstance[];
 

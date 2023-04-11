@@ -39,8 +39,21 @@ export class ExecutionTypesGenerator {
             instance.Nodes = [];
             instance.FactNames = [];
         
-            instance.ContextReferenceId = dto.Context.ReferenceId;
-            instance.ContextId = dto.Context.id;
+            instance.Context = {
+                id         : dto.Context.id,
+                ReferenceId: dto.Context.ReferenceId,
+                Type       : dto.Context.Type,
+                Participant: dto.Context.Participant ? {
+                    id : dto.Context.Participant.id,
+                    FirstName: dto.Context.Participant.FirstName,
+                    LastName: dto.Context.Participant.LastName,
+                }: null,
+                ParticipantGroup : dto.Context.ParticipantGroup ? {
+                    id         : dto.Context.ParticipantGroup.id,
+                    Name       : dto.Context.ParticipantGroup.Name,
+                    Description: dto.Context.ParticipantGroup.Description,
+                } : null
+            };
         
             for await (var ni of dto.NodeInstances) {
                 const nodeInstance = await this.createNodeInstance(ni.id);
@@ -76,8 +89,8 @@ export class ExecutionTypesGenerator {
         instance.NodeId = dto.Node.id;
         instance.SchemaId = dto.SchemaInstance.Schema.id;
         instance.SchemaInstanceId = dto.SchemaInstance.id;
-        instance.ParentNodeId = dto.ParentNodeInstance?.Node?.id,
-        instance.ParentNodeInstanceId = dto.ParentNodeInstance?.id;
+        instance.ParentNodeId = dto.ParentNodeInstance?.Node?.id ?? null,
+        instance.ParentNodeInstanceId = dto.ParentNodeInstance?.id ?? null;
         instance.UpdatedAt = new Date();
         if (dto.ApplicableRule) {
             instance.ApplicableRule = await this.createRule(dto.ApplicableRule.id);
@@ -92,7 +105,9 @@ export class ExecutionTypesGenerator {
         }
 
         if (dto.Node.Action) {
-            const action                    = dto.Node.Action;
+
+            const action = dto.Node.Action;
+
             instance.Action               = new CAction();
             instance.Action.id            = action.id;
             instance.Action.ActionType    = action.ActionType;
