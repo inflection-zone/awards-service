@@ -25,34 +25,34 @@ export class SchemaEngine {
         const facts = factCollector.collectFacts(schemaInstance.Context.ReferenceId, schemaInstance.FactNames);
 
         var rootNodeInstance = schemaInstance.RootNodeInstance;
-        var currentNode = rootNodeInstance as CNodeInstance;
+        var currentNodeInstance = rootNodeInstance as CNodeInstance;
 
-        logger.info(`Current node    : ${currentNode.Name}`);
-        logger.info(`Current node Id : ${currentNode.id}`);
+        logger.info(`Current node    : ${currentNodeInstance.Name}`);
+        logger.info(`Current node Id : ${currentNodeInstance.id}`);
 
-        while (currentNode.ExecutionStatus === ExecutionStatus.Pending) {
-            currentNode = await SchemaEngine.traverse(
+        while (currentNodeInstance.ExecutionStatus === ExecutionStatus.Pending) {
+            currentNodeInstance = await SchemaEngine.traverse(
                 schemaInstance.Context,
                 schemaInstance,
-                currentNode,
+                currentNodeInstance,
                 facts,
             );
         }
-        return currentNode;
+        return currentNodeInstance;
     };
 
     private static async traverse(
         context: CContext,
-        schema: CSchemaInstance,
-        currentNode: CNodeInstance,
+        schemaInstance: CSchemaInstance,
+        currentNodeInstance: CNodeInstance,
         facts: any
-        ) {
+        ): Promise<CNodeInstance> {
 
         const processor = Loader.Container.resolve(ProcessorService);
 
-        const rules = currentNode.Rules;
+        const rules = currentNodeInstance.Rules;
         if (rules.length > 0) {
-            var facts: any = SchemaEngine.extractFactsForNode(facts, currentNode);
+            var facts: any = SchemaEngine.extractFactsForNode(facts, currentNodeInstance);
             var successEvent: any = undefined;
     
             for (var r of rules) {
@@ -69,21 +69,21 @@ export class SchemaEngine {
                 const results = await engine.run(facts);
             }
         }
-        else if (currentNode.Action) {
+        else if (currentNodeInstance.Action) {
 
             // Execute this node's default action and then move onto the next node
-            const action = currentNode.Action;
+            const action = currentNodeInstance.Action;
             const actionType = action.ActionType;
 
             if (actionType === EventActionType.ExtractData) {
                 //Extract data based on the action subject filters
                 const subject = action.ActionSubject;
-                if (subject.RecordType === 'Medication') {
-                    
-                }
-                else if (subject.RecordType === 'Badge') {
-
-                }
+                const data = await processor.extractData(context.id, subject);
+                schemaInstance.Almanac.push({
+                    Name: data.Tag,
+                    Data: data.Data
+                });
+                return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.ProcessData) {
                 //
@@ -116,24 +116,24 @@ export class SchemaEngine {
             var action = successEvent.params?.Action as EventActionType;
             var nextNodeId = successEvent.params?.NextNodeId;
             if (action === EventActionType.ExecuteNext && nextNodeId != null) {
-                var nextNode = schema.Nodes.find(x => x.NodeId === nextNodeId);
+                var nextNode = schemaInstance.NodeInstances.find(x => x.NodeId === nextNodeId);
                 if (nextNode) {
-                    currentNode.ExecutionStatus = ExecutionStatus.Executed;
-                    currentNode = nextNode;
-                    logger.info(`\nCurrent node    : ${currentNode.Name}`);
-                    logger.info(`Current node Id : ${currentNode.id}\n`);
+                    currentNodeInstance.ExecutionStatus = ExecutionStatus.Executed;
+                    currentNodeInstance = nextNode;
+                    logger.info(`\nCurrent node    : ${currentNodeInstance.Name}`);
+                    logger.info(`Current node Id : ${currentNodeInstance.id}\n`);
                 }
             }
             else if (action === EventActionType.WaitForInputEvents) {
-                currentNode.ExecutionStatus = ExecutionStatus.Waiting;
+                currentNodeInstance.ExecutionStatus = ExecutionStatus.Waiting;
                 logger.warn(`%cWaiting for input events for necessary facts!`);
             }
         }
         else {
-            currentNode.ExecutionStatus = ExecutionStatus.Executed;
+            currentNodeInstance.ExecutionStatus = ExecutionStatus.Executed;
         }
 
-        return currentNode;
+        return currentNodeInstance;
     }
 
     private static extractFactsForNode(incomingFacts: any, currentNode: CNodeInstance) {
@@ -153,5 +153,19 @@ export class SchemaEngine {
         }
         return facts;
     }
+
+    private static getNextNode = (currentNodeInstance, schemaInstance) => {
+        if (currentNodeInstance.Action && 
+            currentNodeInstance.Action.Params && 
+            currentNodeInstance.Action.Params.NextNodeId) {
+            const nextNodeId = currentNodeInstance.Action.Params.NextNodeId;
+            const nodeInstances = schemaInstance.NodeInstances;
+            const newCurrentNodeInstance = nodeInstances.find(x => x.NodeId === nextNodeId);
+            if (newCurrentNodeInstance) {
+                return newCurrentNodeInstance;
+            }
+        }
+        return null;
+    };
 
 }

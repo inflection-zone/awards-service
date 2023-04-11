@@ -180,3 +180,9 @@ export const ExecutionStatusList: ExecutionStatus[] = [
     ExecutionStatus.Waiting,
     ExecutionStatus.Exited,
 ];
+
+export interface ProcessorResult {
+    Success: boolean;
+    Tag    : string;
+    Data   : any[] | any;
+}

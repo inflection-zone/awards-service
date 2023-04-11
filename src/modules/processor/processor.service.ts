@@ -1,3 +1,4 @@
+import { ProcessorResult } from '../../domain.types/engine/engine.enums';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import { IDataComparator } from './interfaces/data.comparator.interface';
 import { IDataExtractor } from './interfaces/data.extractor.interface';
@@ -16,15 +17,15 @@ export class ProcessorService {
         ) {
         }
 
-    compareRange = async (contextId: uuid, subject: any): Promise<any[]> => {
+    compareRange = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
         return await this._comparator.compareRange(contextId, subject);
     }
     
-    extractData = async (contextId: uuid, subject: any): Promise<any[]> => {
+    extractData = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
         return await this._extractor.extractData(contextId, subject);
     }
     
-    calculateContinuity = async (contextId: uuid, records: any[], subject: any): Promise<any[]> => {
+    calculateContinuity = async (contextId: uuid, records: any[], subject: any): Promise<ProcessorResult> => {
         return await this._processor.calculateContinuity(contextId, records, subject);
     }
 

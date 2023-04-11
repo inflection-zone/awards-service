@@ -238,7 +238,7 @@ export class CSchemaInstance {
 
     Context            : CContext;
 
-    Nodes              : CNodeInstance[];
+    NodeInstances      : CNodeInstance[];
 
     FactNames          : string[];
 

@@ -9,6 +9,7 @@ import { Context } from "../../../../database/models/engine/context.model";
 import { logger } from "../../../../logger/logger";
 import { ErrorHandler } from "../../../../common/handlers/error.handler";
 import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
+import { ProcessorResult } from '../../../../domain.types/engine/engine.enums';
 
 //////////////////////////////////////////////////////////////////////
 
@@ -26,17 +27,18 @@ export class DataExtractor implements IDataExtractor {
 
     //#endregion
 
-    extractData = async (contextId: uuid, subject: any): Promise<any[]> => {
+    extractData = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
         const context = await this.getContextById(contextId);
         const recordType = subject.RecordType;
 
         if (recordType === 'Medication') {
-            return await this.extractMedicationData(context, {});            
+            return await this.extractMedicationData(context, subject);            
         }
         else if (recordType === 'Badge') {
             const filters = {
+                RecordType   : recordType,
                 BadgeCategory: subject.BadgeCategory,
-                BadgeName: subject.BadgeName,
+                BadgeName    : subject.BadgeName,
             };
             return await this.extractBadgeData(context, filters);   
         }
@@ -83,13 +85,21 @@ export class DataExtractor implements IDataExtractor {
             .where("medicationFact.ContextReferenceId = :id", { id: context.ReferenceId })
             .groupBy('RecrodDateStr')
             .getMany();
+
         // const transformed = records.map(x => {
         //     return {
         //         MedicationId: x.MedicationId,
         //         RecordDate: new Date(x.RecrodDateStr)
         //     };
         // });
-        return records;
+
+        const result: ProcessorResult = {
+            Success: true,
+            Tag    : [filters.RecordType].join(':'),
+            Data   : records
+        };
+
+        return result;
     };
 
     private extractBadgeData = async (context: Context, filters: any) => {
@@ -132,7 +142,15 @@ export class DataExtractor implements IDataExtractor {
                 }
             }
         });
-        return records;
+
+        
+        const result: ProcessorResult = {
+            Success: true,
+            Tag    : [filters.RecordType, filters.BadgeCategory, filters.BadgeName].join(':'),
+            Data   : records
+        };
+
+        return result;
     };
 
     //#endregion
