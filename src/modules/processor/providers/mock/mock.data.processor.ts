@@ -2,13 +2,16 @@ import { LogicalOperator } from "../../../../domain.types/engine/engine.enums";
 import { IDataProcessor } from "../../interfaces/data.processor.interface";
 import { OperandDataType } from "../../../../domain.types/engine/engine.enums";
 import { TypeUtils } from "../../../../common/utilities/type.utils";
+import { ProcessorResult } from "../../../../domain.types/engine/engine.enums";
+import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 
 //////////////////////////////////////////////////////////////////////
 
 export class MockDataProcessorr implements IDataProcessor {
 
-    calculateContinuity = async (records: any[], subject: any): Promise<any[]> => {
-        throw new Error("Method not implemented.");    };
+    calculateContinuity = async (contextId: uuid, records: any[], subject: any): Promise<ProcessorResult> => {
+        throw new Error("Method not implemented.");    
+    };
     
     //#region Private methods
 

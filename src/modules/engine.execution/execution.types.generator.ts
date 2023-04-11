@@ -36,7 +36,7 @@ export class ExecutionTypesGenerator {
             instance.id = dto.id;
             instance.Name = dto.Schema.Name;
             instance.SchemaId = dto.Schema.id;
-            instance.Nodes = [];
+            instance.NodeInstances = [];
             instance.FactNames = [];
         
             instance.Context = {
@@ -57,12 +57,12 @@ export class ExecutionTypesGenerator {
         
             for await (var ni of dto.NodeInstances) {
                 const nodeInstance = await this.createNodeInstance(ni.id);
-                instance.Nodes.push(nodeInstance);
+                instance.NodeInstances.push(nodeInstance);
             }
-            instance.RootNodeInstance = instance.Nodes.find(x => x.NodeId === dto.RootNodeInstance?.Node?.id);
-            instance.CurrentNodeInstance = instance.Nodes.find(x => x.NodeId === dto.CurrentNodeInstance?.Node?.id);
+            instance.RootNodeInstance = instance.NodeInstances.find(x => x.NodeId === dto.RootNodeInstance?.Node?.id);
+            instance.CurrentNodeInstance = instance.NodeInstances.find(x => x.NodeId === dto.CurrentNodeInstance?.Node?.id);
 
-            for (var nodeInstance of instance.Nodes) {
+            for (var nodeInstance of instance.NodeInstances) {
                 var facts = nodeInstance.extractFacts();
                 if (facts.length > 0) {
                     instance.FactNames.push(...facts);

@@ -9,13 +9,14 @@ import { Context } from "../../../../database/models/engine/context.model";
 import { logger } from "../../../../logger/logger";
 import { ErrorHandler } from "../../../../common/handlers/error.handler";
 import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
+import { ProcessorResult } from "../../../../domain.types/engine/engine.enums";
 
 //////////////////////////////////////////////////////////////////////
 
 export class MockDataExtractor implements IDataExtractor {
 
 
-    extractData = async (contextId: uuid, subject: any): Promise<any[]> => {
+    extractData = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
         throw new Error("Method not implemented.");
     };
 
