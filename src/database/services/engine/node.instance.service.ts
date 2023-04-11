@@ -52,18 +52,25 @@ export class NodeInstanceService extends BaseService {
                     id : id
                 },
                 relations : {
-                    SchemaInstance       : {
+                    SchemaInstance : {
                         Schema : true,
                         Context: true,
                     },
                     ChildrenNodeInstances: {
-                        Node: true
+                        Node: {
+                            Rules : true,
+                            Action: true
+                        }
                     },
-                    Node                 : {
-                        Rules: true
+                    Node : {
+                        Rules : true,
+                        Action: true,
                     },
-                    ParentNodeInstance   : {
-                        Node: true
+                    ParentNodeInstance : {
+                        Node: {
+                            Action: true,
+                            Rules : true,
+                        }
                     }
                 },
             });

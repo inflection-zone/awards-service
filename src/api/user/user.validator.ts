@@ -148,13 +148,22 @@ export class UserValidator extends BaseValidator {
 
     public validateLoginWithPasswordRequest = async (request: express.Request) => {
         try {
+            // const schema = joi.object({
+            //     CountryCode : joi.string().max(10).optional(),
+            //     Phone       : joi.string().max(16).min(6).optional(),
+            //     Email       : joi.string().max(256).optional(),
+            //     UserName    : joi.string().max(64).optional(),
+            //     Password    : joi.string().max(512).required(),
+            // });
             const schema = joi.object({
-                CountryCode : joi.string().max(10).optional(),
-                Phone       : joi.string().max(16).min(6).optional(),
-                Email       : joi.string().max(256).optional(),
-                UserName    : joi.string().max(64).optional(),
-                Password    : joi.string().max(512),
-            });
+                Phone       : {
+                    CountryCode : joi.string().max(10).optional(),
+                    PhoneNumber: joi.string().max(16).min(6).required(),
+                },
+                Email       : joi.string().max(256).email(),
+                UserName    : joi.string().max(64),
+                Password    : joi.string().max(512).required(),
+            }).xor('Email', 'UserName', 'Phone');
             await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -163,13 +172,22 @@ export class UserValidator extends BaseValidator {
 
     public validateLoginWithOtpRequest = async (request: express.Request) => {
         try {
+            // const schema = joi.object({
+            //     CountryCode : joi.string().max(10).optional(),
+            //     Phone       : joi.string().max(16).min(6).optional(),
+            //     Email       : joi.string().max(256).optional(),
+            //     UserName    : joi.string().max(64).optional(),
+            //     Otp         : joi.string().max(10),
+            // });
             const schema = joi.object({
-                CountryCode : joi.string().max(10).optional(),
-                Phone       : joi.string().max(16).min(6).optional(),
-                Email       : joi.string().max(256).optional(),
-                UserName    : joi.string().max(64).optional(),
-                Otp         : joi.string().max(10),
-            });
+                Phone       : {
+                    CountryCode : joi.string().max(10).optional(),
+                    PhoneNumber: joi.string().max(16).min(6).required(),
+                },
+                Email       : joi.string().max(256).email(),
+                UserName    : joi.string().max(64),
+                Otp         : joi.string().max(10).required(),
+            }).xor('Email', 'UserName', 'Phone');
             await schema.validateAsync(request.body);
         } catch (error) {
             ErrorHandler.handleValidationError(error);

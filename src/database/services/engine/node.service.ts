@@ -40,6 +40,7 @@ export class NodeService extends BaseService {
 
         const schema = await this._commonUtils.getSchema(createModel.SchemaId);
         const action = await this._commonUtils.createAction(createModel.Action);
+        const actionRecord = await this._actionRepository.save(action);
         const parentNode = await this.getNode(createModel.ParentNodeId);
 
         const node = this._nodeRepository.create({
@@ -47,7 +48,7 @@ export class NodeService extends BaseService {
             ParentNode : parentNode,
             Name       : createModel.Name,
             Description: createModel.Description,
-            Action     : action,
+            Action     : actionRecord,
         });
         var record = await this._nodeRepository.save(node);
         return NodeMapper.toResponseDto(record);

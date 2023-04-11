@@ -15,6 +15,9 @@
             "Provider": "Mock"
         }
     },
+    "Processor" : {
+        "Provider": "Custom"
+    },
     "TemporaryFolders": {
         "Upload": "./tmp/resources/uploads/",
         "Download": "./tmp/resources/downloads/",

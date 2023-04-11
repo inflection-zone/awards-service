@@ -4,7 +4,9 @@ import * as localConfiguration from '../../service.config.local.json';
 import {
     AuthenticationType,
     AuthorizationType, Configurations,
-    FileStorageProvider
+    FileStorageProvider,
+    Processor,
+    ProcessorsProvider
 } from './configuration.types';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,6 +25,9 @@ export class ConfigurationManager {
             Auth             : {
                 Authentication : configuration.Auth.Authentication as AuthenticationType,
                 Authorization  : configuration.Auth.Authorization as AuthorizationType,
+            },
+            Processor: {
+                Provider: configuration.Processor?.Provider as ProcessorsProvider,
             },
             FileStorage : {
                 Provider : configuration.FileStorage.Provider as FileStorageProvider,
@@ -57,6 +62,10 @@ export class ConfigurationManager {
 
     public static get MaxUploadFileSize(): number {
         return ConfigurationManager._config.MaxUploadFileSize;
+    }
+
+    public static get Processor(): Processor {
+        return ConfigurationManager._config?.Processor;
     }
 
     public static get Logger(): string {

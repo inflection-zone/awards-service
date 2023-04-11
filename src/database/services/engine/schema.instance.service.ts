@@ -58,7 +58,7 @@ export class SchemaInstanceService extends BaseService {
         record.CurrentNodeInstance = rootNodeInstanceRecord;
         record = await this._schemaInstanceRepository.save(record);
 
-        const rootNodeId = rootNodeInstance.Node.id;
+        const rootNodeId = schema.RootNode.id;
 
         if (schema.Nodes && schema.Nodes.length > 0) {
             for await (var node of schema.Nodes) {
@@ -72,7 +72,7 @@ export class SchemaInstanceService extends BaseService {
             }
         }
 
-        return SchemaInstanceMapper.toResponseDto(record, );
+        return await this.getById(record.id);
     };
 
     public getById = async (id: uuid): Promise<SchemaInstanceResponseDto> => {
@@ -342,6 +342,7 @@ export class SchemaInstanceService extends BaseService {
             relations: {
                 Nodes: true,
                 Client: true,
+                RootNode : true,
             }
         });
         if (!schema) {
