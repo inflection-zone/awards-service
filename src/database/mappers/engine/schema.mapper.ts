@@ -1,4 +1,5 @@
 import { Schema } from '../../models/engine/schema.model';
+import { Node } from '../../models/engine/node.model';
 import {
     SchemaResponseDto
 } from '../../../domain.types/engine/schema.domain.types';
@@ -8,7 +9,7 @@ import { IncomingEventType } from '../../models/engine/incoming.event.type.model
 
 export class SchemaMapper {
 
-    static toResponseDto = (schema: Schema, eventTypes?: IncomingEventType[]): SchemaResponseDto => {
+    static toResponseDto = (schema: Schema, rootNode: Node, eventTypes?: IncomingEventType[]): SchemaResponseDto => {
         if (schema == null) {
             return null;
         }
@@ -25,20 +26,20 @@ export class SchemaMapper {
             ValidFrom   : schema.ValidFrom,
             ValidTill   : schema.ValidTill,
             IsValid     : schema.IsValid,
-            RootNode    : schema.RootNode ? {
-                id         : schema.RootNode.id,
-                Description: schema.RootNode.Description,
-                Name       : schema.RootNode.Name,
-                Type       : schema.RootNode.Type,
-                Action     : schema.RootNode.Action ? {
-                    Name         : schema.RootNode.Action.Name,
-                    Description  : schema.RootNode.Action.Description,
-                    ActionType   : schema.RootNode.Action.ActionType,
-                    ActionSubject: schema.RootNode.Action.ActionSubject,
-                    Params       : schema.RootNode.Action.Params ? {
-                        Message   : schema.RootNode.Action.Params.Message,
-                        NextNodeId: schema.RootNode.Action.Params.NextNodeId,
-                        Extra     : schema.RootNode.Action.Params.Extra,
+            RootNode    : rootNode ? {
+                id         : rootNode.id,
+                Description: rootNode.Description,
+                Name       : rootNode.Name,
+                Type       : rootNode.Type,
+                Action     : rootNode.Action ? {
+                    Name         : rootNode.Action.Name,
+                    Description  : rootNode.Action.Description,
+                    ActionType   : rootNode.Action.ActionType,
+                    ActionSubject: rootNode.Action.ActionSubject,
+                    Params       : rootNode.Action.Params ? {
+                        Message   : rootNode.Action.Params.Message,
+                        NextNodeId: rootNode.Action.Params.NextNodeId,
+                        Extra     : rootNode.Action.Params.Extra,
                     } : null,
                 } : null,
             } : null,

@@ -38,7 +38,8 @@ export class ExecutionTypesGenerator {
             instance.SchemaId = dto.Schema.id;
             instance.NodeInstances = [];
             instance.FactNames = [];
-        
+            instance.Almanac = [];
+
             instance.Context = {
                 id         : dto.Context.id,
                 ReferenceId: dto.Context.ReferenceId,

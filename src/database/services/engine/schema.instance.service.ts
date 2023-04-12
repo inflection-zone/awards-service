@@ -17,6 +17,7 @@ import { Context } from '../../models/engine/context.model';
 import { NodeInstance } from '../../models/engine/node.instance.model';
 import { Node } from '../../models/engine/node.model';
 import { IncomingEventType } from '../../models/engine/incoming.event.type.model';
+import { CommonUtilsService } from './common.utils.service';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -34,13 +35,16 @@ export class SchemaInstanceService extends BaseService {
 
     _nodeInstanceRepository: Repository<NodeInstance> = Source.getRepository(NodeInstance);
 
+    _commonUtils: CommonUtilsService = new CommonUtilsService();
+
     //#endregion
 
     public create = async (createModel: SchemaInstanceCreateModel)
         : Promise<SchemaInstanceResponseDto> => {
 
-        const schema = await this.getSchema(createModel.SchemaId);
-        const context = await this.getContext(createModel.ContextId);
+        const schema = await this._commonUtils.getSchema(createModel.SchemaId);
+        const rootNode = await this._commonUtils.getNode(schema.RootNodeId);
+        const context = await this._commonUtils.getContext(createModel.ContextId);
 
         const schemaInstance = this._schemaInstanceRepository.create({
             Schema  : schema,
@@ -48,7 +52,7 @@ export class SchemaInstanceService extends BaseService {
         });
         var record = await this._schemaInstanceRepository.save(schemaInstance);
         const rootNodeInstance = await this._nodeInstanceRepository.create({
-                Node: schema.RootNode,
+                Node: rootNode,
                 SchemaInstance: schemaInstance
             }
         );
@@ -58,7 +62,7 @@ export class SchemaInstanceService extends BaseService {
         record.CurrentNodeInstance = rootNodeInstanceRecord;
         record = await this._schemaInstanceRepository.save(record);
 
-        const rootNodeId = schema.RootNode.id;
+        const rootNodeId = schema.RootNodeId;
 
         if (schema.Nodes && schema.Nodes.length > 0) {
             for await (var node of schema.Nodes) {
@@ -176,11 +180,11 @@ export class SchemaInstanceService extends BaseService {
                 ErrorHandler.throwNotFoundError('SchemaInstance not found!');
             }
             if (model.SchemaId != null) {
-                const schema = await this.getSchema(model.SchemaId);
+                const schema = await this._commonUtils.getSchema(model.SchemaId);
                 schemaInstance.Schema = schema;
             }
             if (model.ContextId != null) {
-                const context = await this.getContext(model.ContextId);
+                const context = await this._commonUtils.getContext(model.ContextId);
                 schemaInstance.Context = context;
             }
             var record = await this._schemaInstanceRepository.save(schemaInstance);
@@ -302,65 +306,5 @@ export class SchemaInstanceService extends BaseService {
     };
 
     //#endregion
-
-    private async getSchema(schemaId: uuid) {
-        const schema = await this._schemaRepository.findOne({
-            where : {
-                id : schemaId
-            },
-            select: {
-                id         : true,
-                RootNode   : {
-                    id    : true,
-                    Name  : true,
-                    Type  : true,
-                    Rules : true,
-                    Action: {
-                        id           : true,
-                        ActionType   : true,
-                        ActionSubject: true,
-                        Name         : true,
-                        Description  : true,
-                        Params       : {
-                           Message   : true,
-                           Extra     : true,
-                           NextNodeId: true,
-                        }
-                    }
-                },
-                Name       : true,
-                Description: true,
-                IsValid    : true,
-                Type       : true,
-                Client     : {
-                    id: true,
-                    Name: true,
-                    Code: true,
-                },
-                Nodes: true,
-            },
-            relations: {
-                Nodes: true,
-                Client: true,
-                RootNode : true,
-            }
-        });
-        if (!schema) {
-            ErrorHandler.throwNotFoundError('Schema cannot be found');
-        }
-        return schema;
-    }
-
-    private async getContext(contextId: uuid) {
-        const context = await this._contextRepository.findOne({
-            where : {
-                id : contextId
-            }
-        });
-        if (!context) {
-            ErrorHandler.throwNotFoundError('Context cannot be found');
-        }
-        return context;
-    }
 
 }

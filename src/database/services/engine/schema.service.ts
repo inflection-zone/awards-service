@@ -50,7 +50,7 @@ export class SchemaService extends BaseService {
     public create = async (createModel: SchemaCreateModel)
         : Promise<SchemaResponseDto> => {
 
-        const client = await this.getClient(createModel.ClientId);
+        const client = await this._commonUtils.getClient(createModel.ClientId);
 
         const rootNodeName = 'Root Node' + createModel.Name.substring(0, 25);
         let rootNode;
@@ -82,7 +82,7 @@ export class SchemaService extends BaseService {
             ValidFrom  : createModel.ValidFrom,
             ValidTill  : createModel.ValidTill,
             IsValid    : createModel.IsValid ?? true,
-            RootNode   : rootNodeRecord,
+            RootNodeId : rootNodeRecord.id,
         });
         var schemaRecord = await this._schemaRepository.save(schema);
 
@@ -92,7 +92,7 @@ export class SchemaService extends BaseService {
         await this.addEventTypesToSchema(createModel, schema);
         const eventTypeRecords = await this.getEventTypesForSchema(schemaRecord.id);
 
-        return SchemaMapper.toResponseDto(schemaRecord, eventTypeRecords);
+        return SchemaMapper.toResponseDto(schemaRecord, rootNodeRecord, eventTypeRecords);
     };
 
     public getById = async (id: uuid): Promise<SchemaResponseDto> => {
@@ -104,13 +104,11 @@ export class SchemaService extends BaseService {
                 relations: {
                     Client    : true,
                     Nodes     : true,
-                    RootNode  : {
-                        Action : true,
-                    },
                 }
             });
+            const rootNode = await this._commonUtils.getNode(schema.RootNodeId);
             const eventTypes = await this.getEventTypesForSchema(id);
-            return SchemaMapper.toResponseDto(schema, eventTypes);
+            return SchemaMapper.toResponseDto(schema, rootNode, eventTypes);
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
@@ -129,7 +127,7 @@ export class SchemaService extends BaseService {
                     Schema : true,
                 }
             });
-            return records.map(x => SchemaMapper.toResponseDto(x.Schema));
+            return records.map(x => SchemaMapper.toResponseDto(x.Schema, null));
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
@@ -149,7 +147,7 @@ export class SchemaService extends BaseService {
                 ItemsPerPage   : limit,
                 Order          : order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy      : orderByColumn,
-                Items          : list.map(x => SchemaMapper.toResponseDto(x)),
+                Items          : list.map(x => SchemaMapper.toResponseDto(x, null)),
             };
             return searchResults;
         } catch (error) {
@@ -173,7 +171,7 @@ export class SchemaService extends BaseService {
             //Use renew key to update ApiKey, ValidFrom and ValidTill
 
             if (model.ClientId != null) {
-                const client = await this.getClient(model.ClientId);
+                const client = await this._commonUtils.getClient(model.ClientId);
                 schema.Client = client;
             }
             if (model.Name != null) {
@@ -194,8 +192,9 @@ export class SchemaService extends BaseService {
             if (model.IsValid != null) {
                 schema.IsValid = model.IsValid;
             }
+            const rootNode = await this._commonUtils.getNode(schema.RootNodeId);
             var record = await this._schemaRepository.save(schema);
-            return SchemaMapper.toResponseDto(record);
+            return SchemaMapper.toResponseDto(record, rootNode);
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
@@ -235,24 +234,6 @@ export class SchemaService extends BaseService {
                 },
                 Name        : true,
                 Description : true,
-                RootNode  : {
-                    id    : true,
-                    Name  : true,
-                    Type  : true,
-                    Rules : true,
-                    Action: {
-                        id           : true,
-                        ActionType   : true,
-                        ActionSubject: true,
-                        Name         : true,
-                        Description  : true,
-                        Params       : {
-                           Message   : true,
-                           Extra     : true,
-                           NextNodeId: true,
-                        }
-                    }
-                },
                 ValidFrom   : true,
                 ValidTill   : true,
                 IsValid     : true,
@@ -306,17 +287,5 @@ export class SchemaService extends BaseService {
     }
 
     //#endregion
-
-    private async getClient(clientId: uuid) {
-        const client = await this._clientRepository.findOne({
-            where : {
-                id : clientId
-            }
-        });
-        if (!client) {
-            ErrorHandler.throwNotFoundError('Client cannot be found');
-        }
-        return client;
-    }
 
 }
