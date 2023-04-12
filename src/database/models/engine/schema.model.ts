@@ -38,8 +38,8 @@ export class Schema {
     @JoinColumn()
     Client : Client;
 
-    @OneToOne(() => Node, (node) => node.Schema, { nullable: true })
-    RootNode: Node;
+    @Column({ type: 'uuid', nullable: true })
+    RootNodeId: string;
 
     @OneToMany(() => Node, (node) => node.Schema, {
         cascade  : true,

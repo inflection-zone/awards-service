@@ -248,6 +248,9 @@ export class CSchemaInstance {
 
     Almanac            : AlmanacObject[];
 
+    CSchemaInstance() {
+    }
+
     public setCurrent = (instance: CNodeInstance) => {
         this.CurrentNodeInstance = instance;
     };

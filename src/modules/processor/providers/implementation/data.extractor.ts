@@ -63,12 +63,12 @@ export class DataExtractor implements IDataExtractor {
 
     private extractMedicationData = async (context: Context, filters: any) => {
 
-        // const records = await this._medicationRepository.find({
-        //     where: {
-        //         ContextReferenceId: context.ReferenceId
-        //     },
+        const records = await this._medicationRepository.find({
+            where: {
+                ContextReferenceId: context.ReferenceId
+            },
             
-        // });
+        });
         // const filtered = records.filter(x => x.Taken === false);
         // const transformed = filtered.map(x => {
         //     return {
@@ -78,13 +78,13 @@ export class DataExtractor implements IDataExtractor {
         // });
         // return transformed;
 
-        const records = await this._medicationRepository
+        const records_ = await this._medicationRepository
             .createQueryBuilder()
-            .select('medicationFact')
-            .from(MedicationFact, 'medicationFact')
-            .where("medicationFact.ContextReferenceId = :id", { id: context.ReferenceId })
-            .groupBy('RecrodDateStr')
-            .getMany();
+            .select('med')
+            .from(MedicationFact, 'med')
+            .where("med.ContextReferenceId = :id", { id: context.ReferenceId })
+            .groupBy('med.RecrodDateStr')
+            .getManyAndCount();
 
         // const transformed = records.map(x => {
         //     return {

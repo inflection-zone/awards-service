@@ -103,6 +103,12 @@ export class NodeService extends BaseService {
             const node = await this._nodeRepository.findOne({
                 where : {
                     id : id
+                },
+                relations: {
+                    Action: true,
+                    Children: true,
+                    ParentNode: true,
+                    Schema: true,
                 }
             });
             if (!node) {

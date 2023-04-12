@@ -22,7 +22,7 @@ export class SchemaEngine {
         var schemaInstance = await generator.createSchemaInstance(dbSchemaInstance);
 
         const factCollector = new FactCollector();
-        const facts = factCollector.collectFacts(schemaInstance.Context.ReferenceId, schemaInstance.FactNames);
+        const facts = factCollector.collectFacts(dbSchemaInstance.Context.ReferenceId, schemaInstance.FactNames);
 
         var rootNodeInstance = schemaInstance.RootNodeInstance;
         var currentNodeInstance = rootNodeInstance as CNodeInstance;
