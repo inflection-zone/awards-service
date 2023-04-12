@@ -167,6 +167,22 @@ export const EventActionTypeList: EventActionType[] = [
     EventActionType.Custom,
 ];
 
+export enum DataActionType {
+    CalculateContinuity = "Calculate-Continuity",
+    FindRangeDifference = "Find-Range-Difference",
+    MaximumInRange      = "Maximum-In-Range",
+    MinimumInRange      = "Minimum-In-Range",
+    CalculatePercentile = "Calculate-Percentile",
+}
+
+export const ProcessDataActionTypeList: DataActionType[] = [
+    DataActionType.CalculateContinuity,
+    DataActionType.FindRangeDifference,
+    DataActionType.MaximumInRange,
+    DataActionType.MinimumInRange,
+    DataActionType.CalculatePercentile,
+];
+
 export enum ExecutionStatus {
     Pending = "Pending",
     Executed = "Executed",

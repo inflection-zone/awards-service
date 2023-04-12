@@ -4,7 +4,7 @@ import {
     CContext,
     CNodeInstance,
     CSchemaInstance } from './execution.types';
-import { EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
+import { DataActionType, EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
 import { logger } from '../../logger/logger';
 import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
 import { ExecutionTypesGenerator } from './execution.types.generator';
@@ -86,7 +86,22 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.ProcessData) {
-                //
+                const subject = action.ActionSubject;
+                const recordType = subject.RecordType;
+                const dataActionType = subject.DataActionType;
+                const almanacObject = schemaInstance.Almanac.find(x => x.Name === recordType);
+                if (!almanacObject) {
+                    throw new Error(`Records with tag ${recordType} not found in schema almanac.`);
+                }
+                if (dataActionType === DataActionType.CalculateContinuity) {
+                    const data = await processor.calculateContinuity(context.id, almanacObject.Data, subject);
+                    schemaInstance.Almanac.push({
+                        Name: data.Tag,
+                        Data: data.Data
+                    });
+                }
+
+                return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.CompareData) {
                 //
