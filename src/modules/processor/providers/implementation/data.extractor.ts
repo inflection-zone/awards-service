@@ -99,26 +99,26 @@ export class DataExtractor implements IDataExtractor {
             };
         });
 
-        const transformed_ = [];
-        const secondsInADay = 24 * 60 * 60;
-        const difference = secondsInADay + 1;
-        for(var i = 0; i < transformed.length; i++) {
-            const d = transformed[i];
-            const nextIndex = i + 1;
-            transformed_.push(d);
-            if (nextIndex < transformed.length) {
-                const dNext = transformed[nextIndex];
-                const dKey = d.key;
-                const dNextKey = dNext.key;
-                var dCurrentKey = dKey;
-                dCurrentKey = TimeUtils.addDuration(dCurrentKey, difference, DurationType.Second, false);
-                while (dCurrentKey < dNextKey) {
-                    dCurrentKey = TimeUtils.addDuration(dCurrentKey, difference, DurationType.Second, false);
-                    const missing = { key: dCurrentKey, value: false };
-                    transformed_.push(missing);
-                }
-            }
-        }
+        // const transformed_ = [];
+        // const secondsInADay = 24 * 60 * 60;
+        // const difference = secondsInADay + 1;
+        // for(var i = 0; i < transformed.length; i++) {
+        //     const d = transformed[i];
+        //     const nextIndex = i + 1;
+        //     transformed_.push(d);
+        //     if (nextIndex < transformed.length) {
+        //         const dNext = transformed[nextIndex];
+        //         const dKey = d.key;
+        //         const dNextKey = dNext.key;
+        //         var dCurrentKey = dKey;
+        //         dCurrentKey = TimeUtils.addDuration(dCurrentKey, difference, DurationType.Second, false);
+        //         while (dCurrentKey < dNextKey) {
+        //             dCurrentKey = TimeUtils.addDuration(dCurrentKey, difference, DurationType.Second, false);
+        //             const missing = { key: dCurrentKey, value: false };
+        //             transformed_.push(missing);
+        //         }
+        //     }
+        // }
 
         // const filtered = records.filter(x => x.Taken === false);
         // const transformed = filtered.map(x => {
@@ -147,7 +147,7 @@ export class DataExtractor implements IDataExtractor {
         const result: ProcessorResult = {
             Success: true,
             Tag    : [filters.RecordType].join(':'),
-            Data   : transformed_
+            Data   : transformed
         };
 
         return result;
