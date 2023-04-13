@@ -197,7 +197,7 @@ export class DataExtractor implements IDataExtractor {
         
         const result: ProcessorResult = {
             Success: true,
-            Tag    : [filters.RecordType, filters.BadgeCategory, filters.BadgeName].join(':'),
+            Tag    : [filters.RecordType, filters.BadgeCategory, filters.BadgeTitle].join(':'),
             Data   : records
         };
 
