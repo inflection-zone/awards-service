@@ -19,7 +19,7 @@ export class MedicationFactsExtractor implements IExtractor {
             // const transformed = filtered.map(x => {
             //     return {
             //         MedicationId : x.MedicationId,
-            //         RecordDate : new Date(x.RecrodDateStr)
+            //         RecordDate : new Date(x.RecordDateStr)
             //     };
             // });
             // return transformed;
@@ -28,13 +28,13 @@ export class MedicationFactsExtractor implements IExtractor {
                .select('medicationFact')
                .from(MedicationFact, 'medicationFact')
                .where("medicationFact.ContextReferenceId = :id", { id: contextReferenceId })
-               .groupBy('RecrodDateStr')
+               .groupBy('RecordDateStr')
                .getRawMany();
 
             const transformed = records.map(x => {
                 return {
                     MedicationId : x.MedicationId,
-                    RecordDate : new Date(x.RecrodDateStr)
+                    RecordDate : new Date(x.RecordDateStr)
                 };
             });
         }

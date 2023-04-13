@@ -40,7 +40,7 @@ export class DataExtractor implements IDataExtractor {
             const filters = {
                 RecordType   : recordType,
                 BadgeCategory: subject.BadgeCategory,
-                BadgeName    : subject.BadgeName,
+                BadgeTitle   : subject.BadgeTitle,
             };
             return await this.extractBadgeData(context, filters);   
         }
@@ -72,7 +72,7 @@ export class DataExtractor implements IDataExtractor {
         });
 
         const groupedRecords = records.reduce((acc, obj) => {
-            const key = obj.RecrodDateStr;
+            const key = obj.RecordDateStr;
             if (!acc[key]) {
                 acc[key] = [];
             }
@@ -124,7 +124,7 @@ export class DataExtractor implements IDataExtractor {
         // const transformed = filtered.map(x => {
         //     return {
         //         MedicationId : x.MedicationId,
-        //         RecordDate : new Date(x.RecrodDateStr)
+        //         RecordDate : new Date(x.RecordDateStr)
         //     };
         // });
         // return transformed;
@@ -134,13 +134,13 @@ export class DataExtractor implements IDataExtractor {
         //     .select('med')
         //     .from(MedicationFact, 'med')
         //     .where("med.ContextReferenceId = :id", { id: context.ReferenceId })
-        //     .groupBy('med.RecrodDateStr')
+        //     .groupBy('med.RecordDateStr')
         //     .getManyAndCount();
 
         // const transformed = records.map(x => {
         //     return {
         //         MedicationId: x.MedicationId,
-        //         RecordDate: new Date(x.RecrodDateStr)
+        //         RecordDate: new Date(x.RecordDateStr)
         //     };
         // });
 
@@ -161,7 +161,7 @@ export class DataExtractor implements IDataExtractor {
                     ReferenceId : context.ReferenceId
                 },
                 Badge: {
-                    Name    : filters.BadgeName,
+                    Name    : filters.BadgeTitle,
                     Category: {
                         Name : filters.BadgeCategory
                     }
