@@ -6,7 +6,7 @@ import { ProcessorResult } from '../../../../domain.types/engine/engine.enums';
 
 export class DataComparator implements IDataComparator {
 
-    compareRange = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
+    compareRanges = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
         throw new Error("Method not implemented.");
     };
     

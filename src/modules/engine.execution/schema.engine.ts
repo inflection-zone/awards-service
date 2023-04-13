@@ -104,7 +104,28 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.CompareData) {
-                //
+                const subject = action.ActionSubject;
+                const recordType = subject.RecordType;
+                const dataActionType = subject.DataActionType;
+                const firstRangeTag = subject.FirstRangeTag;
+                const secondRangeTag = subject.SecondRangeTag;
+                const almanacObjectFirst = schemaInstance.Almanac.find(x => x.Name === firstRangeTag);
+                if (!almanacObjectFirst) {
+                    throw new Error(`Records with tag ${firstRangeTag} not found in schema almanac.`);
+                }
+                const almanacObjectSecond = schemaInstance.Almanac.find(x => x.Name === secondRangeTag);
+                if (!almanacObjectSecond) {
+                    throw new Error(`Records with tag ${secondRangeTag} not found in schema almanac.`);
+                }
+                if (dataActionType === DataActionType.FindRangeDifference) {
+                    const data = await processor.compareRanges(context.id, subject, almanacObjectFirst.Data, almanacObjectSecond.Data);
+                    schemaInstance.Almanac.push({
+                        Name: data.Tag,
+                        Data: data.Data
+                    });
+                }
+
+                return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.StoreData) {
                 //

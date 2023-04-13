@@ -17,8 +17,8 @@ export class ProcessorService {
         ) {
         }
 
-    compareRange = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
-        return await this._comparator.compareRange(contextId, subject);
+    compareRanges = async (contextId: uuid, subject: any, firstRange: any[], secondRange: any[]): Promise<ProcessorResult> => {
+        return await this._comparator.compareRanges(contextId, subject, firstRange, secondRange);
     }
     
     extractData = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
