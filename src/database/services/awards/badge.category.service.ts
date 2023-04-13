@@ -45,6 +45,9 @@ export class BadgeCategoryService extends BaseService {
             var badge = await this._categoryRepository.findOne({
                 where : {
                     id : id
+                },
+                relations: {
+                    Client: true
                 }
             });
             return BadgeCategoryMapper.toResponseDto(badge);

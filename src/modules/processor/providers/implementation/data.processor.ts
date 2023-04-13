@@ -129,11 +129,23 @@ export class DataProcessorr implements IDataProcessor {
                 //const records_ = this.transformRecords(records, keyDataType, valueDataType);
         
                 const bundles = this.getConsecutiveOccurrences(records, predicate, numOccurrences, options);
-        
+                const bundles_ = [];
+                for (var b of bundles) {
+                    if (b.length > 0) {
+                        const start = b[0];
+                        const end = b[b.length - 1];
+                        const obj = {
+                            start : start,
+                            end   : end,
+                            bundle: b
+                        };
+                        bundles_.push(obj);
+                    }
+                }
                 const result: ProcessorResult = {
                     Success: true,
-                    Tag    : [recordType, 'Continuity', numOccurrences.toString()].join(':'),
-                    Data   : bundles
+                    Tag    : subject.OutputTag,
+                    Data   : bundles_
                 };
                 resolve(result);
 
@@ -146,16 +158,8 @@ export class DataProcessorr implements IDataProcessor {
     
     //#region Private methods
 
-    transformRecords = (records: any[], keyDataType: OperandDataType, valueDataType: OperandDataType): any[] => {
-        const records_ = records.map(x => {
-            return {
-
-            }
-        });
-        return records_;
-    };
-
-    getConsecutiveOccurrences = (records: any[], predicate: PredicateType, numOccurrences: number, options: any) => {
+    getConsecutiveOccurrences = (
+        records: any[], predicate: PredicateType, numOccurrences: number, options: any) => {
         let count = 0;
         const foundBundles = [];
         var bundle = [];

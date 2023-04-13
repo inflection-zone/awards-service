@@ -10,8 +10,6 @@ import { logger } from "../../../../logger/logger";
 import { ErrorHandler } from "../../../../common/handlers/error.handler";
 import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
 import { ProcessorResult } from '../../../../domain.types/engine/engine.enums';
-import { TimeUtils } from "../../../../common/utilities/time.utils";
-import { DurationType } from "../../../../domain.types/miscellaneous/time.types";
 
 //////////////////////////////////////////////////////////////////////
 
@@ -34,7 +32,7 @@ export class DataExtractor implements IDataExtractor {
         const recordType = subject.RecordType;
 
         if (recordType === 'Medication') {
-            return await this.extractMedicationData(context, subject);            
+            return await this.extractMedicationData(context, subject, subject.OutputTag);            
         }
         else if (recordType === 'Badge') {
             const filters = {
@@ -42,7 +40,7 @@ export class DataExtractor implements IDataExtractor {
                 BadgeCategory: subject.BadgeCategory,
                 BadgeTitle   : subject.BadgeTitle,
             };
-            return await this.extractBadgeData(context, filters);   
+            return await this.extractBadgeData(context, filters, subject.OutputTag);   
         }
 
         ErrorHandler.throwNotFoundError(`Data extractor not found for record type.`);
@@ -63,7 +61,7 @@ export class DataExtractor implements IDataExtractor {
         }
     };
 
-    private extractMedicationData = async (context: Context, filters: any) => {
+    private extractMedicationData = async (context: Context, filters: any, tag: string) => {
 
         const records = await this._medicationRepository.find({
             where: {
@@ -146,14 +144,14 @@ export class DataExtractor implements IDataExtractor {
 
         const result: ProcessorResult = {
             Success: true,
-            Tag    : [filters.RecordType].join(':'),
+            Tag    : tag,
             Data   : transformed
         };
 
         return result;
     };
 
-    private extractBadgeData = async (context: Context, filters: any) => {
+    private extractBadgeData = async (context: Context, filters: any, tag: string) => {
 
         const records = await this._participantBadgeRepository.find({
             where: {
@@ -185,6 +183,7 @@ export class DataExtractor implements IDataExtractor {
                     id         : true,
                     ReferenceId: true,
                 },
+                Metadata: true,
             },
             relations: {
                 Participant: true,
@@ -194,11 +193,19 @@ export class DataExtractor implements IDataExtractor {
             }
         });
 
+        var refined = [];
+        for (var r of records) {
+            var metadata = JSON.parse(r.Metadata);
+            var start = (new Date(metadata.start)).toISOString().split('T')[0];
+            var end = (new Date(metadata.end)).toISOString().split('T')[0];
+            var key = `(${start})-(${end})-(${r.Badge.Name})`;
+            refined.push({ start, end, key });
+        }
         
         const result: ProcessorResult = {
             Success: true,
-            Tag    : [filters.RecordType, filters.BadgeCategory, filters.BadgeTitle].join(':'),
-            Data   : records
+            Tag    : tag,
+            Data   : refined
         };
 
         return result;

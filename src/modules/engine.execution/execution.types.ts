@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface AlmanacObject {
     Name: string;
-    Data: any[];
+    Data: any[] | any;
 }
 
 export class CCondition {
