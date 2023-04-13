@@ -87,11 +87,10 @@ export class SchemaEngine {
             }
             else if (actionType === EventActionType.ProcessData) {
                 const subject = action.ActionSubject;
-                const recordType = subject.RecordType;
                 const dataActionType = subject.DataActionType;
-                const almanacObject = schemaInstance.Almanac.find(x => x.Name === recordType);
+                const almanacObject = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
                 if (!almanacObject) {
-                    throw new Error(`Records with tag ${recordType} not found in schema almanac.`);
+                    throw new Error(`Records with tag ${subject.PrimaryInputTag} not found in schema almanac.`);
                 }
                 if (dataActionType === DataActionType.CalculateContinuity) {
                     const data = await processor.calculateContinuity(context.id, almanacObject.Data, subject);
@@ -105,20 +104,17 @@ export class SchemaEngine {
             }
             else if (actionType === EventActionType.CompareData) {
                 const subject = action.ActionSubject;
-                const recordType = subject.RecordType;
                 const dataActionType = subject.DataActionType;
-                const firstRangeTag = subject.FirstRangeTag;
-                const secondRangeTag = subject.SecondRangeTag;
-                const almanacObjectFirst = schemaInstance.Almanac.find(x => x.Name === firstRangeTag);
+                const almanacObjectFirst = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
                 if (!almanacObjectFirst) {
-                    throw new Error(`Records with tag ${firstRangeTag} not found in schema almanac.`);
+                    throw new Error(`Records with tag ${subject.PrimaryInputTag} not found in schema almanac.`);
                 }
-                const almanacObjectSecond = schemaInstance.Almanac.find(x => x.Name === secondRangeTag);
+                const almanacObjectSecond = schemaInstance.fetchAlmanacData(subject.SecondaryInputTag);
                 if (!almanacObjectSecond) {
-                    throw new Error(`Records with tag ${secondRangeTag} not found in schema almanac.`);
+                    throw new Error(`Records with tag ${subject.SecondaryInputTag} not found in schema almanac.`);
                 }
                 if (dataActionType === DataActionType.FindRangeDifference) {
-                    const data = await processor.compareRanges(context.id, subject, almanacObjectFirst.Data, almanacObjectSecond.Data);
+                    const data = await processor.compareRanges(subject, almanacObjectFirst.Data, almanacObjectSecond.Data);
                     schemaInstance.Almanac.push({
                         Name: data.Tag,
                         Data: data.Data
@@ -128,7 +124,17 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.StoreData) {
-                //
+                const subject = action.ActionSubject;
+                const almanacObject = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
+                if (!almanacObject) {
+                    throw new Error(`Records with tag ${subject.PrimaryInputTag} not found in schema almanac.`);
+                }
+                const data = await processor.storeData(context.id, subject, almanacObject.Data?.ToBeAdded);
+                schemaInstance.Almanac.push({
+                    Name: data.Tag,
+                    Data: data.Data
+                });
+                return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.Custom) {
                 //

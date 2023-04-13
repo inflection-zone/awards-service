@@ -50,6 +50,10 @@ export class BadgeService extends BaseService {
             var badge = await this._badgeRepository.findOne({
                 where : {
                     id : id
+                },
+                relations: {
+                    Category: true,
+                    Client  : true
                 }
             });
             return BadgeMapper.toResponseDto(badge);

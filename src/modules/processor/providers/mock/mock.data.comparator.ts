@@ -6,7 +6,7 @@ import { IDataComparator } from "../../interfaces/data.comparator.interface";
 
 export class MockDataComparator implements IDataComparator {
 
-    compareRanges = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
+    compareRanges = async (subject: any): Promise<ProcessorResult> => {
         throw new Error("Method not implemented.");
     };
     

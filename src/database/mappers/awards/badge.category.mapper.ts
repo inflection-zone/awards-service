@@ -13,11 +13,11 @@ export class BadgeCategoryMapper {
         }
         const dto: BadgeCategoryResponseDto = {
             id      : category.id,
-            Client: {
+            Client: category.Client ? {
                 id  : category.Client.id,
                 Name: category.Client.Name,
                 Code: category.Client.Code,
-            },
+            } : null,
             Name       : category.Name,
             Description: category.Description,
             ImageUrl   : category.ImageUrl,

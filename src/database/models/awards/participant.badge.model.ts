@@ -20,18 +20,21 @@ export class ParticipantBadge {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @ManyToOne(() => Participant, { nullable: true })
+    @ManyToOne(() => Participant, { nullable: false })
     @JoinColumn()
     Participant : Participant;
 
-    @ManyToOne(() => Badge, { nullable: true })
+    @ManyToOne(() => Badge, { nullable: false })
     @JoinColumn()
     Badge : Badge;
 
     @Column({ type: 'varchar', length: 512, nullable: true })
     Reason : string;
 
-    @Column({ type: 'date', nullable: false })
+    @Column({ type: 'simple-json', nullable: true })
+    Metadata : string;
+
+    @Column({ type: 'date', nullable: true })
     AcquiredDate : Date;
 
     @CreateDateColumn()
