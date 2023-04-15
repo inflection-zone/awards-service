@@ -150,7 +150,6 @@ export class SchemaEngine {
             }
         }
 
-
         if (successEvent) {
 
             //logger.info(`successEvent = ${JSON.stringify(successEvent, null, 2)}`);
