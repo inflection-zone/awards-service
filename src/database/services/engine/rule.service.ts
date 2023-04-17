@@ -15,7 +15,7 @@ import {
     RuleSearchFilters, 
     RuleSearchResults, 
     RuleUpdateModel } from '../../../domain.types/engine/rule.domain.types';
-import { CompositionOperator, OperatorType } from '../../../domain.types/engine/engine.enums';
+import { CompositionOperator, OperatorType } from '../../../domain.types/engine/engine.types';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -80,7 +80,7 @@ export class RuleService extends BaseService {
                         id           : true,
                         Name         : true,
                         ActionType   : true,
-                        ActionSubject: true,
+                        InputParams: true,
                         Params       : {
                             Message   : true,
                             NextNodeId: true,

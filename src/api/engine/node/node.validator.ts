@@ -1,9 +1,27 @@
 import joi from 'joi';
 import express from 'express';
-import { NodeCreateModel, NodeUpdateModel, NodeSearchFilters } from '../../../domain.types/engine/node.domain.types';
+import { 
+    NodeCreateModel, 
+    NodeUpdateModel, 
+    NodeSearchFilters 
+} from '../../../domain.types/engine/node.domain.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
-import { EventActionType, NodeType } from '../../../domain.types/engine/engine.enums';
+import { EventActionType, NodeType } from '../../../domain.types/engine/engine.types';
+import { 
+    ActionInputParamsObj_Create, 
+    ActionInputParamsObj_Update,
+    ActionOutputParamsObj_Create,
+    ActionOutputParamsObj_Update,
+    ContinuityInputParamsObj_Create,
+    ContinuityInputParamsObj_Update,
+    DataExtractionInputParamsObj_Create,
+    DataExtractionInputParamsObj_Update,
+    RangeComparisonInputParamsObj_Create,
+    RangeComparisonInputParamsObj_Update,
+    ValueComparisonInputParamsObj_Create,
+    ValueComparisonInputParamsObj_Update
+} from '../../common.validations';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -12,6 +30,17 @@ export class NodeValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request)
         : Promise<NodeCreateModel> => {
         try {
+
+            const possibleInputs = [
+                ActionInputParamsObj_Create,
+                ContinuityInputParamsObj_Create,
+                DataExtractionInputParamsObj_Create,
+                RangeComparisonInputParamsObj_Create,
+                ValueComparisonInputParamsObj_Create,
+            ];
+            const possibleOutputs = [
+                ActionOutputParamsObj_Create
+            ];
             const node = joi.object({
                 Type        : joi.string().valid(...Object.values(NodeType)).required(),
                 Name        : joi.string().max(32).required(),
@@ -19,15 +48,11 @@ export class NodeValidator extends BaseValidator {
                 ParentNodeId    : joi.string().uuid().required(),
                 SchemaId    : joi.string().uuid().required(),
                 Action   : {
-                    ActionType   : joi.string().valid(...Object.values(EventActionType)).required(),
-                    ActionSubject: joi.any().optional(),
-                    Name         : joi.string().max(32).required(),
-                    Description  : joi.string().max(256).optional(),
-                    Params       : {
-                        Message   : joi.string().max(256).required(),
-                        NextNodeId: joi.string().uuid().optional(),
-                        Extra     : joi.any().optional()
-                    }
+                    ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
+                    Name        : joi.string().max(32).required(),
+                    Description : joi.string().max(256).optional(),
+                    InputParams : joi.object().valid(possibleInputs).optional(),
+                    OutputParams: joi.object().valid(possibleOutputs).optional(),
                 }
             });
             await node.validateAsync(request.body);
@@ -39,14 +64,10 @@ export class NodeValidator extends BaseValidator {
                 SchemaId    : request.body.SchemaId,
                 Action      : {
                     Name       : request.body.Action.Name,
-                    ActionSubject : request.body.Action.ActionSubject ?? null,
                     Description: request.body.Action.Description ?? null,
                     ActionType : request.body.Action.ActionType,
-                    Params     : {
-                        Message   : request.body.Action.Params.Message,
-                        NextNodeId: request.body.Action.Params.NextNodeId ?? null,
-                        Extra     : request.body.Action.Params.Extra ?? null,
-                    }
+                    InputParams : request.body.Action.InputParams ?? null,
+                    OutputParams : request.body.Action.OutputParams ?? null,
                 },
             };
         } catch (error) {
@@ -56,6 +77,16 @@ export class NodeValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<NodeUpdateModel|undefined> => {
         try {
+            const possibleInputs = [
+                ActionInputParamsObj_Update,
+                ContinuityInputParamsObj_Update,
+                DataExtractionInputParamsObj_Update,
+                RangeComparisonInputParamsObj_Update,
+                ValueComparisonInputParamsObj_Update,
+            ];
+            const possibleOutputs = [
+                ActionOutputParamsObj_Update
+            ];
             const node = joi.object({
                 Type         : joi.string().valid(...Object.values(NodeType)).optional(),
                 Name         : joi.string().max(32).optional(),
@@ -64,14 +95,10 @@ export class NodeValidator extends BaseValidator {
                 SchemaId     : joi.string().uuid().optional(),
                 Action: {
                     ActionType : joi.string().valid(...Object.values(EventActionType)).optional(),
-                    ActionSubject: joi.any().optional(),
                     Name       : joi.string().max(32).optional(),
                     Description: joi.string().max(256).optional(),
-                    Params     : {
-                        Message   : joi.string().max(256).optional(),
-                        NextNodeId: joi.string().uuid().optional(),
-                        Extra     : joi.any().optional()
-                    }
+                    InputParams : joi.object().valid(possibleInputs).optional(),
+                    OutputParams: joi.object().valid(possibleOutputs).optional(),
                 }
             });
             await node.validateAsync(request.body);
@@ -82,15 +109,15 @@ export class NodeValidator extends BaseValidator {
                 ParentNodeId: request.body.ParentNodeId ?? null,
                 SchemaId    : request.body.SchemaId ?? null,
                 Action      : request.body.Action ? {
-                    Name       : request.body.Action.Name ?? null,
-                    Description: request.body.Action.Description ?? null,
-                    ActionType : request.body.Action.ActionType ?? null,
-                    ActionSubject : request.body.Action.ActionSubject ?? null,
-                    Params     : request.body.Action?.Params? {
-                        Message   : request.body.Action.Params.Message ?? null,
-                        NextNodeId: request.body.Action.Params.NextNodeId ?? null,
-                        Extra     : request.body.Action.Params.Extra ?? null,
-                    } : null,
+                    Name        : request.body.Action.Name ?? null,
+                    Description : request.body.Action.Description ?? null,
+                    ActionType  : request.body.Action.ActionType ?? null,
+                    InputParams : request.body.Action &&
+                                  request.body.Action?.InputParams ? 
+                                  request.body.Action?.InputParams : null,
+                    OutputParams: request.body.Action &&
+                                  request.body.Action?.OutputParams ? 
+                                  request.body.Action?.OutputParams : null,
                 }: null,
             };
         } catch (error) {

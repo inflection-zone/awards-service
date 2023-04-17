@@ -3,7 +3,7 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/handlers/error.handler';
 import { BaseController } from '../base.controller';
 import { RoleService } from '../../database/services/user/role.service';
-import { CompositionOperatorList, ConditionOperandDataTypeList, ContextTypeList, EventActionTypeList, ExecutionStatusList, LogicalOperatorList, MathematicalOperatorList, OperatorList } from '../../domain.types/engine/engine.enums';
+import { CompositionOperatorList, ConditionOperandDataTypeList, ContextTypeList, EventActionTypeList, ExecutionStatusList, LogicalOperatorList, MathematicalOperatorList, OperatorList } from '../../domain.types/engine/engine.types';
 import { IncomingEventService } from '../../database/services/engine/incoming.event.service';
 import { IncomingEventTypeService } from '../../database/services/engine/incoming.event.type.service';
 

@@ -12,7 +12,7 @@ import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { StringUtils } from '../../../common/utilities/string.utils';
 import { Context } from '../../models/engine/context.model';
-import { ContextType } from '../../../domain.types/engine/engine.enums';
+import { ContextType } from '../../../domain.types/engine/engine.types';
 
 ///////////////////////////////////////////////////////////////////////
 

@@ -5,8 +5,8 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { EventActionType, OperatorType } from "./engine.enums";
-import { EventActionParams } from "./event.action.params";
+import { ActionInputParams, EventActionType, OperatorType } from "./engine.types";
+import { ActionOutputParams } from "./engine.types";
 
 //////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@ export interface RuleCreateModel {
     SchemaId    : uuid;
     Action      : {
         ActionType    : EventActionType;
-        ActionSubject?: any;
+        InputParams?: any;
         Name          : string;
         Description  ?: string;
         Params        : {
@@ -35,7 +35,7 @@ export interface RuleUpdateModel {
     SchemaId     ?: uuid;
     Action       ?: {
         ActionType   ?: EventActionType;
-        ActionSubject?: any;
+        InputParams?: any;
         Name         ?: string;
         Description  ?: string;
         Params       ?: {
@@ -61,12 +61,12 @@ export interface RuleResponseDto {
         Operator: OperatorType;
     };
     Action: {
-        id            : uuid;
-        Name          : string;
-        Description   : string;
-        ActionType    : EventActionType;
-        ActionSubject?: any;
-        Params       ?: EventActionParams;
+        id           : uuid;
+        Name         : string;
+        Description  : string;
+        ActionType   : EventActionType;
+        InputParams ?: ActionInputParams;
+        OutputParams?: ActionOutputParams;
     },
     CreatedAt: Date;
     UpdatedAt: Date;

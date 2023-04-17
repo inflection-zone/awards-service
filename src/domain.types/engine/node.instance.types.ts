@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { ContextType, EventActionType, ExecutionStatus, NodeType, OperandDataType, OperatorType } from "./engine.enums";
+import { ContextType, EventActionType, ExecutionStatus, InputParams, NodeType, OperandDataType, OperatorType, OutputParams } from "./engine.types";
 
 //////////////////////////////////////////////////////////////
 
@@ -39,8 +39,8 @@ export interface NodeInstanceResponseDto {
             id           : uuid;
             Name         : string;
             ActionType   : EventActionType;
-            ActionSubject: any;
-            Params       : any;
+            InputParams  : InputParams;
+            OutputParams : OutputParams;
         } | null,
         Rules: {
             id    : uuid,
@@ -49,7 +49,8 @@ export interface NodeInstanceResponseDto {
                 id        : uuid;
                 Name      : string;
                 ActionType: EventActionType;
-                Params    : any;
+                InputParams  : InputParams;
+                OutputParams : OutputParams;
             },
             Condition: {
                 id      : uuid;

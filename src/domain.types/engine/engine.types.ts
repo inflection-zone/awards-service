@@ -1,4 +1,6 @@
 
+import { uuid } from "../miscellaneous/system.types";
+
 export enum ContextType {
     Person  = 'Person',
     Group   = 'Group',
@@ -131,6 +133,7 @@ export enum OperandDataType {
     Boolean = 'Boolean',
     Text    = 'Text',
     Array   = 'Array',
+    Object  = 'Object',
 }
 
 export const ConditionOperandDataTypeList: OperandDataType[] = [
@@ -184,10 +187,10 @@ export const ProcessDataActionTypeList: DataActionType[] = [
 ];
 
 export enum ExecutionStatus {
-    Pending = "Pending",
+    Pending  = "Pending",
     Executed = "Executed",
-    Waiting = "Waiting",
-    Exited = "Exited",
+    Waiting  = "Waiting",
+    Exited   = "Exited",
 }
 
 export const ExecutionStatusList: ExecutionStatus[] = [
@@ -197,8 +200,89 @@ export const ExecutionStatusList: ExecutionStatus[] = [
     ExecutionStatus.Exited,
 ];
 
+export enum InputSourceType {
+    Database    = "Database",
+    Almanac     = "Almanac",
+    ApiEndpoint = "ApiEndpoint",
+}
+
+export interface ActionInputParams {
+    RecordType        : string;
+    SourceType        : InputSourceType;
+    InputTag         ?: string;
+    SecondaryInputTag?: string;
+}
+
+export interface DataExtractionInputParams extends ActionInputParams {
+    Filters ?: {
+        Key  : string;
+        Value: string;
+    }[];
+    RecordDateFrom?: Date;
+    RecordDateTo  ?: Date;
+}
+
+export interface ContinuityInputParams extends ActionInputParams {
+    DataActionType ?: DataActionType;
+    KeyDataType    ?: OperandDataType;
+    KeyName        ?: string;
+    ValueDataType  ?: OperandDataType;
+    ValueName      ?: string;
+    Value          ?: any;
+    Operator        : LogicalOperator;
+    ContinuityCount : number;
+}
+
+export interface ValueComparisonInputParams extends ActionInputParams {
+    DataActionType ?: DataActionType;
+    Filters ?: {
+        Key  : string;
+        Value: string;
+    }[];
+}
+
+export interface RangeComparisonInputParams extends ActionInputParams {
+    DataActionType ?: DataActionType;
+    Filters ?: {
+        Key  : string;
+        Value: string;
+    }[];
+}
+
+export interface DataStorageInputParams extends ActionInputParams {
+    Filters ?: {
+        Key  : string;
+        Value: string;
+    }[];
+    RecordDateFrom?: Date;
+    RecordDateTo  ?: Date;
+}
+
+export enum OutputDestinationType {
+    Database    = "Database",
+    Almanac     = "Almanac",
+    ApiEndpoint = "ApiEndpoint",
+}
+
+export interface ActionOutputParams {
+    DestinationType : OutputDestinationType;
+    Message         : string;
+    OutputTag       : string;
+    NextNodeId     ?: uuid | undefined;
+    Extra?          : any | undefined;
+}
+
 export interface ProcessorResult {
     Success: boolean;
     Tag    : string;
     Data   : any[] | any;
 }
+
+export type InputParams = DataExtractionInputParams | 
+                          DataStorageInputParams | 
+                          ContinuityInputParams |
+                          ValueComparisonInputParams |
+                          RangeComparisonInputParams |
+                          ActionInputParams;
+
+export type OutputParams = ActionOutputParams;

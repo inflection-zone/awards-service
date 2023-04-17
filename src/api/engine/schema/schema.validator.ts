@@ -3,7 +3,7 @@ import express from 'express';
 import { SchemaCreateModel, SchemaUpdateModel, SchemaSearchFilters } from '../../../domain.types/engine/schema.domain.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
-import { EventActionType, NodeType, SchemaType } from '../../../domain.types/engine/engine.enums';
+import { EventActionType, NodeType, SchemaType } from '../../../domain.types/engine/engine.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,7 +26,7 @@ export class SchemaValidator extends BaseValidator {
                     Description : joi.string().max(256).optional(),
                     Action   : {
                         ActionType   : joi.string().valid(...Object.values(EventActionType)).required(),
-                        ActionSubject: joi.any().optional(),
+                        InputParams: joi.any().optional(),
                         Name         : joi.string().max(32).required(),
                         Description  : joi.string().max(256).optional(),
                         Params       : {

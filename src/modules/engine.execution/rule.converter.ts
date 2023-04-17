@@ -1,4 +1,4 @@
-import { CompositionOperator, LogicalOperator, OperatorType } from '../../domain.types/engine/engine.enums';
+import { CompositionOperator, LogicalOperator, OperatorType } from '../../domain.types/engine/engine.types';
 import {
     CCondition,
     CRule} from './execution.types';

@@ -1,4 +1,4 @@
-import { EventActionParams } from '../../domain.types/engine/event.action.params';
+import { ActionOutputParams } from '../../domain.types/engine/engine.types';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
 import {
     CompositionOperator,
@@ -10,7 +10,7 @@ import {
     NodeType,
     OperandDataType,
     OperatorType
-} from '../../domain.types/engine/engine.enums';
+} from '../../domain.types/engine/engine.types';
 import { v4 as uuidv4 } from 'uuid';
 
 ///////////////////////////////////////////////////////////////////////////
@@ -77,11 +77,11 @@ export class CContext {
 export class CAction {
     id           : uuid;
     ActionType   : EventActionType;
-    ActionSubject: any;
-    ParentNodeId : uuid | undefined;
     Name         : string | undefined;
     Description  : string | undefined;
-    Params       : EventActionParams;
+    ParentNodeId : uuid | undefined;
+    InputParams: any;
+    Params       : ActionOutputParams;
 }
 
 export class CNode {
@@ -151,7 +151,7 @@ export class CRule {
 
     Action      : {
         ActionType    : EventActionType;
-        ActionSubject?: any;
+        InputParams?: any;
         Name          : string;
         Description  ?: string;
         Params        : EventActionParams;

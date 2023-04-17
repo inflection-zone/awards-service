@@ -9,7 +9,7 @@ import { Context } from "../../../../database/models/engine/context.model";
 import { logger } from "../../../../logger/logger";
 import { ErrorHandler } from "../../../../common/handlers/error.handler";
 import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
-import { ProcessorResult } from '../../../../domain.types/engine/engine.enums';
+import { ProcessorResult } from '../../../../domain.types/engine/engine.types';
 
 //////////////////////////////////////////////////////////////////////
 

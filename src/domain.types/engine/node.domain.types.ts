@@ -5,7 +5,11 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { EventActionType, NodeType } from "./engine.enums";
+import { 
+    EventActionType, 
+    InputParams, 
+    NodeType, 
+    OutputParams } from "./engine.types";
 
 //////////////////////////////////////////////////////////////
 
@@ -17,14 +21,10 @@ export interface NodeCreateModel {
     SchemaId     : uuid;
     Action: {
         ActionType    : EventActionType;
-        ActionSubject?: any;
         Name          : string;
         Description  ?: string;
-        Params        : {
-            Message    : string;
-            NextNodeId?: uuid;
-            Extra     ?: any;
-        }
+        InputParams  ?: InputParams;
+        OutputParams  : OutputParams;
     };
 }
 
@@ -35,15 +35,11 @@ export interface NodeUpdateModel {
     ParentNodeId    ?: uuid;
     SchemaId        ?: uuid;
     Action       ?: {
-        ActionType   ?: EventActionType;
-        ActionSubject?: any;
-        Name         ?: string;
-        Description  ?: string;
-        Params       ?: {
-            Message   ?: string;
-            NextNodeId?: uuid;
-            Extra     ?: any;
-        }
+        ActionType  ?: EventActionType;
+        Name        ?: string;
+        Description ?: string;
+        InputParams ?: InputParams;
+        OutputParams?: OutputParams;
     };
 }
 
@@ -75,14 +71,10 @@ export interface NodeResponseDto {
     Action: {
         id           : uuid;
         Name         : string;
-        ActionSubject: any;
         Description  : string;
         ActionType   : EventActionType;
-        Params       : {
-            Message    : string;
-            NextNodeId : uuid;
-            Extra      : any;
-        }
+        InputParams  : InputParams;
+        OutputParams : OutputParams;
     } | null,
     CreatedAt: Date;
     UpdatedAt: Date;

@@ -1,8 +1,8 @@
-import { LogicalOperator } from "../../../../domain.types/engine/engine.enums";
+import { LogicalOperator } from "../../../../domain.types/engine/engine.types";
 import { IDataProcessor } from "../../interfaces/data.processor.interface";
-import { OperandDataType } from "../../../../domain.types/engine/engine.enums";
+import { OperandDataType } from "../../../../domain.types/engine/engine.types";
 import { TypeUtils } from "../../../../common/utilities/type.utils";
-import { ProcessorResult } from '../../../../domain.types/engine/engine.enums';
+import { ProcessorResult } from '../../../../domain.types/engine/engine.types';
 import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 
 //////////////////////////////////////////////////////////////////////

@@ -14,7 +14,7 @@ import {
 import { NodeDefaultAction } from "./node.default.action.model";
 import { Rule } from "./rule.model";
 import { Schema } from "./schema.model";
-import { NodeType } from "../../../domain.types/engine/engine.enums";
+import { NodeType } from "../../../domain.types/engine/engine.types";
 
 ////////////////////////////////////////////////////////////////////////
 
