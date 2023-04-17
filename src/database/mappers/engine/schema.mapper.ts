@@ -32,15 +32,11 @@ export class SchemaMapper {
                 Name       : rootNode.Name,
                 Type       : rootNode.Type,
                 Action     : rootNode.Action ? {
-                    Name         : rootNode.Action.Name,
-                    Description  : rootNode.Action.Description,
-                    ActionType   : rootNode.Action.ActionType,
-                    InputParams: rootNode.Action.InputParams,
-                    Params       : rootNode.Action.Params ? {
-                        Message   : rootNode.Action.Params.Message,
-                        NextNodeId: rootNode.Action.Params.NextNodeId,
-                        Extra     : rootNode.Action.Params.Extra,
-                    } : null,
+                    Name        : rootNode.Action.Name,
+                    Description : rootNode.Action.Description,
+                    ActionType  : rootNode.Action.ActionType,
+                    InputParams : rootNode.Action.InputParams,
+                    OutputParams: rootNode.Action.OutputParams,
                 } : null,
             } : null,
             EventTypes  : eventTypes? eventTypes.map(x => {

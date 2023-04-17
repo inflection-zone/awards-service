@@ -5,8 +5,13 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { ActionInputParams, EventActionType, OperatorType } from "./engine.types";
-import { ActionOutputParams } from "./engine.types";
+import { 
+    ActionInputParams, 
+    ActionOutputParams,
+    EventActionType, 
+    InputParams, 
+    OperatorType, 
+    OutputParams } from "./engine.types";
 
 //////////////////////////////////////////////////////////////
 
@@ -17,14 +22,10 @@ export interface RuleCreateModel {
     SchemaId    : uuid;
     Action      : {
         ActionType    : EventActionType;
-        InputParams?: any;
         Name          : string;
         Description  ?: string;
-        Params        : {
-            Message    : string;
-            NextNodeId?: uuid;
-            Extra     ?: any;
-        }
+        InputParams?: InputParams;
+        OutputParams?: OutputParams;
     };
 }
 
@@ -35,14 +36,10 @@ export interface RuleUpdateModel {
     SchemaId     ?: uuid;
     Action       ?: {
         ActionType   ?: EventActionType;
-        InputParams?: any;
         Name         ?: string;
         Description  ?: string;
-        Params       ?: {
-            Message   ?: string;
-            NextNodeId?: uuid;
-            Extra     ?: any;
-        }
+        InputParams?: InputParams;
+        OutputParams?: OutputParams;
     };
 }
 

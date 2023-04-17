@@ -5,7 +5,7 @@ import {
 import {
     uuid
 } from "../miscellaneous/system.types";
-import { EventActionType, NodeType, SchemaType } from "./engine.types";
+import { EventActionType, InputParams, NodeType, OutputParams, SchemaType } from "./engine.types";
 import { IncomingEventTypeResponseDto } from "./incoming.event.type.types";
 import { NodeCreateModel } from "./node.domain.types";
 
@@ -48,15 +48,11 @@ export interface SchemaResponseDto {
        Description: string;
        Type       : NodeType;
         Action ?  : {
-            ActionType   : EventActionType;
-            InputParams: any;
-            Name         : string;
-            Description  : string;
-            Params       : {
-                Message   : string;
-                NextNodeId: uuid;
-                Extra     : any;
-            }
+            ActionType  : EventActionType;
+            Name        : string;
+            Description : string;
+            InputParams : InputParams;
+            OutputParams: OutputParams;
         }
     };
     Client     : {
