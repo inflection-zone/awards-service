@@ -13,7 +13,7 @@ export class RuleConverter {
             conditions: RuleConverter.addCompositeCondition(condition),
             event: {
                 type: rule.Action?.ActionType,
-                params: rule.Action?.Params
+                params: rule.Action?.OutputParams
             }
         };
 

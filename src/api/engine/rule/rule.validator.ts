@@ -40,11 +40,7 @@ export class RuleValidator extends BaseValidator {
                     InputParams : request.body.Action.InputParams ?? null,
                     Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType,
-                    Params      : {
-                        Message    : request.body.Action.Params.Message,
-                        NextNodeId : request.body.Action.Params.NextNodeId ?? null,
-                        Extra      : request.body.Action.Params.Extra ?? null,
-                    }
+                    OutputParams : request.body.Action.OutputParams ?? null,
                 },
             };
         } catch (error) {
@@ -83,11 +79,7 @@ export class RuleValidator extends BaseValidator {
                     Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType ?? null,
                     InputParams : request.body.Action.InputParams ?? null,
-                    Params      : request.body.Action?.Params ? {
-                        Message    : request.body.Action.Params.Message ?? null,
-                        NextNodeId : request.body.Action.Params.NextNodeId ?? null,
-                        Extra      : request.body.Action.Params.Extra ?? null,
-                    } : null,
+                    OutputParams : request.body.Action.OutputParams ?? null,
                 } : null,
             };
         } catch (error) {
