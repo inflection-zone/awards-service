@@ -7,7 +7,7 @@ import { RuleService } from '../../database/services/engine/rule.service';
 import { SchemaInstanceService } from '../../database/services/engine/schema.instance.service';
 import { SchemaService } from '../../database/services/engine/schema.service';
 import { ConditionService } from '../../database/services/engine/condition.service';
-import { OperatorType } from '../../domain.types/engine/engine.enums';
+import { OperatorType } from '../../domain.types/engine/engine.types';
 import { CSchemaInstance, CNodeInstance, CRule, CCondition, CAction } from './execution.types';
 import { logger } from '../../logger/logger';
 import { uuid } from '../../domain.types/miscellaneous/system.types';
@@ -112,7 +112,7 @@ export class ExecutionTypesGenerator {
             instance.Action               = new CAction();
             instance.Action.id            = action.id;
             instance.Action.ActionType    = action.ActionType;
-            instance.Action.ActionSubject = action.ActionSubject;
+            instance.Action.InputParams = action.InputParams;
             instance.Action.Name          = action.Name;
             instance.Action.Params        = action.Params;
             instance.Action.ParentNodeId  = dto.Node.id;
@@ -130,7 +130,7 @@ export class ExecutionTypesGenerator {
         instance.Name = rule.Name;
         instance.Action = {
             ActionType  : rule.Action.ActionType,
-            ActionSubject  : rule.Action.ActionSubject,
+            InputParams  : rule.Action.InputParams,
             Name        : rule.Action.Name,
             Description : rule.Description,
             Params      : {

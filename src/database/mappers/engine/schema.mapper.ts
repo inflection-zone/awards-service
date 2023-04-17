@@ -35,7 +35,7 @@ export class SchemaMapper {
                     Name         : rootNode.Action.Name,
                     Description  : rootNode.Action.Description,
                     ActionType   : rootNode.Action.ActionType,
-                    ActionSubject: rootNode.Action.ActionSubject,
+                    InputParams: rootNode.Action.InputParams,
                     Params       : rootNode.Action.Params ? {
                         Message   : rootNode.Action.Params.Message,
                         NextNodeId: rootNode.Action.Params.NextNodeId,

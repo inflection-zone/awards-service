@@ -31,8 +31,8 @@ export class NodeInstanceMapper {
                     id        : instance.Node.Action.id,
                     Name      : instance.Node.Action.Name,
                     ActionType: instance.Node.Action.ActionType,
-                    ActionSubject: instance.Node.Action.ActionSubject,
-                    Params    : instance.Node.Action.Params,
+                    InputParams: instance.Node.Action.InputParams,
+                    OutputParams    : instance.Node.Action.OutputParams,
                 } : null,
                 Rules: instance.Node.Rules? instance.Node.Rules.map(x => {
                     return {

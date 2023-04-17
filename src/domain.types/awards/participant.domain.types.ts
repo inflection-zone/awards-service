@@ -1,4 +1,4 @@
-import { ContextType } from "../engine/engine.enums";
+import { ContextType } from "../engine/engine.types";
 import {
     BaseSearchResults
 } from "../miscellaneous/base.search.types";

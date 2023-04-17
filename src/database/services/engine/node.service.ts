@@ -249,8 +249,8 @@ export class NodeService extends BaseService {
         if(actionModel && actionModel.Description) {
             action.Description = actionModel.Description;
         }
-        if(actionModel && actionModel.ActionSubject) {
-            action.ActionSubject = actionModel.ActionSubject;
+        if(actionModel && actionModel.InputParams) {
+            action.InputParams = actionModel.InputParams;
         }
         if(actionModel && actionModel.Params && actionModel.Params.Message) {
             action.Params.Message = actionModel.Params.Message;

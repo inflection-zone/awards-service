@@ -39,7 +39,7 @@ export class NodeMapper {
                 Name         : node.Action.Name,
                 Description  : node.Action.Description,
                 ActionType   : node.Action.ActionType,
-                ActionSubject: node.Action.ActionSubject,
+                InputParams: node.Action.InputParams,
                 Params       : node.Action.Params ? {
                     Message   : node.Action.Params.Message,
                     NextNodeId: node.Action.Params.NextNodeId,

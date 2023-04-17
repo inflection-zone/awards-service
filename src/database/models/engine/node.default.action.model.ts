@@ -8,9 +8,11 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
 } from 'typeorm';
-import { EventActionType } from "../../../domain.types/engine/engine.enums";
+import { 
+    ActionInputParams, 
+    EventActionType } from "../../../domain.types/engine/engine.types";
 import { Node } from "./node.model";
-import { EventActionParams } from "../../../domain.types/engine/event.action.params";
+import { ActionOutputParams } from "../../../domain.types/engine/engine.types";
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -23,9 +25,6 @@ export class NodeDefaultAction {
     @Column({ type: 'enum', enum: EventActionType, nullable: false })
     ActionType : EventActionType;
 
-    @Column({ type: 'simple-json', nullable: true })
-    ActionSubject : string;
-
     @OneToOne(() => Node, (node) => node.Action, { nullable: true })
     ParentNode: Node;
 
@@ -36,7 +35,10 @@ export class NodeDefaultAction {
     Description : string;
 
     @Column({ type: 'simple-json', nullable: true })
-    Params : EventActionParams;
+    InputParams : ActionInputParams;
+
+    @Column({ type: 'simple-json', nullable: true })
+    OutputParams : ActionOutputParams;
 
     @CreateDateColumn()
     CreatedAt : Date;

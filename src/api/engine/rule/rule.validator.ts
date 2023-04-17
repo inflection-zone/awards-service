@@ -3,7 +3,7 @@ import express from 'express';
 import { RuleCreateModel, RuleUpdateModel, RuleSearchFilters } from '../../../domain.types/engine/rule.domain.types';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
-import { EventActionType } from '../../../domain.types/engine/engine.enums';
+import { EventActionType } from '../../../domain.types/engine/engine.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ export class RuleValidator extends BaseValidator {
                 SchemaId     : joi.string().uuid().required(),
                 Action       : {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
-                    ActionSubject: joi.any().optional(),
+                    InputParams: joi.any().optional(),
                     Name        : joi.string().max(32).required(),
                     Description : joi.string().max(256).optional(),
                     Params      : {
@@ -37,7 +37,7 @@ export class RuleValidator extends BaseValidator {
                 SchemaId     : request.body.SchemaId,
                 Action       : {
                     Name        : request.body.Action.Name,
-                    ActionSubject : request.body.Action.ActionSubject ?? null,
+                    InputParams : request.body.Action.InputParams ?? null,
                     Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType,
                     Params      : {
@@ -62,7 +62,7 @@ export class RuleValidator extends BaseValidator {
                 Action       : {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).optional(),
                     Name        : joi.string().max(32).optional(),
-                    ActionSubject: joi.any().optional(),
+                    InputParams: joi.any().optional(),
                     Description : joi.string().max(256).optional(),
                     Params      : {
                         Message    : joi.string().max(256).optional(),
@@ -82,7 +82,7 @@ export class RuleValidator extends BaseValidator {
                     Name        : request.body.Action.Name ?? null,
                     Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType ?? null,
-                    ActionSubject : request.body.Action.ActionSubject ?? null,
+                    InputParams : request.body.Action.InputParams ?? null,
                     Params      : request.body.Action?.Params ? {
                         Message    : request.body.Action.Params.Message ?? null,
                         NextNodeId : request.body.Action.Params.NextNodeId ?? null,

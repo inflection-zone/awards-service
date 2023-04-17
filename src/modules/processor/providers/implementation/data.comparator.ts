@@ -1,6 +1,6 @@
 import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 import { IDataComparator } from "../../interfaces/data.comparator.interface";
-import { ProcessorResult } from '../../../../domain.types/engine/engine.enums';
+import { ProcessorResult } from '../../../../domain.types/engine/engine.types';
 
 //////////////////////////////////////////////////////////////////////
 

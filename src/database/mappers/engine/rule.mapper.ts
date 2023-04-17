@@ -30,7 +30,7 @@ export class RuleMapper {
                 Name         : rule.Action.Name,
                 Description  : rule.Action.Description,
                 ActionType   : rule.Action.ActionType,
-                ActionSubject: rule.Action.ActionSubject,
+                InputParams: rule.Action.InputParams,
                 Params       : {
                     Message   : rule.Action.Params.Message,
                     NextNodeId: rule.Action.Params.NextNodeId,

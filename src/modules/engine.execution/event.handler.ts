@@ -2,7 +2,7 @@ import { logger } from "../../logger/logger";
 import { IncomingEventResponseDto } from "../../domain.types/engine/incoming.event.types";
 import * as asyncLib from 'async';
 import { ContextService } from "../../database/services/engine/context.service";
-import { ContextType } from "../../domain.types/engine/engine.enums";
+import { ContextType } from "../../domain.types/engine/engine.types";
 import { SchemaInstanceService } from "../../database/services/engine/schema.instance.service";
 import { ContextResponseDto } from "../../domain.types/engine/context.types";
 import { SchemaEngine } from "./schema.engine";

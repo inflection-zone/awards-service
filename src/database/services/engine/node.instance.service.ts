@@ -168,7 +168,7 @@ export class NodeInstanceService extends BaseService {
                         id           : true,
                         Name         : true,
                         ActionType   : true,
-                        ActionSubject: true,
+                        InputParams: true,
                         Params       : {
                             Extra     : true,
                             Message   : true,
@@ -182,7 +182,7 @@ export class NodeInstanceService extends BaseService {
                             id           : true,
                             Name         : true,
                             ActionType   : true,
-                            ActionSubject: true,
+                            InputParams: true,
                             Params       : {
                                 Extra     : true,
                                 Message   : true,

@@ -4,7 +4,7 @@ import {
     CContext,
     CNodeInstance,
     CSchemaInstance } from './execution.types';
-import { DataActionType, EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.enums';
+import { DataActionType, EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.types';
 import { logger } from '../../logger/logger';
 import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
 import { ExecutionTypesGenerator } from './execution.types.generator';
@@ -77,7 +77,7 @@ export class SchemaEngine {
 
             if (actionType === EventActionType.ExtractData) {
                 //Extract data based on the action subject filters
-                const subject = action.ActionSubject;
+                const subject = action.InputParams;
                 const data = await processor.extractData(context.id, subject);
                 schemaInstance.Almanac.push({
                     Name: data.Tag,
@@ -86,7 +86,7 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.ProcessData) {
-                const subject = action.ActionSubject;
+                const subject = action.InputParams;
                 const dataActionType = subject.DataActionType;
                 const almanacObject = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
                 if (!almanacObject) {
@@ -103,7 +103,7 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.CompareData) {
-                const subject = action.ActionSubject;
+                const subject = action.InputParams;
                 const dataActionType = subject.DataActionType;
                 const almanacObjectFirst = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
                 if (!almanacObjectFirst) {
@@ -124,7 +124,7 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.StoreData) {
-                const subject = action.ActionSubject;
+                const subject = action.InputParams;
                 const almanacObject = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
                 if (!almanacObject) {
                     throw new Error(`Records with tag ${subject.PrimaryInputTag} not found in schema almanac.`);

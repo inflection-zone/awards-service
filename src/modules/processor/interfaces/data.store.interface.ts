@@ -1,5 +1,5 @@
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { ProcessorResult } from '../../../domain.types/engine/engine.enums';
+import { ProcessorResult } from '../../../domain.types/engine/engine.types';
 
 export interface IDataStore {
 

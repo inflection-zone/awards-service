@@ -15,7 +15,7 @@ import {
     ParticipantGroupSearchResults, 
     ParticipantGroupUpdateModel } from '../../../domain.types/awards/participant.group.domain.types';
     import { Context } from '../../models/engine/context.model';
-    import { ContextType } from '../../../domain.types/engine/engine.enums';
+    import { ContextType } from '../../../domain.types/engine/engine.types';
 
 ///////////////////////////////////////////////////////////////////////
 
