@@ -252,14 +252,14 @@ export class NodeService extends BaseService {
         if(actionModel && actionModel.InputParams) {
             action.InputParams = actionModel.InputParams;
         }
-        if(actionModel && actionModel.Params && actionModel.Params.Message) {
-            action.Params.Message = actionModel.Params.Message;
+        if(actionModel && actionModel.OutputParams && actionModel.OutputParams.Message) {
+            action.OutputParams.Message = actionModel.OutputParams.Message;
         }
-        if(actionModel && actionModel.Params && actionModel.Params.NextNodeId) {
-            action.Params.NextNodeId = actionModel.Params.NextNodeId;
+        if(actionModel && actionModel.OutputParams && actionModel.OutputParams.NextNodeId) {
+            action.OutputParams.NextNodeId = actionModel.OutputParams.NextNodeId;
         }
-        if(actionModel && actionModel.Params && actionModel.Params.Extra) {
-            action.Params.Extra = actionModel.Params.Extra;
+        if(actionModel && actionModel.OutputParams && actionModel.OutputParams.Extra) {
+            action.OutputParams.Extra = actionModel.OutputParams.Extra;
         }
 
         const updated = await this._actionRepository.save(action);

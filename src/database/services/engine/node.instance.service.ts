@@ -165,29 +165,21 @@ export class NodeInstanceService extends BaseService {
                     Name       : true,
                     Description: true,
                     Action: {
-                        id           : true,
-                        Name         : true,
-                        ActionType   : true,
-                        InputParams: true,
-                        Params       : {
-                            Extra     : true,
-                            Message   : true,
-                            NextNodeId: true,
-                        }
+                        id          : true,
+                        Name        : true,
+                        ActionType  : true,
+                        InputParams : {},
+                        OutputParams: {},
                     },
                     Rules : {
                         id: true,
                         Name: true,
                         Action: {
-                            id           : true,
-                            Name         : true,
-                            ActionType   : true,
-                            InputParams: true,
-                            Params       : {
-                                Extra     : true,
-                                Message   : true,
-                                NextNodeId: true,
-                            }
+                            id          : true,
+                            Name        : true,
+                            ActionType  : true,
+                            InputParams : {},
+                            OutputParams: {},
                         },
                         Condition: {
                             id: true,

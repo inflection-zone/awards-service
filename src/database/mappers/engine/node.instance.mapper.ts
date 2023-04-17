@@ -39,10 +39,11 @@ export class NodeInstanceMapper {
                         id: x.id,
                         Name: x.Name,
                         Action : {
-                            id        : x.Action.id,
-                            Name      : x.Action.Name,
-                            ActionType: x.Action.ActionType,
-                            Params : x.Action.Params,
+                            id          : x.Action.id,
+                            Name        : x.Action.Name,
+                            ActionType  : x.Action.ActionType,
+                            InputParams : x.Action.InputParams,
+                            OutputParams: x.Action.OutputParams,
                         },
                         Condition : {
                             id: x.Condition.id,

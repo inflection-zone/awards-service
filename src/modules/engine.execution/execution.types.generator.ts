@@ -109,13 +109,13 @@ export class ExecutionTypesGenerator {
 
             const action = dto.Node.Action;
 
-            instance.Action               = new CAction();
-            instance.Action.id            = action.id;
-            instance.Action.ActionType    = action.ActionType;
-            instance.Action.InputParams = action.InputParams;
-            instance.Action.Name          = action.Name;
-            instance.Action.Params        = action.Params;
-            instance.Action.ParentNodeId  = dto.Node.id;
+            instance.Action              = new CAction();
+            instance.Action.id           = action.id;
+            instance.Action.ActionType   = action.ActionType;
+            instance.Action.InputParams  = action.InputParams;
+            instance.Action.Name         = action.Name;
+            instance.Action.OutputParams = action.OutputParams;
+            instance.Action.ParentNodeId = dto.Node.id;
         }
 
         return instance;
@@ -130,14 +130,10 @@ export class ExecutionTypesGenerator {
         instance.Name = rule.Name;
         instance.Action = {
             ActionType  : rule.Action.ActionType,
-            InputParams  : rule.Action.InputParams,
             Name        : rule.Action.Name,
             Description : rule.Description,
-            Params      : {
-                Message    : rule.Action.Params.Message,
-                NextNodeId : rule.Action.Params.NextNodeId,
-                Extra      : rule.Action.Params.Extra,
-            }
+            InputParams  : rule.Action.InputParams,
+            OutputParams      : rule.Action.OutputParams
         };
 
         const conds = await this.getConditionsForRule(rule.id);

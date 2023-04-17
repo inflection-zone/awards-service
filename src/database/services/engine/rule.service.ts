@@ -77,15 +77,11 @@ export class RuleService extends BaseService {
                         Description: true,
                     },
                     Action: {
-                        id           : true,
-                        Name         : true,
-                        ActionType   : true,
-                        InputParams: true,
-                        Params       : {
-                            Message   : true,
-                            NextNodeId: true,
-                            Extra     : true,
-                        },
+                        id          : true,
+                        Name        : true,
+                        ActionType  : true,
+                        InputParams : {},
+                        OutputParams: {},
                     },
                     Condition: {
                         id      : true,
@@ -241,7 +237,8 @@ export class RuleService extends BaseService {
             ActionType: actionModel.ActionType,
             Name: actionModel.Name,
             Description: actionModel.Description,
-            Params: actionModel.Params
+            InputParams: actionModel.InputParams,
+            OutputParams: actionModel.InputParams,
         });
         const record = await this._actionRepository.save(action);
         return record;
@@ -268,14 +265,14 @@ export class RuleService extends BaseService {
         if(actionModel && actionModel.Description) {
             action.Description = actionModel.Description;
         }
-        if(actionModel && actionModel.Params && actionModel.Params.Message) {
-            action.Params.Message = actionModel.Params.Message;
+        if(actionModel && actionModel.OutputParams && actionModel.OutputParams.Message) {
+            action.OutputParams.Message = actionModel.OutputParams.Message;
         }
-        if(actionModel && actionModel.Params && actionModel.Params.NextNodeId) {
-            action.Params.NextNodeId = actionModel.Params.NextNodeId;
+        if(actionModel && actionModel.Params && actionModel.OutputParams.NextNodeId) {
+            action.OutputParams.NextNodeId = actionModel.OutputParams.NextNodeId;
         }
-        if(actionModel && actionModel.Params && actionModel.Params.Extra) {
-            action.Params.Extra = actionModel.Params.Extra;
+        if(actionModel && actionModel.Params && actionModel.OutputParams.Extra) {
+            action.OutputParams.Extra = actionModel.OutputParams.Extra;
         }
 
         const updated = await this._actionRepository.save(action);
