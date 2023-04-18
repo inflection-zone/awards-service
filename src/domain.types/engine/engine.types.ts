@@ -134,6 +134,7 @@ export enum OperandDataType {
     Text    = 'Text',
     Array   = 'Array',
     Object  = 'Object',
+    Date    = 'Date',
 }
 
 export const ConditionOperandDataTypeList: OperandDataType[] = [
@@ -142,6 +143,7 @@ export const ConditionOperandDataTypeList: OperandDataType[] = [
     OperandDataType.Boolean,
     OperandDataType.Text,
     OperandDataType.Array,
+    OperandDataType.Date,
 ];
 
 export enum EventActionType {
