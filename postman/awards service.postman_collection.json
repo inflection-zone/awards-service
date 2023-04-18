@@ -1634,6 +1634,317 @@
 								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
 							},
 							"response": []
+						},
+						{
+							"name": "Get data action types",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"isUpperCase = (str) => {\r",
+											"    return str.toUpperCase() === str;\r",
+											"};\r",
+											"\r",
+											"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+											"    if (str.length > 0) {\r",
+											"        var outstr = \"\";\r",
+											"        str = str.replace('-', '');\r",
+											"        str = str.replace('-', '');\r",
+											"        str = str.replace('-', '');\r",
+											"        for (var i = 0; i < str.length; i++) {\r",
+											"            var c = str.charAt(i);\r",
+											"            if (isUpperCase(c) && i !== 0) {\r",
+											"                outstr += '_' + c.toUpperCase();\r",
+											"            }\r",
+											"            else {\r",
+											"                outstr += c.toUpperCase();\r",
+											"            }\r",
+											"        }\r",
+											"        return outstr;\r",
+											"    }\r",
+											"    return str;\r",
+											"};\r",
+											"\r",
+											"try {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    var types = jsonRes.Data.Types;\r",
+											"    for(var i = 0; i < types.length; i++) {\r",
+											"        var r = types[i];\r",
+											"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+											"        var str = x + \"_DATA_ACTION_TYPE\";\r",
+											"        console.log(str);\r",
+											"        pm.environment.set(str, types[i]);\r",
+											"    }\r",
+											"}\r",
+											"catch (error) {\r",
+											"    console.log(error.message);\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Execution status types are returned\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data).to.have.property('Types');\r",
+											"    pm.expect(jsonRes.Data.Types.length).greaterThan(0);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/types/data-action-types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"types",
+										"data-action-types"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
+						},
+						{
+							"name": "Get input source types",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"isUpperCase = (str) => {\r",
+											"    return str.toUpperCase() === str;\r",
+											"};\r",
+											"\r",
+											"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+											"    if (str.length > 0) {\r",
+											"        var outstr = \"\";\r",
+											"        str = str.replace('-', '');\r",
+											"        for (var i = 0; i < str.length; i++) {\r",
+											"            var c = str.charAt(i);\r",
+											"            if (isUpperCase(c) && i !== 0) {\r",
+											"                outstr += '_' + c.toUpperCase();\r",
+											"            }\r",
+											"            else {\r",
+											"                outstr += c.toUpperCase();\r",
+											"            }\r",
+											"        }\r",
+											"        return outstr;\r",
+											"    }\r",
+											"    return str;\r",
+											"};\r",
+											"\r",
+											"try {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    var types = jsonRes.Data.Types;\r",
+											"    for(var i = 0; i < types.length; i++) {\r",
+											"        var r = types[i];\r",
+											"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+											"        var str = x + \"_INPUT_SOURCE_TYPE\";\r",
+											"        console.log(str);\r",
+											"        pm.environment.set(str, types[i]);\r",
+											"    }\r",
+											"}\r",
+											"catch (error) {\r",
+											"    console.log(error.message);\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Execution status types are returned\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data).to.have.property('Types');\r",
+											"    pm.expect(jsonRes.Data.Types.length).greaterThan(0);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/types/input-source-types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"types",
+										"input-source-types"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
+						},
+						{
+							"name": "Get output source types",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"isUpperCase = (str) => {\r",
+											"    return str.toUpperCase() === str;\r",
+											"};\r",
+											"\r",
+											"convertPascalCaseToCapitalSnakeCase = (str) => {\r",
+											"    if (str.length > 0) {\r",
+											"        var outstr = \"\";\r",
+											"        str = str.replace('-', '');\r",
+											"        for (var i = 0; i < str.length; i++) {\r",
+											"            var c = str.charAt(i);\r",
+											"            if (isUpperCase(c) && i !== 0) {\r",
+											"                outstr += '_' + c.toUpperCase();\r",
+											"            }\r",
+											"            else {\r",
+											"                outstr += c.toUpperCase();\r",
+											"            }\r",
+											"        }\r",
+											"        return outstr;\r",
+											"    }\r",
+											"    return str;\r",
+											"};\r",
+											"\r",
+											"try {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    var types = jsonRes.Data.Types;\r",
+											"    for(var i = 0; i < types.length; i++) {\r",
+											"        var r = types[i];\r",
+											"        const x = convertPascalCaseToCapitalSnakeCase(r);\r",
+											"        var str = x + \"_OUTPUT_SOURCE_TYPE\";\r",
+											"        console.log(str);\r",
+											"        pm.environment.set(str, types[i]);\r",
+											"    }\r",
+											"}\r",
+											"catch (error) {\r",
+											"    console.log(error.message);\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Execution status types are returned\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data).to.have.property('Types');\r",
+											"    pm.expect(jsonRes.Data.Types.length).greaterThan(0);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/types/output-source-types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"types",
+										"output-source-types"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
 						}
 					]
 				},
@@ -2129,7 +2440,7 @@
 											"\r",
 											"pm.test(\"Schema is created\", function () {\r",
 											"    var jsonRes = pm.response.json();\r",
-											"    pm.expect(jsonRes.Data.length).greaterThan(0);\r",
+											"    pm.expect(jsonRes.Data).to.have.property('id');\r",
 											"});\r",
 											""
 										],
@@ -3039,7 +3350,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"CreateNewInstanceAlways\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ]\r\n}"
+											"raw": ""
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/schema/{{SCHEMA_ID}}",
@@ -3057,6 +3368,86 @@
 									"response": []
 								}
 							]
+						}
+					]
+				},
+				{
+					"name": "Utility methods",
+					"item": [
+						{
+							"name": "Delete schema",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Schema is created\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+											"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+											"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+											"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+											"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+											"    pm.expect(jsonRes.Data).to.have.property('RootNode');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/engine/schema/{{SCHEMA_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"engine",
+										"schema",
+										"{{SCHEMA_ID}}"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
 						}
 					]
 				}

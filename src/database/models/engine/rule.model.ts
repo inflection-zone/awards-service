@@ -29,7 +29,8 @@ export class Rule {
     @Column({ type: 'varchar', length: 512, nullable: true })
     Description : string;
 
-    @ManyToOne(() => Node, (node) => node.Rules)
+    @ManyToOne(() => Node, (node) => node.Rules, { onDelete: 'CASCADE' })
+    @JoinColumn()
     ParentNode: Node;
 
     @ManyToOne(() => Schema, (schema) => schema.Nodes)

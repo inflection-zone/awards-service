@@ -4,6 +4,14 @@ import { SchemaCreateModel, SchemaUpdateModel, SchemaSearchFilters } from '../..
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
 import { EventActionType, NodeType, SchemaType } from '../../../domain.types/engine/engine.types';
+import { 
+    ActionInputParamsObj_Create, 
+    ActionOutputParamsObj_Create, 
+    ContinuityInputParamsObj_Create, 
+    DataExtractionInputParamsObj_Create, 
+    DataStorageInputParamsObj_Create, 
+    RangeComparisonInputParamsObj_Create, 
+    ValueComparisonInputParamsObj_Create } from '../../../api/common.validations';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,15 +33,17 @@ export class SchemaValidator extends BaseValidator {
                     Name        : joi.string().max(32).required(),
                     Description : joi.string().max(256).optional(),
                     Action   : {
-                        ActionType   : joi.string().valid(...Object.values(EventActionType)).required(),
-                        InputParams: joi.any().optional(),
-                        Name         : joi.string().max(32).required(),
-                        Description  : joi.string().max(256).optional(),
-                        Params       : {
-                            Message   : joi.string().max(256).required(),
-                            NextNodeId: joi.string().uuid().optional(),
-                            Extra     : joi.any().optional()
-                        }
+                        ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
+                        Name        : joi.string().max(32).required(),
+                        Description : joi.string().max(256).optional(),
+                        InputParams : joi.alternatives().try(
+                            ActionInputParamsObj_Create,
+                            ContinuityInputParamsObj_Create,
+                            DataExtractionInputParamsObj_Create,
+                            DataStorageInputParamsObj_Create,
+                            RangeComparisonInputParamsObj_Create,
+                            ValueComparisonInputParamsObj_Create).optional(),
+                        OutputParams: joi.alternatives().try(ActionOutputParamsObj_Create).optional(),
                     }
                 }).optional()
             });

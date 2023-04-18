@@ -16,7 +16,7 @@ export class SchemaEventType {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @ManyToOne(() => Schema)
+    @ManyToOne(() => Schema, { onDelete: 'CASCADE' })
     @JoinColumn()
     Schema: Schema;
 

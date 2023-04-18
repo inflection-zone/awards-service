@@ -3,8 +3,18 @@ import { ResponseHandler } from '../../common/handlers/response.handler';
 import { ErrorHandler } from '../../common/handlers/error.handler';
 import { BaseController } from '../base.controller';
 import { RoleService } from '../../database/services/user/role.service';
-import { CompositionOperatorList, ConditionOperandDataTypeList, ContextTypeList, EventActionTypeList, ExecutionStatusList, LogicalOperatorList, MathematicalOperatorList, OperatorList } from '../../domain.types/engine/engine.types';
-import { IncomingEventService } from '../../database/services/engine/incoming.event.service';
+import { 
+    CompositionOperatorList, 
+    ConditionOperandDataTypeList, 
+    ContextTypeList, 
+    DataActionTypeList, 
+    EventActionTypeList, 
+    ExecutionStatusList, 
+    InputSourceTypeList, 
+    LogicalOperatorList, 
+    MathematicalOperatorList, 
+    OperatorList, 
+    OutputSourceTypeList } from '../../domain.types/engine/engine.types';
 import { IncomingEventTypeService } from '../../database/services/engine/incoming.event.type.service';
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -136,6 +146,42 @@ export class TypesController extends BaseController {
             await this.authorize('Types.GetExecutionStatusTypes', request, response, false);
             ResponseHandler.success(request, response, 'Execution status types retrieved successfully!', 200, {
                 Types : ExecutionStatusList,
+            });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    
+    getDataActionTypes = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            await this.authorize('Types.GetDataActionTypes', request, response, false);
+            ResponseHandler.success(request, response, 'Data action types retrieved successfully!', 200, {
+                Types : DataActionTypeList,
+            });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    
+    getInputSourceTypes = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            await this.authorize('Types.GetInputSourceTypes', request, response, false);
+            ResponseHandler.success(request, response, 'Input source types retrieved successfully!', 200, {
+                Types : InputSourceTypeList,
+            });
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    
+    getOutputSourceTypes = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            await this.authorize('Types.GetOutputSourceTypes', request, response, false);
+            ResponseHandler.success(request, response, 'Output source types retrieved successfully!', 200, {
+                Types : OutputSourceTypeList,
             });
         } catch (error) {
             ResponseHandler.handleError(request, response, error);

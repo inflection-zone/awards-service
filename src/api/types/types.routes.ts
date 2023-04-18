@@ -20,6 +20,9 @@ export const register = (app: express.Application): void => {
     router.get('/mathematical-operator-types', controller.getMathematicalOperatorTypes);
     router.get('/operand-data-types', controller.getOperandDataTypes);
     router.get('/execution-status-types', controller.getExecutionStatusTypes);
+    router.get('/data-action-types', controller.getDataActionTypes);
+    router.get('/input-source-types', controller.getInputSourceTypes);
+    router.get('/output-source-types', controller.getOutputSourceTypes);
 
     app.use('/api/v1/types', router);
 };
