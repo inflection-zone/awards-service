@@ -1,4 +1,4 @@
-import { LogicalOperator } from "../../../../domain.types/engine/engine.types";
+import { ContinuityInputParams, LogicalOperator, OutputParams } from "../../../../domain.types/engine/engine.types";
 import { IDataProcessor } from "../../interfaces/data.processor.interface";
 import { OperandDataType } from "../../../../domain.types/engine/engine.types";
 import { TypeUtils } from "../../../../common/utilities/type.utils";
@@ -9,7 +9,10 @@ import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 
 export class MockDataProcessorr implements IDataProcessor {
 
-    calculateContinuity = async (contextId: uuid, records: any[], subject: any): Promise<ProcessorResult> => {
+    calculateContinuity = async (
+        records: any[], 
+        inputParams: ContinuityInputParams, 
+        outputParams: OutputParams): Promise<ProcessorResult> => {
         throw new Error("Method not implemented.");    
     };
     

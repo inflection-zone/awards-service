@@ -9,7 +9,7 @@ import { Context } from "../../../../database/models/engine/context.model";
 import { logger } from "../../../../logger/logger";
 import { ErrorHandler } from "../../../../common/handlers/error.handler";
 import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
-import { ProcessorResult } from '../../../../domain.types/engine/engine.types';
+import { DataStorageInputParams, OutputParams, ProcessorResult } from '../../../../domain.types/engine/engine.types';
 import { Badge } from "../../../../database/models/awards/badge.model";
 import { Participant } from "../../../../database/models/awards/participant.model";
 
@@ -33,11 +33,16 @@ export class DataStore implements IDataStore {
 
     //#endregion
 
-    storeData = async (contextId: string, subject: any, records: any[]): Promise<ProcessorResult> => {
+    storeData = async (
+        contextId: uuid, 
+        records:any[], 
+        inputParams: DataStorageInputParams, 
+        outputParams: OutputParams): Promise<ProcessorResult> => {
+
         const context = await this.getContextById(contextId);
-        const recordType = subject.RecordType;
+        const recordType = inputParams.RecordType;
         if (recordType === 'Badge') {
-            return await this.storeBadgeData(context, subject, records, subject.OutputTag);   
+            return await this.storeBadgeData(context, records, inputParams, outputParams.OutputTag);   
         }
         ErrorHandler.throwNotFoundError(`Data store not found for record type.`);
     };
@@ -59,9 +64,17 @@ export class DataStore implements IDataStore {
         }
     };
 
-    private storeBadgeData = async (context: Context, subject: any, records: any[], tag: string) => {
+    private storeBadgeData = async (
+        context: Context, 
+        records: any[], 
+        inputParams: DataStorageInputParams, 
+        tag: string) => {
 
-        const badgeId = subject.BadgeId;
+        const storageKeys = inputParams.StorageKeys;
+        const badgeId = storageKeys && storageKeys.length > 0 ? storageKeys['BadgeId'] : null;
+        if (!badgeId) {
+            throw new Error(`Badge not found for the category!`);
+        }
         const participant = await this._participantRepository.findOne({
             where: {
                 ReferenceId : context.ReferenceId

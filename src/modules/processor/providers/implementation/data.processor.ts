@@ -1,4 +1,4 @@
-import { LogicalOperator } from "../../../../domain.types/engine/engine.types";
+import { ContinuityInputParams, LogicalOperator, OutputParams } from "../../../../domain.types/engine/engine.types";
 import { IDataProcessor } from "../../interfaces/data.processor.interface";
 import { OperandDataType } from "../../../../domain.types/engine/engine.types";
 import { TypeUtils } from "../../../../common/utilities/type.utils";
@@ -103,32 +103,36 @@ const predicate: PredicateType = (x: any,
 
 export class DataProcessorr implements IDataProcessor {
 
-    calculateContinuity = async (contextId: uuid, records: any[], subject: any)
+    calculateContinuity = async (
+        records: any[], 
+        inputParams: ContinuityInputParams, 
+        outputParams: OutputParams)
         : Promise<ProcessorResult> => {
 
         return new Promise((resolve, reject) => {
             try {
-                const recordType = subject.RecordType;
-                const operator = subject.Operator as LogicalOperator;
-                const keyDataType = subject.KeyDataType as OperandDataType;
-                const valueDataType = subject.DataType as OperandDataType;
-                const numOccurrences = subject.ContinuityCount;
-                const operandValue = subject.OperandValue;
-                const secondOperandValue = subject.SecondOperandValue;
-                const valueName = 'value';
+                // const recordType = options.RecordType;
+                // const operator = options.Operator as LogicalOperator;
+                // const keyDataType = options.KeyDataType as OperandDataType;
+                // const keyName = options.KeyName;
+                // const valueDataType = options.ValueDataType as OperandDataType;
+                // const valueName = 'value';
+                // const numOccurrences = options.ContinuityCount;
+                // const operandValue = options.Value;
+                // const secondOperandValue = options.;
 
-                const options = {
-                    keyDataType,
-                    valueDataType,
-                    operator,
-                    operandValue,
-                    secondOperandValue,
-                    valueName
-                };
+                // const options = {
+                //     keyDataType,
+                //     valueDataType,
+                //     operator,
+                //     operandValue,
+                //     secondOperandValue,
+                //     valueName
+                // };
         
                 //const records_ = this.transformRecords(records, keyDataType, valueDataType);
         
-                const bundles = this.getConsecutiveOccurrences(records, predicate, numOccurrences, options);
+                const bundles = this.getConsecutiveOccurrences(records, predicate, inputParams);
                 const bundles_ = [];
                 for (var b of bundles) {
                     if (b.length > 0) {
@@ -144,7 +148,7 @@ export class DataProcessorr implements IDataProcessor {
                 }
                 const result: ProcessorResult = {
                     Success: true,
-                    Tag    : subject.OutputTag,
+                    Tag    : outputParams.OutputTag,
                     Data   : bundles_
                 };
                 resolve(result);
@@ -159,17 +163,20 @@ export class DataProcessorr implements IDataProcessor {
     //#region Private methods
 
     getConsecutiveOccurrences = (
-        records: any[], predicate: PredicateType, numOccurrences: number, options: any) => {
+        records: any[], predicate: PredicateType, options: ContinuityInputParams) => {
         let count = 0;
         const foundBundles = [];
         var bundle = [];
+        const numOccurrences: number = options.ContinuityCount;
+        const valueName = 'value'; // Pl. check this again...
+
         for (let i = 0; i < records.length; i++) {
             if (predicate(
                 records[i], 
-                options.valueName, 
-                options.operator, 
-                options.operandValue, 
-                options.secondOperandValue)) {
+                valueName, 
+                options.Operator, 
+                options.Value, 
+                options.SecondaryValue)) {
                 count++;
                 bundle.push(records[i]);
                 if (count === numOccurrences) {

@@ -1,20 +1,18 @@
 import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 import { IDataComparator } from "../../interfaces/data.comparator.interface";
-import { ProcessorResult } from '../../../../domain.types/engine/engine.types';
+import { 
+    OutputParams, 
+    ProcessorResult, 
+    RangeComparisonInputParams } from '../../../../domain.types/engine/engine.types';
 
 //////////////////////////////////////////////////////////////////////
 
 export class DataComparator implements IDataComparator {
 
-    // const overlap = (e: any,  referenceRange: any[]): boolean => {
-    //     for (var r of referenceRange) {
-    //         if (e.start > r.start && e.start < r.end) {
-    //             return true;
-    //         }
-    //     }
-    // }
-
-    compareRanges = async (subject: any, rangeToBeCompared: any[], referenceRange: any[])
+    compareRanges = async (    rangeToBeCompared: any[],
+        referenceRange: any[],
+        inputParams: RangeComparisonInputParams,
+        outputParams: OutputParams)
         : Promise<ProcessorResult> => {
 
         return new Promise((resolve, reject) => {
@@ -46,7 +44,7 @@ export class DataComparator implements IDataComparator {
                 }
                 const result: ProcessorResult = {
                     Success: true,
-                    Tag: subject.OutputTag,
+                    Tag: outputParams.OutputTag,
                     Data: data
                 };
                 resolve(result);
@@ -57,3 +55,11 @@ export class DataComparator implements IDataComparator {
     };
 
 }
+
+    // const overlap = (e: any,  referenceRange: any[]): boolean => {
+    //     for (var r of referenceRange) {
+    //         if (e.start > r.start && e.start < r.end) {
+    //             return true;
+    //         }
+    //     }
+    // }

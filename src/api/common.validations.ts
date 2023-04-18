@@ -45,6 +45,7 @@ export const ContinuityInputParamsObj_Create = joi.object({
     ValueDataType : joi.string().valid(...Object.values(OperandDataType)).optional(),
     ValueName: joi.string().required(),
     Value: joi.any().optional(),
+    SecondaryValue: joi.any().optional(),
     Operator: joi.string().valid(...Object.values(LogicalOperator)).optional(),
     ContinuityCount: joi.number().integer().required(),
 });
@@ -127,6 +128,7 @@ export const ContinuityInputParamsObj_Update = joi.object({
     ValueDataType : joi.string().valid(...Object.values(OperandDataType)).optional(),
     ValueName: joi.string().optional(),
     Value: joi.any().optional(),
+    SecondaryValue: joi.any().optional(),
     Operator: joi.string().valid(...Object.values(LogicalOperator)).optional(),
     ContinuityCount: joi.number().integer().optional(),
 });

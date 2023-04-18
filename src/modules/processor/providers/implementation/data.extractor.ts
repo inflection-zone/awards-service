@@ -9,7 +9,7 @@ import { Context } from "../../../../database/models/engine/context.model";
 import { logger } from "../../../../logger/logger";
 import { ErrorHandler } from "../../../../common/handlers/error.handler";
 import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
-import { ProcessorResult } from '../../../../domain.types/engine/engine.types';
+import { DataExtractionInputParams, OutputParams, ProcessorResult } from '../../../../domain.types/engine/engine.types';
 
 //////////////////////////////////////////////////////////////////////
 
@@ -27,20 +27,26 @@ export class DataExtractor implements IDataExtractor {
 
     //#endregion
 
-    extractData = async (contextId: uuid, subject: any): Promise<ProcessorResult> => {
+    extractData = async (
+        contextId: uuid, 
+        inputParams: DataExtractionInputParams, 
+        outputParams: OutputParams): Promise<ProcessorResult> => {
+            
         const context = await this.getContextById(contextId);
-        const recordType = subject.RecordType;
+        const recordType = inputParams.RecordType;
 
         if (recordType === 'Medication') {
-            return await this.extractMedicationData(context, subject, subject.OutputTag);            
+            return await this.extractMedicationData(context, inputParams, outputParams.OutputTag);            
         }
         else if (recordType === 'Badge') {
-            const filters = {
-                RecordType   : recordType,
-                BadgeCategory: subject.BadgeCategory,
-                BadgeTitle   : subject.BadgeTitle,
-            };
-            return await this.extractBadgeData(context, filters, subject.OutputTag);   
+            const filters = {};
+            filters['RecordType'] = recordType;
+            if (inputParams.Filters) {
+                for (var f of inputParams.Filters) {
+                    filters[f.Key] = f.Value;
+                }
+            }
+            return await this.extractBadgeData(context, filters, outputParams.OutputTag);   
         }
 
         ErrorHandler.throwNotFoundError(`Data extractor not found for record type.`);
