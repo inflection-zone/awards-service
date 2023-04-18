@@ -4,6 +4,21 @@ import { RuleCreateModel, RuleUpdateModel, RuleSearchFilters } from '../../../do
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
 import { EventActionType } from '../../../domain.types/engine/engine.types';
+import { 
+    ActionInputParamsObj_Create, 
+    ActionInputParamsObj_Update, 
+    ActionOutputParamsObj_Create, 
+    ActionOutputParamsObj_Update, 
+    ContinuityInputParamsObj_Create, 
+    ContinuityInputParamsObj_Update, 
+    DataExtractionInputParamsObj_Create, 
+    DataExtractionInputParamsObj_Update, 
+    DataStorageInputParamsObj_Create, 
+    DataStorageInputParamsObj_Update, 
+    RangeComparisonInputParamsObj_Create, 
+    RangeComparisonInputParamsObj_Update, 
+    ValueComparisonInputParamsObj_Create, 
+    ValueComparisonInputParamsObj_Update } from '../../../api/common.validations';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -12,6 +27,17 @@ export class RuleValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request)
         : Promise<RuleCreateModel> => {
         try {
+            const possibleInputs = [
+                ActionInputParamsObj_Create,
+                ContinuityInputParamsObj_Create,
+                DataExtractionInputParamsObj_Create,
+                DataStorageInputParamsObj_Create,
+                RangeComparisonInputParamsObj_Create,
+                ValueComparisonInputParamsObj_Create,
+            ];
+            const possibleOutputs = [
+                ActionOutputParamsObj_Create
+            ];
             const rule = joi.object({
                 Name         : joi.string().max(32).required(),
                 Description  : joi.string().max(256).optional(),
@@ -19,14 +45,10 @@ export class RuleValidator extends BaseValidator {
                 SchemaId     : joi.string().uuid().required(),
                 Action       : {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
-                    InputParams: joi.any().optional(),
                     Name        : joi.string().max(32).required(),
                     Description : joi.string().max(256).optional(),
-                    Params      : {
-                        Message    : joi.string().max(256).required(),
-                        NextNodeId : joi.any().optional(),
-                        Extra      : joi.any().optional()
-                    }
+                    InputParams : joi.object().valid(possibleInputs).optional(),
+                    OutputParams: joi.object().valid(possibleOutputs).optional(),
                 }
             });
             await rule.validateAsync(request.body);
@@ -36,10 +58,10 @@ export class RuleValidator extends BaseValidator {
                 ParentNodeId : request.body.ParentNodeId,
                 SchemaId     : request.body.SchemaId,
                 Action       : {
-                    Name        : request.body.Action.Name,
-                    InputParams : request.body.Action.InputParams ?? null,
-                    Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType,
+                    Name        : request.body.Action.Name,
+                    Description : request.body.Action.Description ?? null,
+                    InputParams : request.body.Action.InputParams ?? null,
                     OutputParams : request.body.Action.OutputParams ?? null,
                 },
             };
@@ -50,6 +72,17 @@ export class RuleValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<RuleUpdateModel> => {
         try {
+            const possibleInputs = [
+                ActionInputParamsObj_Update,
+                ContinuityInputParamsObj_Update,
+                DataExtractionInputParamsObj_Update,
+                DataStorageInputParamsObj_Update,
+                RangeComparisonInputParamsObj_Update,
+                ValueComparisonInputParamsObj_Update,
+            ];
+            const possibleOutputs = [
+                ActionOutputParamsObj_Update
+            ];
             const rule = joi.object({
                 Name         : joi.string().max(32).optional(),
                 Description  : joi.string().max(256).optional(),
@@ -58,14 +91,9 @@ export class RuleValidator extends BaseValidator {
                 Action       : {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).optional(),
                     Name        : joi.string().max(32).optional(),
-                    InputParams: joi.any().optional(),
                     Description : joi.string().max(256).optional(),
-                    Params      : {
-                        Message    : joi.string().max(256).optional(),
-                        Action     : joi.string().valid(...Object.values(EventActionType)).optional(),
-                        NextNodeId : joi.string().uuid().optional(),
-                        Extra      : joi.any().optional()
-                    }
+                    InputParams : joi.object().valid(possibleInputs).optional(),
+                    OutputParams: joi.object().valid(possibleOutputs).optional(),
                 }
             });
             await rule.validateAsync(request.body);
@@ -78,8 +106,12 @@ export class RuleValidator extends BaseValidator {
                     Name        : request.body.Action.Name ?? null,
                     Description : request.body.Action.Description ?? null,
                     ActionType  : request.body.Action.ActionType ?? null,
-                    InputParams : request.body.Action.InputParams ?? null,
-                    OutputParams : request.body.Action.OutputParams ?? null,
+                    InputParams : request.body.Action &&
+                                  request.body.Action?.InputParams ? 
+                                  request.body.Action?.InputParams : null,
+                    OutputParams: request.body.Action &&
+                                  request.body.Action?.OutputParams ? 
+                                  request.body.Action?.OutputParams : null,
                 } : null,
             };
         } catch (error) {

@@ -250,12 +250,10 @@ export interface RangeComparisonInputParams extends ActionInputParams {
 }
 
 export interface DataStorageInputParams extends ActionInputParams {
-    Filters ?: {
+    StorageKeys ?: {
         Key  : string;
         Value: string;
     }[];
-    RecordDateFrom?: Date;
-    RecordDateTo  ?: Date;
 }
 
 export enum OutputDestinationType {
