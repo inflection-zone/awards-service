@@ -1,8 +1,11 @@
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { ProcessorResult } from '../../../domain.types/engine/engine.types';
+import { ContinuityInputParams, OutputParams, ProcessorResult } from '../../../domain.types/engine/engine.types';
 
 export interface IDataProcessor {
 
-    calculateContinuity(contextId: uuid, records: any[], subject: any): Promise<ProcessorResult>;
+    calculateContinuity(
+        records: any[], 
+        inputParams: ContinuityInputParams, 
+        outputParams: OutputParams): Promise<ProcessorResult>;
 
 }

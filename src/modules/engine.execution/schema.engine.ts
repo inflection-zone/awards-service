@@ -4,7 +4,7 @@ import {
     CContext,
     CNodeInstance,
     CSchemaInstance } from './execution.types';
-import { DataActionType, EventActionType, ExecutionStatus } from '../../domain.types/engine/engine.types';
+import { ContinuityInputParams, DataActionType, EventActionType, ExecutionStatus, OutputParams, RangeComparisonInputParams } from '../../domain.types/engine/engine.types';
 import { logger } from '../../logger/logger';
 import { SchemaInstanceResponseDto } from '../../domain.types/engine/schema.instance.types';
 import { ExecutionTypesGenerator } from './execution.types.generator';
@@ -22,7 +22,7 @@ export class SchemaEngine {
         var schemaInstance = await generator.createSchemaInstance(dbSchemaInstance);
 
         const factCollector = new FactCollector();
-        const facts = factCollector.collectFacts(dbSchemaInstance.Context.ReferenceId, schemaInstance.FactNames);
+        const facts = await factCollector.collectFacts(dbSchemaInstance.Context.ReferenceId, schemaInstance.FactNames);
 
         var rootNodeInstance = schemaInstance.RootNodeInstance;
         var currentNodeInstance = rootNodeInstance as CNodeInstance;
@@ -77,8 +77,7 @@ export class SchemaEngine {
 
             if (actionType === EventActionType.ExtractData) {
                 //Extract data based on the action subject filters
-                const subject = action.InputParams;
-                const data = await processor.extractData(context.id, subject);
+                const data = await processor.extractData(context.id, action.InputParams, action.OutputParams);
                 schemaInstance.Almanac.push({
                     Name: data.Tag,
                     Data: data.Data
@@ -88,12 +87,15 @@ export class SchemaEngine {
             else if (actionType === EventActionType.ProcessData) {
                 const subject = action.InputParams;
                 const dataActionType = subject.DataActionType;
-                const almanacObject = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
+                const almanacObject = schemaInstance.fetchAlmanacData(subject.InputTag);
                 if (!almanacObject) {
-                    throw new Error(`Records with tag ${subject.PrimaryInputTag} not found in schema almanac.`);
+                    throw new Error(`Records with tag ${subject.InputTag} not found in schema almanac.`);
                 }
                 if (dataActionType === DataActionType.CalculateContinuity) {
-                    const data = await processor.calculateContinuity(context.id, almanacObject.Data, subject);
+                    const data = await processor.calculateContinuity(
+                        almanacObject.Data, 
+                        action.InputParams as ContinuityInputParams, 
+                        action.OutputParams as OutputParams);
                     schemaInstance.Almanac.push({
                         Name: data.Tag,
                         Data: data.Data
@@ -103,18 +105,22 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.CompareData) {
-                const subject = action.InputParams;
-                const dataActionType = subject.DataActionType;
-                const almanacObjectFirst = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
+                const inputParams = action.InputParams;
+                const dataActionType = inputParams.DataActionType;
+                const almanacObjectFirst = schemaInstance.fetchAlmanacData(inputParams.InputTag);
                 if (!almanacObjectFirst) {
-                    throw new Error(`Records with tag ${subject.PrimaryInputTag} not found in schema almanac.`);
+                    throw new Error(`Records with tag ${inputParams.InputTag} not found in schema almanac.`);
                 }
-                const almanacObjectSecond = schemaInstance.fetchAlmanacData(subject.SecondaryInputTag);
+                const almanacObjectSecond = schemaInstance.fetchAlmanacData(inputParams.SecondaryInputTag);
                 if (!almanacObjectSecond) {
-                    throw new Error(`Records with tag ${subject.SecondaryInputTag} not found in schema almanac.`);
+                    throw new Error(`Records with tag ${inputParams.SecondaryInputTag} not found in schema almanac.`);
                 }
                 if (dataActionType === DataActionType.FindRangeDifference) {
-                    const data = await processor.compareRanges(subject, almanacObjectFirst.Data, almanacObjectSecond.Data);
+                    const data = await processor.compareRanges(
+                        almanacObjectFirst.Data, 
+                        almanacObjectSecond.Data,
+                        action.InputParams as RangeComparisonInputParams, 
+                        action.OutputParams as OutputParams);
                     schemaInstance.Almanac.push({
                         Name: data.Tag,
                         Data: data.Data
@@ -124,12 +130,12 @@ export class SchemaEngine {
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
             else if (actionType === EventActionType.StoreData) {
-                const subject = action.InputParams;
-                const almanacObject = schemaInstance.fetchAlmanacData(subject.PrimaryInputTag);
+                const inputParams = action.InputParams;
+                const almanacObject = schemaInstance.fetchAlmanacData(inputParams.InputTag);
                 if (!almanacObject) {
-                    throw new Error(`Records with tag ${subject.PrimaryInputTag} not found in schema almanac.`);
+                    throw new Error(`Records with tag ${inputParams.InputTag} not found in schema almanac.`);
                 }
-                const data = await processor.storeData(context.id, subject, almanacObject.Data?.ToBeAdded);
+                const data = await processor.storeData(context.id, almanacObject.Data?.ToBeAdded, action.InputParams, action.OutputParams);
                 schemaInstance.Almanac.push({
                     Name: data.Tag,
                     Data: data.Data
@@ -197,9 +203,9 @@ export class SchemaEngine {
 
     private static getNextNode = (currentNodeInstance, schemaInstance) => {
         if (currentNodeInstance.Action && 
-            currentNodeInstance.Action.Params && 
-            currentNodeInstance.Action.Params.NextNodeId) {
-            const nextNodeId = currentNodeInstance.Action.Params.NextNodeId;
+            currentNodeInstance.Action.OutputParams && 
+            currentNodeInstance.Action.OutputParams.NextNodeId) {
+            const nextNodeId = currentNodeInstance.Action.OutputParams.NextNodeId;
             const nodeInstances = schemaInstance.NodeInstances;
             const newCurrentNodeInstance = nodeInstances.find(x => x.NodeId === nextNodeId);
             if (newCurrentNodeInstance) {

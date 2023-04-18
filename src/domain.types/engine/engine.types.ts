@@ -237,6 +237,7 @@ export interface ContinuityInputParams extends ActionInputParams {
     ValueDataType  ?: OperandDataType;
     ValueName      ?: string;
     Value          ?: any;
+    SecondaryValue ?: any;
     Operator        : LogicalOperator;
     ContinuityCount : number;
 }
