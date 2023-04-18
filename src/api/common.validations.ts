@@ -23,6 +23,17 @@ export const DataExtractionInputParamsObj_Create = joi.object({
     RecordDateTo  : joi.date().optional(),
 });
 
+export const DataStorageInputParamsObj_Create = joi.object({
+    RecordType: joi.string().required(),
+    SourceType: joi.string().valid(...Object.values(InputSourceType)).required(),
+    InputTag: joi.string().optional(),
+    SecondaryInputTag: joi.string().optional(),
+    StorageKeys : joi.array().items(joi.object({
+        Key  : joi.string(),
+        Value: joi.string(),
+    })).optional(),
+});
+
 export const ContinuityInputParamsObj_Create = joi.object({
     RecordType: joi.string().required(),
     SourceType: joi.string().valid(...Object.values(InputSourceType)).required(),
@@ -37,7 +48,6 @@ export const ContinuityInputParamsObj_Create = joi.object({
     Operator: joi.string().valid(...Object.values(LogicalOperator)).optional(),
     ContinuityCount: joi.number().integer().required(),
 });
-
 
 export const ValueComparisonInputParamsObj_Create = joi.object({
     RecordType: joi.string().required(),
@@ -95,6 +105,17 @@ export const DataExtractionInputParamsObj_Update = joi.object({
     RecordDateTo  : joi.date().optional(),
 });
 
+export const DataStorageInputParamsObj_Update = joi.object({
+    RecordType: joi.string().optional(),
+    SourceType: joi.string().valid(...Object.values(InputSourceType)).optional(),
+    InputTag: joi.string().optional(),
+    SecondaryInputTag: joi.string().optional(),
+    StorageKeys : joi.array().items(joi.object({
+        Key  : joi.string(),
+        Value: joi.string(),
+    })).optional(),
+});
+
 export const ContinuityInputParamsObj_Update = joi.object({
     RecordType: joi.string().optional(),
     SourceType: joi.string().valid(...Object.values(InputSourceType)).optional(),
@@ -109,7 +130,6 @@ export const ContinuityInputParamsObj_Update = joi.object({
     Operator: joi.string().valid(...Object.values(LogicalOperator)).optional(),
     ContinuityCount: joi.number().integer().optional(),
 });
-
 
 export const ValueComparisonInputParamsObj_Update = joi.object({
     RecordType: joi.string().optional(),
@@ -149,3 +169,5 @@ export const ActionOutputParamsObj_Update = joi.object({
     NextNodeId: joi.string().uuid().optional(),
     Extra: joi.any().optional(),
 });
+
+/////////////////////////////////////////////////////////////////////////////

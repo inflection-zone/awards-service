@@ -9,7 +9,7 @@ import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
 import { EventActionType, NodeType } from '../../../domain.types/engine/engine.types';
 import { 
-    ActionInputParamsObj_Create, 
+    ActionInputParamsObj_Create,
     ActionInputParamsObj_Update,
     ActionOutputParamsObj_Create,
     ActionOutputParamsObj_Update,
@@ -17,6 +17,8 @@ import {
     ContinuityInputParamsObj_Update,
     DataExtractionInputParamsObj_Create,
     DataExtractionInputParamsObj_Update,
+    DataStorageInputParamsObj_Create,
+    DataStorageInputParamsObj_Update,
     RangeComparisonInputParamsObj_Create,
     RangeComparisonInputParamsObj_Update,
     ValueComparisonInputParamsObj_Create,
@@ -35,6 +37,7 @@ export class NodeValidator extends BaseValidator {
                 ActionInputParamsObj_Create,
                 ContinuityInputParamsObj_Create,
                 DataExtractionInputParamsObj_Create,
+                DataStorageInputParamsObj_Create,
                 RangeComparisonInputParamsObj_Create,
                 ValueComparisonInputParamsObj_Create,
             ];
@@ -81,6 +84,7 @@ export class NodeValidator extends BaseValidator {
                 ActionInputParamsObj_Update,
                 ContinuityInputParamsObj_Update,
                 DataExtractionInputParamsObj_Update,
+                DataStorageInputParamsObj_Update,
                 RangeComparisonInputParamsObj_Update,
                 ValueComparisonInputParamsObj_Update,
             ];
