@@ -27,17 +27,6 @@ export class RuleValidator extends BaseValidator {
     public validateCreateRequest = async (request: express.Request)
         : Promise<RuleCreateModel> => {
         try {
-            const possibleInputs = [
-                ActionInputParamsObj_Create,
-                ContinuityInputParamsObj_Create,
-                DataExtractionInputParamsObj_Create,
-                DataStorageInputParamsObj_Create,
-                RangeComparisonInputParamsObj_Create,
-                ValueComparisonInputParamsObj_Create,
-            ];
-            const possibleOutputs = [
-                ActionOutputParamsObj_Create
-            ];
             const rule = joi.object({
                 Name         : joi.string().max(32).required(),
                 Description  : joi.string().max(256).optional(),
@@ -47,9 +36,15 @@ export class RuleValidator extends BaseValidator {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
                     Name        : joi.string().max(32).required(),
                     Description : joi.string().max(256).optional(),
-                    InputParams : joi.object().valid(possibleInputs).optional(),
-                    OutputParams: joi.object().valid(possibleOutputs).optional(),
-                }
+                    InputParams : joi.alternatives().try(
+                        ActionInputParamsObj_Create,
+                        ContinuityInputParamsObj_Create,
+                        DataExtractionInputParamsObj_Create,
+                        DataStorageInputParamsObj_Create,
+                        RangeComparisonInputParamsObj_Create,
+                        ValueComparisonInputParamsObj_Create).optional(),
+                    OutputParams: joi.alternatives().try(ActionOutputParamsObj_Create).optional(),
+            }
             });
             await rule.validateAsync(request.body);
             return {
@@ -72,17 +67,6 @@ export class RuleValidator extends BaseValidator {
 
     public validateUpdateRequest = async (request: express.Request): Promise<RuleUpdateModel> => {
         try {
-            const possibleInputs = [
-                ActionInputParamsObj_Update,
-                ContinuityInputParamsObj_Update,
-                DataExtractionInputParamsObj_Update,
-                DataStorageInputParamsObj_Update,
-                RangeComparisonInputParamsObj_Update,
-                ValueComparisonInputParamsObj_Update,
-            ];
-            const possibleOutputs = [
-                ActionOutputParamsObj_Update
-            ];
             const rule = joi.object({
                 Name         : joi.string().max(32).optional(),
                 Description  : joi.string().max(256).optional(),
@@ -92,8 +76,14 @@ export class RuleValidator extends BaseValidator {
                     ActionType  : joi.string().valid(...Object.values(EventActionType)).optional(),
                     Name        : joi.string().max(32).optional(),
                     Description : joi.string().max(256).optional(),
-                    InputParams : joi.object().valid(possibleInputs).optional(),
-                    OutputParams: joi.object().valid(possibleOutputs).optional(),
+                    InputParams : joi.alternatives().try(
+                        ActionInputParamsObj_Update,
+                        ContinuityInputParamsObj_Update,
+                        DataExtractionInputParamsObj_Update,
+                        DataStorageInputParamsObj_Update,
+                        RangeComparisonInputParamsObj_Update,
+                        ValueComparisonInputParamsObj_Update).optional(),
+                    OutputParams: joi.alternatives().try(ActionOutputParamsObj_Update).optional(),
                 }
             });
             await rule.validateAsync(request.body);

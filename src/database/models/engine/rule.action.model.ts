@@ -25,7 +25,7 @@ export class RuleAction {
     @Column({ type: 'enum', enum: EventActionType, nullable: false })
     ActionType : EventActionType;
 
-    @OneToOne(() => Rule, (rule) => rule.Action, { nullable: true })
+    @OneToOne(() => Rule, (rule) => rule.Action, { nullable: true, onDelete: 'CASCADE' })
     ParentRule: Rule;
 
     @Column({ type: 'varchar', length: 256, nullable: false })

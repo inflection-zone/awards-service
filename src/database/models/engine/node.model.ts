@@ -39,7 +39,8 @@ export class Node {
     @OneToMany(() => Node, (node) => node.ParentNode)
     Children: Node[];
 
-    @ManyToOne(() => Schema, (schema) => schema.Nodes)
+    @ManyToOne(() => Schema, (schema) => schema.Nodes, { onDelete: 'CASCADE' })
+    @JoinColumn()
     Schema: Schema;
 
     @OneToMany(() => Rule, (rule) => rule.ParentNode, {
@@ -48,7 +49,7 @@ export class Node {
     })
     Rules: Rule[];
 
-    @OneToOne(() => NodeDefaultAction, (action) => action.ParentNode)
+    @OneToOne(() => NodeDefaultAction, (action) => action.ParentNode, { onDelete: 'CASCADE' })
     @JoinColumn()
     Action: NodeDefaultAction;
 

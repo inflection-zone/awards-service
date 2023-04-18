@@ -34,7 +34,7 @@ export class Schema {
     @Column({ type: 'enum', enum: SchemaType, nullable: false, default: SchemaType.ReuseExistingInstance })
     Type : SchemaType;
 
-    @ManyToOne(() => Client, { nullable: true })
+    @ManyToOne(() => Client, { nullable: true, onDelete: 'CASCADE' })
     @JoinColumn()
     Client : Client;
 

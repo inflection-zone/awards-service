@@ -178,7 +178,7 @@ export enum DataActionType {
     CalculatePercentile = "Calculate-Percentile",
 }
 
-export const ProcessDataActionTypeList: DataActionType[] = [
+export const DataActionTypeList: DataActionType[] = [
     DataActionType.CalculateContinuity,
     DataActionType.FindRangeDifference,
     DataActionType.MaximumInRange,
@@ -205,6 +205,12 @@ export enum InputSourceType {
     Almanac     = "Almanac",
     ApiEndpoint = "ApiEndpoint",
 }
+
+export const InputSourceTypeList: InputSourceType[] = [
+    InputSourceType.Database,
+    InputSourceType.Almanac,
+    InputSourceType.ApiEndpoint,
+]
 
 export interface ActionInputParams {
     RecordType        : string;
@@ -261,6 +267,12 @@ export enum OutputDestinationType {
     Almanac     = "Almanac",
     ApiEndpoint = "ApiEndpoint",
 }
+
+export const OutputSourceTypeList: OutputDestinationType[] = [
+    OutputDestinationType.Database,
+    OutputDestinationType.Almanac,
+    OutputDestinationType.ApiEndpoint,
+];
 
 export interface ActionOutputParams {
     DestinationType : OutputDestinationType;
