@@ -1856,6 +1856,11 @@
 										"key": "x-api-key",
 										"value": "{{API_KEY}}",
 										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
 									}
 								],
 								"body": {
@@ -1871,6 +1876,310 @@
 										"participants",
 										"by-client-id",
 										"{{CLIENT_ID}}"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create badge category",
+					"item": [
+						{
+							"name": "Create badge category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"try {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.environment.set(\"BADGE_CATEGORY_ID\", jsonRes.Data.id);\r",
+											"}\r",
+											"catch (error) {\r",
+											"    console.log(error.message);\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Participant is created\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication\",\r\n    \"Description\": \"Badge category for medication related badges\",\r\n    \"ImageUrl\": \"https://e7.pngegg.com/pngimages/626/893/png-clipart-blue-and-white-check-logo-facebook-social-media-verified-badge-logo-vanity-url-blue-checkmark-blue-angle.png\"\r\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/badge-categories",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"badge-categories"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
+						},
+						{
+							"name": "Get badge category by id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/badge-categories/{{BADGE_CATEGORY_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"badge-categories",
+										"{{BADGE_CATEGORY_ID}}"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create badge",
+					"item": [
+						{
+							"name": "Create badge",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"try {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.environment.set(\"BADGE_ID\", jsonRes.Data.id);\r",
+											"}\r",
+											"catch (error) {\r",
+											"    console.log(error.message);\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Participant is created\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+											"\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"CategoryId\": \"{{BADGE_CATEGORY_ID}}\",\r\n    \"Name\": \"7-Day Medication Adherence\",\r\n    \"Description\": \"Badge awarded for 7-day medication adherence.\",\r\n    \"ImageUrl\": \"https://e7.pngegg.com/pngimages/626/893/png-clipart-blue-and-white-check-logo-facebook-social-media-verified-badge-logo-vanity-url-blue-checkmark-blue-angle.png\"\r\n}"
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/badges",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"badges"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
+						},
+						{
+							"name": "Get badge by id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Schema is created\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data.length).greaterThan(0);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/badges/{{BADGE_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"badges",
+										"{{BADGE_ID}}"
 									]
 								},
 								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
@@ -1954,7 +2263,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\"\r\n            },\r\n            \"Params\": {\r\n                \"Message\": \"Extracting medication data for the given context.\"\r\n            }\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": []\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting medication data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Medication\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/schema",
@@ -2117,7 +2426,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_01_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Name\": \"Calculate continuity\",\r\n    \"Description\": \"This execution step involves calculating the continuity for medication adherence for 7-days.\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Process-Data\",\r\n        \"Name\": \"Calculate Continuity\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Medication\",\r\n            \"ValueName\": \"Taken\",\r\n            \"OperandDataType\": \"Boolean\",\r\n            \"OperandValue\": true,\r\n            \"Operator\": \"Equal\",\r\n            \"ContinuityCount\": 7\r\n        },\r\n        \"Params\": {\r\n            \"Message\": \"Processing records for 7-day medication adherence continuity\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_01_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Name\": \"Calculate continuity\",\r\n    \"Description\": \"This execution step involves calculating the continuity for medication adherence for 7-days.\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Process-Data\",\r\n        \"Name\": \"Calculate Continuity\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Medication\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Extract-Data:Medication\",\r\n            \"DataActionType\": \"Calculate-Continuity\",\r\n            \"KeyDataType\": \"Date\",\r\n            \"KeyName\": \"Date\",\r\n            \"ValueDataType\": \"Boolean\",\r\n            \"ValueName\": \"Taken\",\r\n            \"Value\": true,\r\n            \"Operator\": \"Equal\",\r\n            \"ContinuityCount\": 7\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Processing records for 7-day medication adherence continuity\",\r\n            \"OutputTag\": \"Calculate-Continuity:Medication\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes",
@@ -2142,7 +2451,7 @@
 												"exec": [
 													"\r",
 													"pm.test(\"Request is successfull\", function () {\r",
-													"    pm.response.to.have.status(201);\r",
+													"    pm.response.to.have.status(200);\r",
 													"    var jsonRes = pm.response.json();\r",
 													"    pm.expect(jsonRes.Status).to.eql('success');\r",
 													"});\r",
@@ -2190,7 +2499,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"Action\": {\r\n        \"Params\": {\r\n            \"NextNodeId\": \"{{NODE_02_ID}}\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_02_ID}}\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes/{{NODE_01_ID}}",
@@ -2271,7 +2580,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_02_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Get existing badges\",\r\n    \"Description\": \"Extract existing 7-day medication badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Extract-Data\",\r\n        \"Name\": \"Extract-Badges\",\r\n        \"InputParams\": {\r\n            \"RecordType\" : \"Badge\",\r\n            \"BadgeCategory\": \"Medication\",\r\n            \"BadgeTitle\": \"7-Day Medication Adherence\"\r\n        },\r\n        \"Params\": {\r\n            \"Message\": \"Extracting 7-day medication adherence badges\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_02_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Get existing badges\",\r\n    \"Description\": \"Extract existing 7-day medication badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Extract-Data\",\r\n        \"Name\": \"Extract-Badges\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Database\",\r\n            \"InputTag\": \"Badge\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Medication\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"7-Day Medication Adherence\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 7-day medication adherence badges\",\r\n            \"OutputTag\": \"Extract-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes",
@@ -2296,7 +2605,7 @@
 												"exec": [
 													"\r",
 													"pm.test(\"Request is successfull\", function () {\r",
-													"    pm.response.to.have.status(201);\r",
+													"    pm.response.to.have.status(200);\r",
 													"    var jsonRes = pm.response.json();\r",
 													"    pm.expect(jsonRes.Status).to.eql('success');\r",
 													"});\r",
@@ -2344,7 +2653,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"Action\": {\r\n        \"Params\": {\r\n            \"NextNodeId\": \"{{NODE_03_ID}}\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_03_ID}}\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes/{{NODE_02_ID}}",
@@ -2425,7 +2734,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_03_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Compare badges\",\r\n    \"Description\": \"Compare calculated badges against existing badges for 7-day medication adherence.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Compare-Data\",\r\n        \"Name\": \"Compare badges\",\r\n        \"Description\": \"Compare calculated badges against existing badges for 7-day medication adherence\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"BadgeCategory\": \"Medication\",\r\n            \"BadgeTitle\": \"7-Day Medication Adherence\"\r\n        },\r\n        \"Params\": {\r\n            \"Message\": \"Comparing badges and get updated badge list for 7-day medication adherence badges.\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_03_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Compare badges\",\r\n    \"Description\": \"Compare calculated badges against existing badges for 7-day medication adherence.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Compare-Data\",\r\n        \"Name\": \"Compare badges\",\r\n        \"Description\": \"Compare calculated badges against existing badges for 7-day medication adherence\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Calculate-Continuity:Medication\",\r\n            \"SecondaryInputTag\": \"Extract-Data:Badge\",\r\n            \"DataActionType\": \"Find-Range-Difference\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Medication\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"7-Day Medication Adherence\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Comparing badges and get updated badge list for 7-day medication adherence badges.\",\r\n            \"OutputTag\": \"Compare-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes",
@@ -2450,7 +2759,7 @@
 												"exec": [
 													"\r",
 													"pm.test(\"Request is successfull\", function () {\r",
-													"    pm.response.to.have.status(201);\r",
+													"    pm.response.to.have.status(200);\r",
 													"    var jsonRes = pm.response.json();\r",
 													"    pm.expect(jsonRes.Status).to.eql('success');\r",
 													"});\r",
@@ -2498,7 +2807,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"Action\": {\r\n        \"Params\": {\r\n            \"NextNodeId\": \"{{NODE_04_ID}}\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_04_ID}}\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes/{{NODE_03_ID}}",
@@ -2579,7 +2888,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_04_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Store updated badges\",\r\n    \"Description\": \"Store updated 7-day medication adherence badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Store-Data\",\r\n        \"Name\": \"Store updated badges\",\r\n        \"Description\": \"Store updated 7-day medication adherence badges for the participant.\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"BadgeCategory\": \"Medication\",\r\n            \"BadgeTitle\": \"7-Day Medication Adherence\"\r\n        },\r\n        \"Params\": {\r\n            \"Message\": \"Extracting 7-day medication adherence badges\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_04_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Store updated badges\",\r\n    \"Description\": \"Store updated 7-day medication adherence badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Store-Data\",\r\n        \"Name\": \"Store updated badges\",\r\n        \"Description\": \"Store updated 7-day medication adherence badges for the participant.\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Compare-Data:Badge\",\r\n            \"StorageKeys\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Medication\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"7-Day Medication Adherence\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeId\",\r\n                    \"Value\": \"{{BADGE_ID}}\"\r\n                }\r\n            ]\r\n        },\r\n        \"Params\": {\r\n            \"Message\": \"Extracting 7-day medication adherence badges\",\r\n            \"OutputTag\": \"Store-Data:Badge\",\r\n            \"DestinationType\": \"Database\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes",
@@ -2604,7 +2913,7 @@
 												"exec": [
 													"\r",
 													"pm.test(\"Request is successfull\", function () {\r",
-													"    pm.response.to.have.status(201);\r",
+													"    pm.response.to.have.status(200);\r",
 													"    var jsonRes = pm.response.json();\r",
 													"    pm.expect(jsonRes.Status).to.eql('success');\r",
 													"});\r",
@@ -2652,7 +2961,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"Action\": {\r\n        \"Params\": {\r\n            \"NextNodeId\": \"{{NODE_05_ID}}\"\r\n        }\r\n    }\r\n}"
+											"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_05_ID}}\"\r\n        }\r\n    }\r\n}"
 										},
 										"url": {
 											"raw": "{{BASE_URL}}/engine/nodes/{{NODE_04_ID}}",
