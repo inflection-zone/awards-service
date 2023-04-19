@@ -299,3 +299,15 @@ export type InputParams = DataExtractionInputParams |
                           ActionInputParams;
 
 export type OutputParams = ActionOutputParams;
+
+export enum DataSamplingMethod {
+    Any     = "Any",
+    All     = "All",
+    Average = "Average",
+}
+
+export const DataSamplingMethodList: DataSamplingMethod[] = [
+    DataSamplingMethod.Any,
+    DataSamplingMethod.All,
+    DataSamplingMethod.Average,
+];

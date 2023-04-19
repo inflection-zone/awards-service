@@ -9,7 +9,7 @@ import { Context } from "../../../../database/models/engine/context.model";
 import { logger } from "../../../../logger/logger";
 import { ErrorHandler } from "../../../../common/handlers/error.handler";
 import { ParticipantBadge } from "../../../../database/models/awards/participant.badge.model";
-import { DataExtractionInputParams, OutputParams, ProcessorResult } from '../../../../domain.types/engine/engine.types';
+import { DataExtractionInputParams, DataSamplingMethod, OutputParams, ProcessorResult } from '../../../../domain.types/engine/engine.types';
 
 //////////////////////////////////////////////////////////////////////
 
@@ -69,6 +69,11 @@ export class DataExtractor implements IDataExtractor {
 
     private extractMedicationData = async (context: Context, filters: any, tag: string) => {
 
+        var samplingMethod = filters['SamplingMethod'] as DataSamplingMethod;
+        if (!samplingMethod) {
+            samplingMethod = DataSamplingMethod.Any;
+        }
+
         const records = await this._medicationRepository.find({
             where: {
                 ContextReferenceId: context.ReferenceId
@@ -85,14 +90,25 @@ export class DataExtractor implements IDataExtractor {
         }, {});
 
         const dayStats: { Day: string; Passed: boolean;}[] = [];
-        for (var grKey of Object.keys(groupedRecords)) {
-            const arr = groupedRecords[grKey];
-            const passed = arr.some(obj => obj.Taken  === true); // Check only for one record per day
-            //const passed = arr.every(obj => obj.Taken  === true); // Check only for one record per day
-            dayStats.push({
-                Day: grKey,
-                Passed: passed,
-            });
+        if (samplingMethod === DataSamplingMethod.Any) {
+            for (var grKey of Object.keys(groupedRecords)) {
+                const arr = groupedRecords[grKey];
+                const passed = arr.some(obj => obj.Taken  === true); // Check only for one record per day
+                dayStats.push({
+                    Day: grKey,
+                    Passed: passed,
+                });
+            }
+        }
+        else {
+            for (var grKey of Object.keys(groupedRecords)) {
+                const arr = groupedRecords[grKey];
+                const passed = arr.every(obj => obj.Taken  === true); // Check all records for the day
+                dayStats.push({
+                    Day: grKey,
+                    Passed: passed,
+                });
+            }
         }
 
         const sorted = dayStats.sort((a, b) => Date.parse(a.Day) - Date.parse(b.Day));
