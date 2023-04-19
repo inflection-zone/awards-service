@@ -71,9 +71,16 @@ export class DataStore implements IDataStore {
         tag: string) => {
 
         const storageKeys = inputParams.StorageKeys;
-        const badgeId = storageKeys && storageKeys.length > 0 ? storageKeys['BadgeId'] : null;
+        if (!storageKeys && storageKeys.length === 0) {
+            throw new Error(`Empty storage keys!`);
+        }
+        const x = storageKeys.find(x => x.Key === 'BadgeId');
+        if (!x) {
+            throw new Error(`Badge not found to add badge for the participant!`);
+        }
+        const badgeId = x.Value;
         if (!badgeId) {
-            throw new Error(`Badge not found for the category!`);
+            throw new Error(`Invalid badge Id!`);
         }
         const participant = await this._participantRepository.findOne({
             where: {
