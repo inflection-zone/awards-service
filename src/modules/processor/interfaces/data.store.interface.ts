@@ -9,4 +9,10 @@ export interface IDataStore {
         inputParams: DataStorageInputParams, 
         outputParams: OutputParams): Promise<ProcessorResult>;
 
+    removeData(
+        contextId: uuid, 
+        records:any[], 
+        inputParams: DataStorageInputParams, 
+        outputParams: OutputParams): Promise<ProcessorResult>;
+    
 }

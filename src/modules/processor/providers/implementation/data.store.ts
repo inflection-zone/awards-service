@@ -47,21 +47,18 @@ export class DataStore implements IDataStore {
         ErrorHandler.throwNotFoundError(`Data store not found for record type.`);
     };
 
-    public getContextById = async (id: uuid): Promise<Context> => {
-        try {
-            var context = await this._contextRepository.findOne({
-                where : {
-                    id : id
-                },
-                relations: {
-                    Participant: true,
-                    Group: true,
-                }
-            });
-            return context;
-        } catch (error) {
-            logger.error(error.message);
+    removeData = async (
+        contextId: uuid, 
+        records:any[], 
+        inputParams: DataStorageInputParams, 
+        outputParams: OutputParams): Promise<ProcessorResult> => {
+
+        const context = await this.getContextById(contextId);
+        const recordType = inputParams.RecordType;
+        if (recordType === 'Badge') {
+            return await this.removeBadgeData(context, records, inputParams, outputParams.OutputTag);   
         }
+        ErrorHandler.throwNotFoundError(`Data store not found for record type.`);
     };
 
     private storeBadgeData = async (
@@ -121,6 +118,82 @@ export class DataStore implements IDataStore {
         };
 
         return result;
+    };
+
+    private removeBadgeData = async (
+        context: Context, 
+        records: any[], 
+        inputParams: DataStorageInputParams, 
+        tag: string) => {
+
+        const storageKeys = inputParams.StorageKeys;
+        if (!storageKeys && storageKeys.length === 0) {
+            throw new Error(`Empty storage keys!`);
+        }
+        const x = storageKeys.find(x => x.Key === 'BadgeId');
+        if (!x) {
+            throw new Error(`Badge not found to add badge for the participant!`);
+        }
+        const badgeId = x.Value;
+        if (!badgeId) {
+            throw new Error(`Invalid badge Id!`);
+        }
+        const participant = await this._participantRepository.findOne({
+            where: {
+                ReferenceId : context.ReferenceId
+            }
+        });
+        const badge = await this._badgeRepository.findOne({
+            where: {
+                id : badgeId
+            }
+        });
+
+        const addedBadges = [];
+        for await (var r of records) {
+            const start = (new Date(r.start.key)).toISOString().split('T')[0];
+            const end = (new Date(r.end.key)).toISOString().split('T')[0];
+            const metadata = {
+                start : start,
+                end : end,
+                key : `(${start})-(${end})-(${badge.Name})`,
+            };
+            const str = JSON.stringify(metadata);
+            const record = await this._participantBadgeRepository.create({
+                Participant: participant,
+                Badge: badge,
+                Reason: badge.Description,
+                AcquiredDate: new Date(end),
+                Metadata: str
+            });
+            const record_ = await this._participantBadgeRepository.save(record);
+            addedBadges.push(record_);
+        }
+        
+        const result: ProcessorResult = {
+            Success: true,
+            Tag    : tag,
+            Data   : addedBadges
+        };
+
+        return result;
+    };
+
+    public getContextById = async (id: uuid): Promise<Context> => {
+        try {
+            var context = await this._contextRepository.findOne({
+                where : {
+                    id : id
+                },
+                relations: {
+                    Participant: true,
+                    Group: true,
+                }
+            });
+            return context;
+        } catch (error) {
+            logger.error(error.message);
+        }
     };
 
 }

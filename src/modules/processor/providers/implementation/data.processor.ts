@@ -118,10 +118,14 @@ export class DataProcessorr implements IDataProcessor {
                     if (b.length > 0) {
                         const start = b[0];
                         const end = b[b.length - 1];
+                        var startStr = (new Date(start.key)).toISOString().split('T')[0];
+                        var endStr = (new Date(end.key)).toISOString().split('T')[0];
+                        var key = `(${startStr})-(${endStr})`;
                         const obj = {
-                            start : start,
-                            end   : end,
-                            bundle: b
+                            start : start.key,
+                            end   : end.key,
+                            bundle: b,
+                            key   : key,
                         };
                         bundles_.push(obj);
                     }

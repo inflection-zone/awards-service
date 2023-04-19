@@ -218,10 +218,11 @@ export class DataExtractor implements IDataExtractor {
         var refined = [];
         for (var r of records) {
             var metadata = JSON.parse(r.Metadata);
+            var id = r.id;
             var start = (new Date(metadata.start)).toISOString().split('T')[0];
             var end = (new Date(metadata.end)).toISOString().split('T')[0];
-            var key = `(${start})-(${end})-(${r.Badge.Name})`;
-            refined.push({ start, end, key });
+            var key = `(${start})-(${end})`; //-(${r.Badge.Name})
+            refined.push({ id, start, end, key });
         }
         
         const result: ProcessorResult = {
