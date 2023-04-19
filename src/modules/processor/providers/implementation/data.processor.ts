@@ -111,27 +111,7 @@ export class DataProcessorr implements IDataProcessor {
 
         return new Promise((resolve, reject) => {
             try {
-                // const recordType = options.RecordType;
-                // const operator = options.Operator as LogicalOperator;
-                // const keyDataType = options.KeyDataType as OperandDataType;
-                // const keyName = options.KeyName;
-                // const valueDataType = options.ValueDataType as OperandDataType;
-                // const valueName = 'value';
-                // const numOccurrences = options.ContinuityCount;
-                // const operandValue = options.Value;
-                // const secondOperandValue = options.;
 
-                // const options = {
-                //     keyDataType,
-                //     valueDataType,
-                //     operator,
-                //     operandValue,
-                //     secondOperandValue,
-                //     valueName
-                // };
-        
-                //const records_ = this.transformRecords(records, keyDataType, valueDataType);
-        
                 const bundles = this.getConsecutiveOccurrences(records, predicate, inputParams);
                 const bundles_ = [];
                 for (var b of bundles) {
