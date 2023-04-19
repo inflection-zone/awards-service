@@ -22,8 +22,4 @@ export class MockDataExtractor implements IDataExtractor {
         throw new Error("Method not implemented.");
     };
 
-    //#region Private methods
-
-    //#endregion
-
 }

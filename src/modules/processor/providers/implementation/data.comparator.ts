@@ -9,7 +9,7 @@ import {
 
 export class DataComparator implements IDataComparator {
 
-    compareRanges = async (    rangeToBeCompared: any[],
+    compareRanges = async (incomingRange: any[],
         referenceRange: any[],
         inputParams: RangeComparisonInputParams,
         outputParams: OutputParams)
@@ -18,29 +18,38 @@ export class DataComparator implements IDataComparator {
         return new Promise((resolve, reject) => {
             try {
                 var data = {
-                    ToBeAdded: rangeToBeCompared,
+                    ToBeAdded: incomingRange,
                     ToBeRemoved: referenceRange
                 };
 
-                if (rangeToBeCompared.length === 0 && referenceRange.length > 0) {
-                    data.ToBeAdded = [];
+                if (incomingRange.length === 0 && referenceRange.length > 0) {
+                    data.ToBeAdded   = [];
                     data.ToBeRemoved = referenceRange;
                 }
-                else if (rangeToBeCompared.length > 0 && referenceRange.length === 0) {
-                    data.ToBeAdded = rangeToBeCompared;
+                else if (incomingRange.length > 0 && referenceRange.length === 0) {
+                    data.ToBeAdded   = incomingRange;
                     data.ToBeRemoved = [];
                 }
                 else {
-                    //Need to work on this... Use badge key as (start)-(end)-(title)
-                    // var toBeAdded = [];
-                    // var toBeRemoved = [];
-                    // for(var e of rangeToBeCompared) {
-                    //     for (var r of referenceRange) {
-                    //         if (e.start > r.start && e.start < r.end) {
-                    //             toBeRemoved.push(r);
-                    //         }
-                    //     }
-                    // }
+                    var toBeAdded = [];
+                    var toBeRemoved = [];
+                    for(const i of incomingRange) {
+                        const found = referenceRange.find(x => x.key === i.key);
+                        if (!found) {
+                            toBeAdded.push(i);
+                        }
+                    }
+                    if (toBeAdded.length > 0) {
+                        for(const r of referenceRange) {
+                            const found = toBeAdded.find(x => x.key === r.key);
+                            if (!found) {
+                                toBeRemoved.push(r);
+                            }
+                        }
+                    }
+
+                    data.ToBeAdded   = toBeAdded;
+                    data.ToBeRemoved = toBeRemoved;
                 }
                 const result: ProcessorResult = {
                     Success: true,

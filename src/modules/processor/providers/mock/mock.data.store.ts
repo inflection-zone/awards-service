@@ -6,7 +6,6 @@ import { DataStorageInputParams, OutputParams, ProcessorResult } from "../../../
 
 export class MockDataStore implements IDataStore {
 
-
     storeData = async (
         contextId: uuid, 
         records:any[], 
@@ -15,8 +14,12 @@ export class MockDataStore implements IDataStore {
         throw new Error("Method not implemented.");
     };
 
-    //#region Private methods
-
-    //#endregion
+    removeData = async (
+        contextId: uuid, 
+        records:any[], 
+        inputParams: DataStorageInputParams, 
+        outputParams: OutputParams): Promise<ProcessorResult> => {
+        throw new Error("Method not implemented.");
+    };
 
 }

@@ -37,6 +37,10 @@ export class ProcessorService {
         return await this._store.storeData(contextId, records, inputParams, outputParams);
     }
     
+    removeData = async (contextId: uuid, records: any[], inputParams: DataStorageInputParams, outputParams: OutputParams): Promise<ProcessorResult> => {
+        return await this._store.removeData(contextId, records, inputParams, outputParams);
+    }
+    
     calculateContinuity = async (records: any[], inputParams: ContinuityInputParams, outputParams: OutputParams): Promise<ProcessorResult> => {
         return await this._processor.calculateContinuity(records, inputParams, outputParams);
     }
