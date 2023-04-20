@@ -135,13 +135,18 @@ export class SchemaEngine {
                 if (!almanacObject) {
                     throw new Error(`Records with tag ${inputParams.InputTag} not found in schema almanac.`);
                 }
-                const added = await processor.storeData(context.id, almanacObject.Data?.ToBeAdded, action.InputParams, action.OutputParams);
-                const removed = await processor.removeData(context.id, almanacObject.Data?.ToBeRemoved, action.InputParams, action.OutputParams);
+                const added = await processor.storeData(context.id, almanacObject.Data.ToBeAdded, action.InputParams, action.OutputParams);
+                var removedData = null;
+                if (almanacObject.Data.ToBeRemoved) {
+                    const removed = await processor.removeData(context.id, almanacObject.Data.ToBeRemoved, action.InputParams, action.OutputParams);
+                    removedData = removed?.Data;
+                }
+
                 schemaInstance.Almanac.push({
                     Name: action.OutputParams.OutputTag,
                     Data: {
                         Added  : added.Data,
-                        Removed: removed.Data,
+                        Removed: removedData,
                     }
                 });
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
