@@ -30,7 +30,8 @@ export class SchemaEngine {
         logger.info(`Current node    : ${currentNodeInstance.Name}`);
         logger.info(`Current node Id : ${currentNodeInstance.id}`);
 
-        while (currentNodeInstance.ExecutionStatus === ExecutionStatus.Pending) {
+        while (currentNodeInstance && 
+               currentNodeInstance.ExecutionStatus === ExecutionStatus.Pending) {
             currentNodeInstance = await SchemaEngine.traverse(
                 schemaInstance.Context,
                 schemaInstance,
