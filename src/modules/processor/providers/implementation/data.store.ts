@@ -1,6 +1,6 @@
 import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 import { IDataStore } from "../../interfaces/data.store.interface";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository } from "typeorm";
 import { FactsSource } from '../../../fact.extractors/facts.db.connector';
 import { Source } from '../../../../database/database.connector';
 import { MedicationFact } from '../../../fact.extractors/models/medication.fact.model';
@@ -97,7 +97,7 @@ export class DataStore implements IDataStore {
             const metadata = {
                 start : start,
                 end : end,
-                key : `(${start})-(${end})-(${badge.Name})`,
+                key : `(${start})-(${end})`,
             };
             const str = JSON.stringify(metadata);
             const record = await this._participantBadgeRepository.create({
@@ -126,54 +126,13 @@ export class DataStore implements IDataStore {
         inputParams: DataStorageInputParams, 
         tag: string) => {
 
-        const storageKeys = inputParams.StorageKeys;
-        if (!storageKeys && storageKeys.length === 0) {
-            throw new Error(`Empty storage keys!`);
-        }
-        const x = storageKeys.find(x => x.Key === 'BadgeId');
-        if (!x) {
-            throw new Error(`Badge not found to add badge for the participant!`);
-        }
-        const badgeId = x.Value;
-        if (!badgeId) {
-            throw new Error(`Invalid badge Id!`);
-        }
-        const participant = await this._participantRepository.findOne({
-            where: {
-                ReferenceId : context.ReferenceId
-            }
-        });
-        const badge = await this._badgeRepository.findOne({
-            where: {
-                id : badgeId
-            }
-        });
-
-        const addedBadges = [];
-        for await (var r of records) {
-            const start = (new Date(r.start.key)).toISOString().split('T')[0];
-            const end = (new Date(r.end.key)).toISOString().split('T')[0];
-            const metadata = {
-                start : start,
-                end : end,
-                key : `(${start})-(${end})-(${badge.Name})`,
-            };
-            const str = JSON.stringify(metadata);
-            const record = await this._participantBadgeRepository.create({
-                Participant: participant,
-                Badge: badge,
-                Reason: badge.Description,
-                AcquiredDate: new Date(end),
-                Metadata: str
-            });
-            const record_ = await this._participantBadgeRepository.save(record);
-            addedBadges.push(record_);
-        }
-        
+        const recordIds = records.map(x => x.id);
+        var deleted: DeleteResult = await this._participantBadgeRepository.delete(recordIds);
+      
         const result: ProcessorResult = {
             Success: true,
             Tag    : tag,
-            Data   : addedBadges
+            Data   : deleted
         };
 
         return result;
