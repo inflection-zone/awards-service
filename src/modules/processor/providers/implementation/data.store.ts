@@ -127,8 +127,11 @@ export class DataStore implements IDataStore {
         tag: string) => {
 
         const recordIds = records.map(x => x.id);
-        var deleted: DeleteResult = await this._participantBadgeRepository.delete(recordIds);
-      
+        var deleted: DeleteResult = null;
+        if (recordIds && recordIds.length > 0) {
+            deleted = await this._participantBadgeRepository.delete(recordIds);
+        }
+
         const result: ProcessorResult = {
             Success: true,
             Tag    : tag,
