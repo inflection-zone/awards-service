@@ -3,11 +3,10 @@ import "reflect-metadata";
 import { Config } from './../../database/database.config';
 import { logger } from '../../logger/logger';
 import { DataSource } from "typeorm";
-import path from "path";
-import fs from 'fs';
 import { BadgeFact } from './models/bedge.facts.model';
 import { MedicationFact } from './models/medication.fact.model';
 import { DBLogger } from "./../../database/database.logger";
+import { NutritionChoiceFact } from "./models/nutrition.choice.fact.model";
 
 ///////////////////////////////////////////////////////////////////////////////////
 const DATABASE_NAME = `awards_facts`;
@@ -28,6 +27,7 @@ class FactsDatabaseConnector {
         entities    : [
             MedicationFact,
             BadgeFact,
+            NutritionChoiceFact,
         ],
         migrations  : [],
         subscribers : [],
