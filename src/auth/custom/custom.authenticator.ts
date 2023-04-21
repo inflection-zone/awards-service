@@ -1,9 +1,9 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { Logger } from '../../common/logger';
-import { AuthenticationResult } from '../../domain.types/auth.domain.types';
+import { logger } from '../../logger/logger';
+import { AuthenticationResult } from '../../domain.types/user/auth.domain.types';
 import { CurrentClient } from '../../domain.types/miscellaneous/current.client';
-import { ApiClientService } from '../../database/repository.services/api.client.service';
+import { ClientService } from '../../database/services/client/client.service';
 import { Loader } from '../../startup/loader';
 import { IAuthenticator } from '../authenticator.interface';
 
@@ -11,10 +11,10 @@ import { IAuthenticator } from '../authenticator.interface';
 
 export class CustomAuthenticator implements IAuthenticator {
 
-    _clientService: ApiClientService = null;
+    _clientService: ClientService = null;
 
     constructor() {
-        this._clientService = Loader.Container.resolve(ApiClientService);
+        this._clientService = Loader.Container.resolve(ClientService);
     }
 
     public authenticateUser = async (
@@ -37,7 +37,7 @@ export class CustomAuthenticator implements IAuthenticator {
                 if (IsPrivileged) {
                     return res;
                 }
-                
+
                 res = {
                     Result        : false,
                     Message       : 'Unauthorized user access',
@@ -57,9 +57,9 @@ export class CustomAuthenticator implements IAuthenticator {
                 }
                 request.currentUser = user;
             });
-            
+
         } catch (err) {
-            Logger.instance().log(JSON.stringify(err, null, 2));
+            logger.error(JSON.stringify(err, null, 2));
             res = {
                 Result        : false,
                 Message       : 'Error authenticating user',
@@ -101,9 +101,9 @@ export class CustomAuthenticator implements IAuthenticator {
                 return res;
             }
             request.currentClient = client;
-            
+
         } catch (err) {
-            Logger.instance().log(JSON.stringify(err, null, 2));
+            logger.error(JSON.stringify(err, null, 2));
             res = {
                 Result        : false,
                 Message       : 'Error authenticating client',

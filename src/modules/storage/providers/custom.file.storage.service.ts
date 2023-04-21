@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { Logger } from '../../../common/logger';
+import { logger } from '../../../logger/logger';
 import { Helper } from '../../../common/helper';
 import { IFileStorageService } from '../interfaces/file.storage.service.interface';
+import { FileUtils } from '../../../common/utilities/file.utils';
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -22,15 +23,15 @@ export class CustomFileStorageService implements IFileStorageService {
             return storageKey;
         }
         catch (error) {
-            Logger.instance().log(JSON.stringify(error, null, 2));
+            logger.error(JSON.stringify(error, null, 2));
             return null;
         }
     };
-    
+
     upload = async (inputStream: any, storageKey: string): Promise<string> => {
         return new Promise((resolve, reject) => {
             try {
-                var storagePath = Helper.getStoragePath();
+                var storagePath = FileUtils.getStoragePath();
                 const fileLocation = path.join(storagePath, storageKey);
                 const fileDirectory = path.dirname(fileLocation);
                 if (!fs.existsSync(fileDirectory)){
@@ -38,15 +39,14 @@ export class CustomFileStorageService implements IFileStorageService {
                 }
                 const writeStream = fs.createWriteStream(fileLocation);
                 inputStream.pipe(writeStream);
-
                 writeStream.on('finish', async () => {
-                    Logger.instance().log('wrote all data to file');
+                    logger.info('wrote all data to file');
                     writeStream.end();
                     resolve(storageKey);
                 });
             }
             catch (error) {
-                Logger.instance().log(error.message);
+                logger.error(error.message);
                 reject("Unable to create file resource!");
             }
         });
@@ -64,20 +64,20 @@ export class CustomFileStorageService implements IFileStorageService {
             return storageKey;
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             return null;
         }
     };
 
     download = async (storageKey: string): Promise<any> => {
         try {
-            var storagePath = Helper.getStoragePath();
+            var storagePath = FileUtils.getStoragePath();
             const fileLocation = path.join(storagePath, storageKey);
             const stream = fs.createReadStream(fileLocation);
             return stream;
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             return null;
         }
     };
@@ -94,7 +94,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return localFilePath;
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             return null;
         }
     };
@@ -112,7 +112,7 @@ export class CustomFileStorageService implements IFileStorageService {
             return true;
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             return false;
         }
     };
@@ -124,11 +124,11 @@ export class CustomFileStorageService implements IFileStorageService {
             return true;
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             return false;
         }
     };
-    
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getShareableLink(storageKey: string, _durationInMinutes: number): string {
         return path.join(this._storagePath, storageKey);

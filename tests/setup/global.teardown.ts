@@ -1,14 +1,14 @@
-import { Logger } from "../../../../common/logger";
+import { logger } from "../../../../common/logger";
 
 //////////////////////////////////////////////////////////////////////////////////
 
 export default async () => {
     try {
-        
-        //Logger.instance().log("Tearing down...");
+
+        //logger.log("Tearing down...");
     }
     catch (error) {
-        Logger.instance().log('Problem in tearing down the tests! -> ' + error.message);
+        logger.log('Problem in tearing down the tests! -> ' + error.message);
     }
 };
 

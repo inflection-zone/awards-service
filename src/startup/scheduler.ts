@@ -1,6 +1,6 @@
 import * as cron from 'node-cron';
 import * as CronSchedules from '../../seed.data/cron.schedules.json';
-import { Logger } from '../common/logger';
+import { logger } from '../logger/logger';
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +15,7 @@ export class Scheduler {
     private constructor() {
         const env = process.env.NODE_ENV || 'development';
         Scheduler._schedules = CronSchedules[env];
-        Logger.instance().log('Initializing the schedular.');
+        logger.info('Initializing the schedular.');
     }
 
     //#endregion
@@ -31,10 +31,10 @@ export class Scheduler {
             try {
 
                 this.scheduleDailyReminders();
-                
+
                 resolve(true);
             } catch (error) {
-                Logger.instance().log('Error initializing the scheduler.: ' + error.message);
+                logger.error('Error initializing the scheduler.: ' + error.message);
                 reject(false);
             }
         });
@@ -46,14 +46,14 @@ export class Scheduler {
 
     private scheduleDailyReminders = () => {
         cron.schedule(Scheduler._schedules['DailyReminder'], () => {
-            Logger.instance().log('Running scheducled jobs: Daily reminders...');
+            logger.info('Running scheducled jobs: Daily reminders...');
             // (async () => {
             // var service = Loader.container.resolve(UserTaskService);
             // await service.sendTaskReminders();
             // })();
         });
     };
-    
+
     //#endregion
 
 }

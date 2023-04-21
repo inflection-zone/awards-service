@@ -7,6 +7,9 @@
     "FileStorage" : {
         "Provider": "AWS-S3"
     },
+    "Processor" : {
+        "Provider": "Custom"
+    },
     "Communication" : {
         "SMS": {
             "Provider": "Twilio"
@@ -21,5 +24,7 @@
         "CleanupFolderBeforeMinutes": 10
     },
     "MaxUploadFileSize": 104857600,
-    "JwtExpiresIn": 2592000
+    "JwtExpiresIn": 2592000,
+    "Logger" : "Winston",
+    "UseHTTPLogging" : true
 }

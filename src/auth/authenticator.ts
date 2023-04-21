@@ -3,15 +3,15 @@ import express from 'express';
 import { IAuthenticator } from './authenticator.interface';
 import { injectable, inject } from "tsyringe";
 
-import { ResponseHandler } from '../common/response.handler';
-import { Logger } from '../common/logger';
-import { ApiError } from '../common/api.error';
+import { ResponseHandler } from '../common/handlers/response.handler';
+import { logger } from '../logger/logger';
+import { ErrorHandler } from '../common/handlers/error.handler';
 
 ////////////////////////////////////////////////////////////////////////
 
 @injectable()
 export class Authenticator {
-    
+
     constructor(
         @inject('IAuthenticator') private _authenticator: IAuthenticator
     ) {}
@@ -29,7 +29,7 @@ export class Authenticator {
             }
             next();
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             ResponseHandler.failure(request, response, 'User authentication error: ' + error.message, 401);
         }
     };
@@ -37,7 +37,7 @@ export class Authenticator {
     public verifyUser = async (request: express.Request): Promise<boolean> => {
         const authResult = await this._authenticator.authenticateUser(request);
         return authResult.Result;
-    }
+    };
 
     public authenticateClient = async (
         request: express.Request,
@@ -52,7 +52,7 @@ export class Authenticator {
             }
             next();
         } catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             ResponseHandler.failure(request, response, 'Client authentication error: ' + error.message, 401);
         }
     };
@@ -60,11 +60,11 @@ export class Authenticator {
     public checkAuthentication = async(request: express.Request): Promise<boolean> => {
         const clientAuthResult = await this._authenticator.authenticateClient(request);
         if (clientAuthResult.Result === false){
-            throw new ApiError('Unauthorized access', 401);
+            ErrorHandler.throwInternalServerError('Unauthorized access', 401);
         }
         const userAuthResult = await this._authenticator.authenticateUser(request);
         if (userAuthResult.Result === false){
-            throw new ApiError('Unauthorized access', 401);
+            ErrorHandler.throwInternalServerError('Unauthorized access', 401);
         }
         return true;
     };

@@ -10,12 +10,13 @@
             "name": "Launch Program",
             "sourceMaps": true,
             "smartStep": true,
-            "internalConsoleOptions": "openOnSessionStart",
+            "internalConsoleOptions": "neverOpen",
             "program": "${workspaceFolder}/src/index.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
-            ]
+            ],
+            "console": "integratedTerminal"
         },
         {
             "type": "node",
@@ -28,8 +29,7 @@
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "disableOptimisticBPs": true
+            "internalConsoleOptions": "neverOpen"
         }
     ]
 }

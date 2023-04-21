@@ -1,7 +1,7 @@
 import express from 'express';
 import 'reflect-metadata';
 import { inject, injectable } from "tsyringe";
-import { ApiError } from '../common/api.error';
+import { ErrorHandler } from '../common/handlers/error.handler';
 import { CurrentUser } from '../domain.types/miscellaneous/current.user';
 import { IAuthorizer } from './authorizer.interface';
 
@@ -18,7 +18,7 @@ export class Authorizer {
     ): Promise<void> => {
         const authorized = await this._authorizer.authorize(request, response);
         if (!authorized) {
-            throw new ApiError('Unauthorized access', 403);
+            ErrorHandler.throwUnauthorizedUserError('Unauthorized access');
         }
     };
 
@@ -27,5 +27,3 @@ export class Authorizer {
     };
 
 }
-
-////////////////////////////////////////////////////////////////////////

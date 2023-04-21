@@ -15,11 +15,16 @@
             "Provider": "Mock"
         }
     },
+    "Processor" : {
+        "Provider": "Custom"
+    },
     "TemporaryFolders": {
         "Upload": "./tmp/resources/uploads/",
         "Download": "./tmp/resources/downloads/",
         "CleanupFolderBeforeMinutes": 10
     },
     "MaxUploadFileSize": 104857600,
-    "JwtExpiresIn": 2592000
+    "JwtExpiresIn": 2592000,
+    "Logger" : "Pino",
+    "UseHTTPLogging" : true
 }
