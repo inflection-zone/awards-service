@@ -47,6 +47,6 @@ This is a typical webhook which listens to the predefined events (which can be o
 
 Please have a look at the following schematic depicting the internals of the awards service.
 
-  <img src="./logical-architecture-layout.png" width="1300">
+  <img src="./docs/awards-service-schematic.png" width="800">
 
 __We encourage forking and welcome contributions to this code base.__
