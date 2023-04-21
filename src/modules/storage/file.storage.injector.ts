@@ -10,7 +10,7 @@ export class FileStorageInjector {
 
     static registerInjections(container: DependencyContainer) {
 
-        const provider = ConfigurationManager.FileStorageProvider();
+        const provider = ConfigurationManager.FileStorageProvider;
         if (provider === 'AWS-S3') {
             container.register('IFileStorageService', AWSS3FileStorageService);
         }
@@ -18,5 +18,5 @@ export class FileStorageInjector {
             container.register('IFileStorageService', CustomFileStorageService);
         }
     }
-    
+
 }

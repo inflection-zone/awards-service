@@ -1,6 +1,6 @@
 import * as aws from 'aws-sdk';
 import fs from 'fs';
-import { Logger } from '../../../common/logger';
+import { logger } from '../../../logger/logger';
 import { IFileStorageService } from '../interfaces/file.storage.service.interface';
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -18,16 +18,16 @@ export class AWSS3FileStorageService implements IFileStorageService {
             };
             var stored = await s3.headObject(params).promise();
 
-            Logger.instance().log(JSON.stringify(stored, null, 2));
+            logger.info(JSON.stringify(stored, null, 2));
 
             return storageKey;
         }
         catch (error) {
-            Logger.instance().log(JSON.stringify(error, null, 2));
+            logger.error(JSON.stringify(error, null, 2));
             return null;
         }
     };
-    
+
     upload = async (inputStream: any, storageKey: string): Promise<string> => {
         try {
             var s3 = this.getS3Client();
@@ -37,11 +37,11 @@ export class AWSS3FileStorageService implements IFileStorageService {
                 Body   : inputStream //Request stream piped directly
             };
             var stored = await s3.upload(params).promise();
-            Logger.instance().log(JSON.stringify(stored, null, 2));
+            logger.info(JSON.stringify(stored, null, 2));
             return storageKey;
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
         }
     };
 
@@ -58,12 +58,12 @@ export class AWSS3FileStorageService implements IFileStorageService {
             };
             var stored = await s3.upload(params).promise();
 
-            Logger.instance().log(JSON.stringify(stored, null, 2));
+            logger.info(JSON.stringify(stored, null, 2));
 
             return storageKey;
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
         }
     };
 
@@ -77,13 +77,13 @@ export class AWSS3FileStorageService implements IFileStorageService {
             return s3.getObject(params).createReadStream();
         }
         catch (error) {
-            Logger.instance().log(error.message);
+            logger.error(error.message);
             return null;
         }
     };
 
     downloadLocally = async (storageKey: string, localFilePath: string): Promise<string> => {
-        
+
         const s3 = this.getS3Client();
         const params = {
             Bucket : process.env.STORAGE_BUCKET,
@@ -142,7 +142,7 @@ export class AWSS3FileStorageService implements IFileStorageService {
             CopySource : `${BUCKET_NAME}/${OLD_KEY}`,
             Key        : NEW_KEY
         };
-    
+
         await s3.copyObject(params).promise();
         await s3.deleteObject({
             Bucket : BUCKET_NAME,
@@ -166,7 +166,7 @@ export class AWSS3FileStorageService implements IFileStorageService {
         }
         return true;
     };
-    
+
     getShareableLink(storageKey: string, durationInMinutes: number): string {
 
         const s3 = new aws.S3({

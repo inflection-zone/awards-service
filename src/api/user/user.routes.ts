@@ -10,7 +10,9 @@ export const register = (app: express.Application): void => {
     const authenticator = Loader.Authenticator;
     const controller = new UserController();
 
-    router.post('', controller.create);
+    router.get('/role-types', authenticator.authenticateClient, controller.getRoleTypes);
+
+    router.post('', authenticator.authenticateClient, controller.create);
     router.put('/:id', authenticator.authenticateUser, controller.update);
     router.delete('/:id', authenticator.authenticateUser, controller.delete);
 

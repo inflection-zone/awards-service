@@ -1,17 +1,18 @@
 //import cors from 'cors';
+import "reflect-metadata";
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
-import "reflect-metadata";
 import { Router } from './startup/router';
-import { Logger } from './common/logger';
+import { logger } from './logger/logger';
 import { ConfigurationManager } from "./config/configuration.manager";
 import { Loader } from './startup/loader';
 import { Scheduler } from './startup/scheduler';
-import { DatabaseModelManager } from './database/database.model.manager';
-import * as db from './database/database.connector';
-import { DbClient } from './database/db.client';
+import { DbClient } from './database/db.clients/db.client';
 import { Seeder } from './startup/seeder';
+import { DBConnector } from "./database/database.connector";
+import { FactsDBConnector } from "./modules/fact.extractors/facts.db.connector";
+import { HttpLogger } from "./logger/HttpLogger";
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -42,8 +43,6 @@ export default class Application {
 
     warmUp = async () => {
         try {
-
-            ConfigurationManager.loadConfigurations();
             await this.setupDatabaseConnection();
             await Loader.init();
             await this.setupMiddlewares();
@@ -53,42 +52,29 @@ export default class Application {
             await Scheduler.instance().schedule();
         }
         catch (error) {
-            Logger.instance().log('An error occurred while warming up.' + error.message);
+            logger.error('An error occurred while warming up.' + error.message);
         }
     };
 
     setupDatabaseConnection = async () => {
-
-        const sequelize = db.default.sequelize;
-
-        await DbClient.createDatabase();
-
         if (process.env.NODE_ENV === 'test') {
             //Note: This is only for test environment
             //Drop all tables in db
             await DbClient.dropDatabase();
         }
+        await DbClient.createDatabase();
+        await DBConnector.initialize();
 
-        await DatabaseModelManager.setupAssociations(); //set associations
-
-        await sequelize.sync({ alter: true });
-
+        await FactsDBConnector.initialize();
     };
 
     public start = async(): Promise<void> => {
         try {
             await this.warmUp();
-
-            process.on('exit', code => {
-                Logger.instance().log(`Process exited with code: ${code}`);
-            });
-
-            //Start listening
             await this.listen();
-
         }
         catch (error){
-            Logger.instance().log('An error occurred while starting reancare-api service.' + error.message);
+            logger.error('An error occurred while starting reancare-api service.' + error.message);
         }
     };
 
@@ -100,8 +86,11 @@ export default class Application {
                 this._app.use(express.json());
                 this._app.use(helmet());
                 //this._app.use(cors());
+                if (ConfigurationManager.UseHTTPLogging) {
+                    HttpLogger.use(this._app);
+                }
 
-                const MAX_UPLOAD_FILE_SIZE = ConfigurationManager.MaxUploadFileSize();
+                const MAX_UPLOAD_FILE_SIZE = ConfigurationManager.MaxUploadFileSize;
 
                 this._app.use(fileUpload({
                     limits            : { fileSize: MAX_UPLOAD_FILE_SIZE },
@@ -124,8 +113,8 @@ export default class Application {
             try {
                 const port = process.env.PORT;
                 const server = this._app.listen(port, () => {
-                    const serviceName = 'Careplan service api' + '-' + process.env.NODE_ENV;
-                    Logger.instance().log(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
+                    const serviceName = `${process.env.SERVICE_NAME}-[${process.env.NODE_ENV}]`;
+                    logger.info(serviceName + ' is up and listening on port ' + process.env.PORT.toString());
                     this._app.emit("server_started");
                 });
                 module.exports.server = server;
@@ -138,3 +127,21 @@ export default class Application {
     };
 
 }
+
+// process.on('exit', () => {
+//     logger.info("process.exit() is called.");
+// });
+
+[
+    `exit`,
+    `SIGINT`,
+    `SIGUSR1`,
+    `SIGUSR2`,
+    `uncaughtException`,
+    `SIGTERM`
+].forEach((terminationEvent) => {
+    process.on(terminationEvent, () => {
+        logger.info(`Received ${terminationEvent} signal`);
+        process.exit(0);
+    });
+});

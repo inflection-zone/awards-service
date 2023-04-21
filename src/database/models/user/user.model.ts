@@ -1,101 +1,50 @@
-import * as db from '../../database.connector';
-import { DataTypes } from 'sequelize';
-const sequelize = db.default.sequelize;
-import { GenderList } from '../../../domain.types/miscellaneous/system.types';
+import "reflect-metadata";
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    DeleteDateColumn,
+    JoinColumn,
+    ManyToOne,
+    ManyToMany,
+} from 'typeorm';
+import { Client } from "../client/client.model";
+import { Person } from "./person.model";
+import { Role } from "./role.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-export class UserModel {
+@Entity({ name: 'users' })
+export class User extends Person {
 
-    static TableName = 'users';
+    @PrimaryGeneratedColumn('uuid')
+    id : string;
 
-    static ModelName = 'User';
+    @ManyToOne(() => Client, { nullable: true })
+    @JoinColumn()
+    Client : Client;
 
-    static Schema = {
-        id : {
-            type         : DataTypes.UUID,
-            allowNull    : false,
-            defaultValue : DataTypes.UUIDV4,
-            primaryKey   : true
-        },
-        RoleId : {
-            type       : DataTypes.INTEGER,
-            allowNull  : false,
-            foreignKey : true,
-            unique     : false
-        },
-        UserName : {
-            type      : DataTypes.STRING(32),
-            allowNull : false
-        },
-        Prefix : {
-            type         : DataTypes.STRING(16),
-            allowNull    : false,
-            defaultValue : 'Mr'
-        },
-        FirstName : {
-            type      : DataTypes.STRING(64),
-            allowNull : false
-        },
-        LastName : {
-            type      : DataTypes.STRING(64),
-            allowNull : false
-        },
-        CountryCode : {
-            type         : DataTypes.STRING(10),
-            allowNull    : false,
-            defaultValue : '+91'
-        },
-        Phone : {
-            type      : DataTypes.STRING(16),
-            allowNull : true
-        },
-        Email : {
-            type      : DataTypes.STRING(256),
-            allowNull : true
-        },
-        Gender : {
-            type         : DataTypes.ENUM({ values: GenderList }),
-            allowNull    : false,
-            defaultValue : 'Male'
-        },
-        BirthDate : {
-            type      : DataTypes.DATE,
-            allowNull : true
-        },
-        Password : {
-            type      : DataTypes.STRING(512),
-            allowNull : true
-        },
+    @Column({ type: 'varchar', length: 16, nullable: false })
+    UserName : string;
 
-        CreatedAt : DataTypes.DATE,
-        UpdatedAt : DataTypes.DATE,
-        DeletedAt : DataTypes.DATE
-    };
+    @Column({ type: 'varchar', length: 1024, nullable: true })
+    Password : string;
 
-    static Model: any = sequelize.define(
-        UserModel.ModelName,
-        UserModel.Schema,
-        {
-            createdAt       : 'CreatedAt',
-            updatedAt       : 'UpdatedAt',
-            deletedAt       : 'DeletedAt',
-            freezeTableName : true,
-            timestamps      : true,
-            paranoid        : true,
-            tableName       : UserModel.TableName,
-        });
+    @ManyToMany(() => Role, (role) => role.Users)
+    Roles: Role[];
 
-    static associate = (models) => {
+    @Column({ type: 'date', nullable: true })
+    LastLogin : Date;
 
-        //Add associations here...
+    @CreateDateColumn()
+    CreatedAt : Date;
 
-        models.User.belongsTo(models.Role, {
-            sourceKey : 'RoleId',
-            targetKey : 'id',
-            as        : 'Role'
-        });
+    @UpdateDateColumn()
+    UpdatedAt : Date;
 
-    };
+    @DeleteDateColumn()
+    DeletedAt : Date;
 
 }

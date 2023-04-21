@@ -1,70 +1,47 @@
-import * as db from '../../database.connector';
-import { DataTypes } from 'sequelize';
-const sequelize = db.default.sequelize;
+import { IsDate } from "class-validator";
+import "reflect-metadata";
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    DeleteDateColumn,
+    JoinColumn,
+    ManyToOne,
+} from 'typeorm';
+import { User } from "./user.model";
 
 ////////////////////////////////////////////////////////////////////////
 
-export class UserLoginSessionModel {
+@Entity({ name: 'user_login_sessions' })
+export class UserLoginSession {
 
-    static TableName = 'user_login_sessions';
+    @PrimaryGeneratedColumn('uuid')
+    id : string;
 
-    static ModelName = 'UserLoginSession';
+    @ManyToOne(() => User, { nullable: false })
+    @JoinColumn()
+    User: User;
 
-    static Schema = {
-        id : {
-            type         : DataTypes.UUID,
-            allowNull    : false,
-            defaultValue : DataTypes.UUIDV4,
-            primaryKey   : true
-        },
-        UserId : {
-            type       : DataTypes.UUID,
-            allowNull  : false,
-            foreignKey : true,
-            unique     : false
-        },
-        IsActive : {
-            type         : DataTypes.BOOLEAN,
-            allowNull    : false,
-            defaultValue : true
-        },
-        StartedAt : {
-            type      : DataTypes.DATE,
-            allowNull : false
-        },
-        ValidTill : {
-            type      : DataTypes.DATE,
-            allowNull : false
-        },
+    @Column({ type: 'boolean', nullable: false, default: true })
+    IsActive: boolean;
 
-        CreatedAt : DataTypes.DATE,
-        UpdatedAt : DataTypes.DATE,
-        DeletedAt : DataTypes.DATE
-    };
+    @Column({ type: 'date', nullable: true })
+    @IsDate()
+    StartedAt : Date;
 
-    static Model: any = sequelize.define(
-        UserLoginSessionModel.ModelName,
-        UserLoginSessionModel.Schema,
-        {
-            createdAt       : 'CreatedAt',
-            updatedAt       : 'UpdatedAt',
-            deletedAt       : 'DeletedAt',
-            freezeTableName : true,
-            timestamps      : true,
-            paranoid        : true,
-            tableName       : UserLoginSessionModel.TableName,
-        });
+    @Column({ type: 'date', nullable: true })
+    @IsDate()
+    ValidTill : Date;
 
-    static associate = (models) => {
+    @CreateDateColumn()
+    CreatedAt : Date;
 
-        //Add associations here...
+    @UpdateDateColumn()
+    UpdatedAt : Date;
 
-        models.UserLoginSession.belongsTo(models.User, {
-            sourceKey : 'UserId',
-            targetKey : 'id',
-            as        : 'User'
-        });
-
-    };
+    @DeleteDateColumn()
+    DeletedAt : Date;
 
 }
