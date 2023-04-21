@@ -41,7 +41,7 @@ The schema engine is the most generic module in the service and can be re-used a
 
 This module basically pulls in the facts from the event as well as facts database and feeds them into schema instance. The interfaces are quite generic but the implementation of this is governed by the entities defined in the facts database. The facts database is generally populated and maintained by the client app/service.
 
-### Exernal event handling module
+### Exernal Event Handling Module
 
 This is a typical webhook which listens to the predefined events (which can be of custom types and created by the schema content moderators). The supported event will trigger execution of the schema instance for the given context. So each event payload must contain context identifier (which is generally called as 'reference id') apart from other event specific parameters. This reference id could be an 'id' of the participant in the exernal client system.
 
