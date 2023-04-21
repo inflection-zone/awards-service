@@ -4,7 +4,6 @@ import * as asyncLib from 'async';
 import { ContextService } from "../../database/services/engine/context.service";
 import { ContextType } from "../../domain.types/engine/engine.types";
 import { SchemaInstanceService } from "../../database/services/engine/schema.instance.service";
-import { ContextResponseDto } from "../../domain.types/engine/context.types";
 import { SchemaEngine } from "./schema.engine";
 import { SchemaService } from "../../database/services/engine/schema.service";
 import { SchemaInstanceResponseDto, SchemaInstanceSearchFilters } from "../../domain.types/engine/schema.instance.types";
@@ -65,20 +64,20 @@ export default class EventHandler {
             }
 
             const eventType = event.EventType;
-            const schemaForEventType = await schemaService.getByEventType(eventType.id)
+            const schemaForEventType = await schemaService.getByEventType(eventType.id);
             const filtered: SchemaInstanceResponseDto[] = [];
             for await (var s of schemaForEventType) {
                 const schemaId = s.id;
                 const filters: SchemaInstanceSearchFilters = {
-                    ContextId: context.id,
-                    SchemaId: schemaId
+                    ContextId : context.id,
+                    SchemaId  : schemaId
                 };
                 const searchResults = await schemaInstanceService.search(filters);
                 const schemaInstances = searchResults.Items;
                 if (schemaInstances.length === 0) {
                     const schemaInstance = await schemaInstanceService.create({
-                        SchemaId: schemaId,
-                        ContextId: context.id
+                        SchemaId  : schemaId,
+                        ContextId : context.id
                     });
                     if (schemaInstance) {
                         logger.info(`Schema instance created successfully!`);

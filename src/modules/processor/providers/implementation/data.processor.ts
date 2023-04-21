@@ -1,28 +1,26 @@
 import { ContinuityInputParams, LogicalOperator, OutputParams } from "../../../../domain.types/engine/engine.types";
 import { IDataProcessor } from "../../interfaces/data.processor.interface";
-import { OperandDataType } from "../../../../domain.types/engine/engine.types";
 import { TypeUtils } from "../../../../common/utilities/type.utils";
 import { ProcessorResult } from '../../../../domain.types/engine/engine.types';
-import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 
 //////////////////////////////////////////////////////////////////////
 
-type PredicateType = (value: any, 
-    valueName: string, 
-    operator: LogicalOperator, 
-    operandValue: any, 
+type PredicateType = (value: any,
+    valueName: string,
+    operator: LogicalOperator,
+    operandValue: any,
     secondOperandValue: any) => boolean;
 
-const predicate: PredicateType = (x: any, 
-    valueName: string, 
-    operator: LogicalOperator, 
-    operandValue: any, 
+const predicate: PredicateType = (x: any,
+    valueName: string,
+    operator: LogicalOperator,
+    operandValue: any,
     secondOperandValue: any): boolean => {
 
-    let v;
+    let v: any = undefined;
 
     //check where x is an object or itself an perand to process through predicate
-    if(valueName && TypeUtils.isObject(x)) {
+    if (valueName && TypeUtils.isObject(x)) {
         v = x[valueName];
     }
     else {
@@ -39,7 +37,7 @@ const predicate: PredicateType = (x: any,
     }
     else if (operator === LogicalOperator.NotEqual) {
         if (operandValue) {
-            return v != operandValue;
+            return v !== operandValue;
         }
     }
     else if (operator === LogicalOperator.Exists) {
@@ -97,15 +95,15 @@ const predicate: PredicateType = (x: any,
         }
     }
     return false;
-}
+};
 
 //////////////////////////////////////////////////////////////////////
 
 export class DataProcessorr implements IDataProcessor {
 
     calculateContinuity = async (
-        records: any[], 
-        inputParams: ContinuityInputParams, 
+        records: any[],
+        inputParams: ContinuityInputParams,
         outputParams: OutputParams)
         : Promise<ProcessorResult> => {
 
@@ -122,18 +120,18 @@ export class DataProcessorr implements IDataProcessor {
                         var endStr = (new Date(end.key)).toISOString().split('T')[0];
                         var key = `(${startStr})-(${endStr})`;
                         const obj = {
-                            start : start.key,
-                            end   : end.key,
-                            bundle: b,
-                            key   : key,
+                            start  : start.key,
+                            end    : end.key,
+                            bundle : b,
+                            key    : key,
                         };
                         bundles_.push(obj);
                     }
                 }
                 const result: ProcessorResult = {
-                    Success: true,
-                    Tag    : outputParams.OutputTag,
-                    Data   : bundles_
+                    Success : true,
+                    Tag     : outputParams.OutputTag,
+                    Data    : bundles_
                 };
                 resolve(result);
 
@@ -156,10 +154,10 @@ export class DataProcessorr implements IDataProcessor {
 
         for (let i = 0; i < records.length; i++) {
             if (predicate(
-                records[i], 
-                valueName, 
-                options.Operator, 
-                options.Value, 
+                records[i],
+                valueName,
+                options.Operator,
+                options.Value,
                 options.SecondaryValue)) {
                 count++;
                 bundle.push(records[i]);
