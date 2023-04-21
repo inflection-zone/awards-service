@@ -281,29 +281,33 @@ export class ParticipantService extends BaseService {
     public getBadges = async (id: string): Promise<ParticipantBadgeResponseDto[]> => {
         try {
             const search: FindManyOptions<ParticipantBadge> = {
-                relations : {
-                },
                 where : {
                     Participant : {
                         id : id
                     }
                 },
-                select: {
-                    Badge : {
-                        id         : true,
-                        Name       : true,
-                        Description: true,
-                        Category   : {
-                            id      : true,
-                            Name    : true,
-                            ImageUrl: true,
-                        },
-                        ImageUrl: true,
+                relations: {
+                    Badge: {
+                        Category: true,
                     },
-                    AcquiredDate: true,
-                    Reason      : true,
-                    CreatedAt : true,
-                }
+                    Participant: true,
+                },
+                // select: {
+                //     Badge : {
+                //         id         : true,
+                //         Name       : true,
+                //         Description: true,
+                //         Category   : {
+                //             id      : true,
+                //             Name    : true,
+                //             ImageUrl: true,
+                //         },
+                //         ImageUrl: true,
+                //     },
+                //     AcquiredDate: true,
+                //     Reason      : true,
+                //     CreatedAt : true,
+                // }
             };
             const list = await this._participantBadgeRepository.find(search);
             const participantBadges = list.map(x => {

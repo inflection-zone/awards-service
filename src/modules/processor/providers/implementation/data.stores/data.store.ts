@@ -92,8 +92,8 @@ export class DataStore implements IDataStore {
 
         const addedBadges = [];
         for await (var r of records) {
-            const start = (new Date(r.start.key)).toISOString().split('T')[0];
-            const end = (new Date(r.end.key)).toISOString().split('T')[0];
+            const start = (new Date(r.start)).toISOString().split('T')[0];
+            const end = (new Date(r.end)).toISOString().split('T')[0];
             const metadata = {
                 start : start,
                 end : end,
