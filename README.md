@@ -27,15 +27,15 @@ The schema engine is the most generic module in the service and can be re-used a
 6. A 'Rule node' contains a rule to be executed and results in the passing or failing status. Based on the rule execution status, the workflow can change the paths in the workflow.
 7. Each rule contains a tree structure of conditions to be evaluated against the set of facts. 
 8. These facts could be 
-  - input parameters fed to the schema at the start or 
-  - can be result/output of the execution of the action of the 'execution node'. 
+  -- input parameters fed to the schema at the start or 
+  -- can be result/output of the execution of the action of the 'execution node'. 
 9. The conditions which are part of the rule can have following types of the operators - 
-  - composite (e.g. AND, OR, XOR)
-  - logical (e.g. EQUALS, NOT_EQUALS, GREATER_THAN,....and many more)
+  -- composite (e.g. AND, OR, XOR)
+  -- logical (e.g. EQUALS, NOT_EQUALS, GREATER_THAN,....and many more)
 10. The schema is instanced for a given context. For example, in case of the awards or gamifications, the context can be a participant or a participant group.
 11. Based on the use-cases, the schema instances can be of 2 types.
-  - *Long running schema instance* : This schema instance can wait on a current node for certain types of events or rule to be satisfied before proceeding ahead. An example of this could be an emergency healthcare protocol or certain award point schema which is dependent on multiple events.
-  - *Event based schema instance* : For every type of the supported event, a new instance of the schema is generated and executed by the engine. An example of this could be consistency badge awards schema.
+  -- *Long running schema instance* : This schema instance can wait on a current node for certain types of events or rule to be satisfied before proceeding ahead. An example of this could be an emergency healthcare protocol or certain award point schema which is dependent on multiple events.
+  -- *Event based schema instance* : For every type of the supported event, a new instance of the schema is generated and executed by the engine. An example of this could be consistency badge awards schema.
 
 ### Domain Specific Facts Data Handler
 
@@ -48,5 +48,19 @@ This is a typical webhook which listens to the predefined events (which can be o
 Please have a look at the following schematic depicting the internals of the awards service.
 
   <img src="./docs/awards-service-schematic.png" width="800">
+  
+The following are workflow schema examples.
 
+A schema containing only execution nodes.
+
+  <img src="./docs/badge-schema-example.png" width="800">
+
+A blood pressure management schema containing both rule and execution nodes.
+
+  <img src="./docs/blood-pressure-management-schema-example.png" width="800">
+  
+Following schematic depicts the relation between a rule and children conditions.
+
+  <img src="./docs/rules-and-conditions.png" width="800">
+  
 __We encourage forking and welcome contributions to this code base.__
