@@ -29,7 +29,7 @@ export enum NodeType {
     //Based on rule execution results, an action is taken at the end.
     RuleNode = 'Rule-Node',
 
-    //This node type contains some execution steps and once processed, 
+    //This node type contains some execution steps and once processed,
     //the control moves to next node defined or schema exits.
     ExecutionNode = 'Execution-Node',
 
@@ -212,7 +212,7 @@ export const InputSourceTypeList: InputSourceType[] = [
     InputSourceType.Database,
     InputSourceType.Almanac,
     InputSourceType.ApiEndpoint,
-]
+];
 
 export interface ActionInputParams {
     RecordType        : string;
@@ -291,8 +291,8 @@ export interface ProcessorResult {
     Data   : any[] | any;
 }
 
-export type InputParams = DataExtractionInputParams | 
-                          DataStorageInputParams | 
+export type InputParams = DataExtractionInputParams |
+                          DataStorageInputParams |
                           ContinuityInputParams |
                           ValueComparisonInputParams |
                           RangeComparisonInputParams |

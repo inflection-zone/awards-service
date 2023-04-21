@@ -1,9 +1,9 @@
-import { uuid } from "../../../../domain.types/miscellaneous/system.types";
 import { IDataComparator } from "../../interfaces/data.comparator.interface";
-import { 
-    OutputParams, 
-    ProcessorResult, 
-    RangeComparisonInputParams } from '../../../../domain.types/engine/engine.types';
+import {
+    OutputParams,
+    ProcessorResult,
+    RangeComparisonInputParams,
+} from '../../../../domain.types/engine/engine.types';
 
 //////////////////////////////////////////////////////////////////////
 
@@ -18,8 +18,8 @@ export class DataComparator implements IDataComparator {
         return new Promise((resolve, reject) => {
             try {
                 var data = {
-                    ToBeAdded: incomingRange,
-                    ToBeRemoved: referenceRange
+                    ToBeAdded   : incomingRange,
+                    ToBeRemoved : referenceRange
                 };
 
                 if (incomingRange.length === 0 && referenceRange.length > 0) {
@@ -33,28 +33,27 @@ export class DataComparator implements IDataComparator {
                 else {
                     var toBeAdded = [];
                     var toBeRemoved = [];
-                    for(const i of incomingRange) {
+                    for (const i of incomingRange) {
                         const found = referenceRange.find(x => x.key === i.key);
                         if (!found) {
                             toBeAdded.push(i);
                         }
                     }
                     if (toBeAdded.length > 0) {
-                        for(const r of referenceRange) {
+                        for (const r of referenceRange) {
                             const found = toBeAdded.find(x => x.key === r.key);
                             if (!found) {
                                 toBeRemoved.push(r);
                             }
                         }
                     }
-
                     data.ToBeAdded   = toBeAdded;
                     data.ToBeRemoved = toBeRemoved;
                 }
                 const result: ProcessorResult = {
-                    Success: true,
-                    Tag: outputParams.OutputTag,
-                    Data: data
+                    Success : true,
+                    Tag     : outputParams.OutputTag,
+                    Data    : data
                 };
                 resolve(result);
             } catch (error) {
@@ -65,10 +64,16 @@ export class DataComparator implements IDataComparator {
 
 }
 
-    // const overlap = (e: any,  referenceRange: any[]): boolean => {
-    //     for (var r of referenceRange) {
-    //         if (e.start > r.start && e.start < r.end) {
-    //             return true;
-    //         }
-    //     }
-    // }
+/////////////////////////////////////////////////////////////////////
+
+//scrap
+
+// const overlap = (e: any,  referenceRange: any[]): boolean => {
+//     for (var r of referenceRange) {
+//         if (e.start > r.start && e.start < r.end) {
+//             return true;
+//         }
+//     }
+// }
+
+/////////////////////////////////////////////////////////////////////
