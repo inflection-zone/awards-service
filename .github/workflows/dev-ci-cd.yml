@@ -2,7 +2,7 @@
 # paths that are modified in the pull request.
 #
 # To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration.  For more information, see:
+# file with configuration.  For more information, see :
 # https://github.com/actions/labeler
 
 
@@ -108,6 +108,11 @@ jobs:
       - name: Task Defintion ARN
         run: |
           echo "Task Defintion: ${{ steps.taskdefintionvar.outputs.task_definition_arn }}"
+          
+      - name: print data
+        run: |
+         echo ID: ${{ secrets.DUPLO_ID }}
+         echo service_name: ${{ secrets.SERVICE_NAME }}
 
       - name: Deploy Amazon ECS task definition using Duplo API
         uses: fjogeleit/http-request-action@master
@@ -116,3 +121,4 @@ jobs:
           method: 'POST'
           data: '{"TaskDefinition":${{ steps.taskdefintionvar.outputs.task_definition_arn }},"Name": "${{ secrets.SERVICE_NAME }}","Replicas":0, "HealthCheckGracePeriodSeconds": 1200}'
           bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN }}
+        
