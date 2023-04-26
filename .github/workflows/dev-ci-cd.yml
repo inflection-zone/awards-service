@@ -82,7 +82,7 @@ jobs:
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ secrets.TASK_DEFINTION_NAME }} \
+          aws ecs describe-task-definition --task-definition duploservices-dev-awards-service \
           --query taskDefinition > task-definition.json
 
       - name: New image ID in the Amazon ECS task definition
@@ -103,18 +103,18 @@ jobs:
         id: taskdefintionvar
         shell: bash
         run: |
-          echo "task_definition_arn=$(aws ecs describe-task-definition --task-definition ${{ secrets.TASK_DEFINTION_NAME }} | jq '.[] | .taskDefinitionArn')" >> $GITHUB_OUTPUT
+          echo "task_definition_arn=$(aws ecs describe-task-definition --task-definition duploservices-dev-awards-service | jq '.[] | .taskDefinitionArn')" >> $GITHUB_OUTPUT
 
       - name: Task Defintion ARN
         run: |
           echo "Task Defintion: ${{ steps.taskdefintionvar.outputs.task_definition_arn }}"
         
 
-      - name: Deploy Amazon ECS task definition using Duplo API
-        uses: fjogeleit/http-request-action@master
-        with:
-          url: 'https://reanfoundation.duplocloud.net/subscriptions/${{ secrets.DUPLO_ID }}/UpdateEcsService'
-          method: 'POST'
-          data: '{"TaskDefinition":${{ steps.taskdefintionvar.outputs.task_definition_arn }},"Name": "awards","Replicas":0, "HealthCheckGracePeriodSeconds": 1200}'
-          bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN }}
+ #     - name: Deploy Amazon ECS task definition using Duplo API
+  #      uses: fjogeleit/http-request-action@master
+   #     with:
+    #      url: 'https://reanfoundation.duplocloud.net/subscriptions/${{ secrets.DUPLO_ID }}/UpdateEcsService'
+     #     method: 'POST'
+      #    data: '{"TaskDefinition":${{ steps.taskdefintionvar.outputs.task_definition_arn }},"Name": "awards","Replicas":0, "HealthCheckGracePeriodSeconds": 1200}'
+       #   bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN }}
         
