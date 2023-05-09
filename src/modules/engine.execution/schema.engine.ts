@@ -138,7 +138,7 @@ export class SchemaEngine {
                 }
                 const added = await processor.storeData(context.id, almanacObject.Data.ToBeAdded, action.InputParams, action.OutputParams);
                 var removedData = null;
-                if (almanacObject.Data.ToBeRemoved) {
+                if (almanacObject.Data.ToBeRemoved.length > 0) {
                     const removed = await processor.removeData(context.id, almanacObject.Data.ToBeRemoved, action.InputParams, action.OutputParams);
                     removedData = removed?.Data;
                 }
