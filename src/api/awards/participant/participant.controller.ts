@@ -155,7 +155,7 @@ export class ParticipantController extends BaseController {
             }
             acc[x.Category?.Name].Badges[x.Name] = {
                 BadgeName: x.Name,
-                Occurence: 0,
+                Occurrences: 0,
                 BadgeList: [],
             };
             return acc;
@@ -194,10 +194,10 @@ export class ParticipantController extends BaseController {
                 bArr = bArr.sort((a, b) => {
                     return a.Badge.Name.localeCompare(b.Badge.Name);
                 });
-                const occurence = bArr.length;
+                const occurrences = bArr.length;
                 badges[key].Badges[badgeName] = {
                     BadgeName: badgeName,
-                    Occurence: occurence,
+                    Occurrences: occurrences,
                     BadgeList: bArr,
                 };
             }
