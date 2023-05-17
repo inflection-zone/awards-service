@@ -63,6 +63,26 @@ export class BadgeService extends BaseService {
         }
     };
 
+    public getByClientId = async (clientId: uuid): Promise<BadgeResponseDto[]> => {
+        try {
+            var badges = await this._badgeRepository.find({
+                where : {
+                    Client : {
+                        id : clientId
+                    }
+                },
+                relations: {
+                    Category: true,
+                    Client  : true
+                }
+            });
+            return badges.map(x => BadgeMapper.toResponseDto(x));
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    }
+
     public search = async (filters: BadgeSearchFilters)
         : Promise<BadgeSearchResults> => {
         try {
