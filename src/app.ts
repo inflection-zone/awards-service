@@ -13,6 +13,7 @@ import { Seeder } from './startup/seeder';
 import { DBConnector } from "./database/database.connector";
 import { FactsDBConnector } from "./modules/fact.extractors/facts.db.connector";
 import { HttpLogger } from "./logger/HttpLogger";
+import FactsDbClient from "./modules/fact.extractors/facts.db.client";
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -65,6 +66,7 @@ export default class Application {
         await DbClient.createDatabase();
         await DBConnector.initialize();
 
+        await FactsDbClient.createDatabase();
         await FactsDBConnector.initialize();
     };
 
