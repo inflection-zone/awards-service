@@ -9,6 +9,7 @@ import { DataExtractionInputParams, OutputParams, ProcessorResult } from '../../
 import { MedicationDataExtractor } from './medication.data.extractor';
 import { BadgeDataExtractor } from "./badge.data.extractor";
 import { NutritionDataExtractor } from "./nutrition.data.extractor";
+import { ExercisePhysicalActivityDataExtractor } from "./exercise.physical.activity.data.extractor";
 
 //////////////////////////////////////////////////////////////////////
 
@@ -60,6 +61,9 @@ export class DataExtractor implements IDataExtractor {
         }
         else if (recordType === 'Nutrition') {
             return new NutritionDataExtractor();
+        }
+        else if (recordType === 'Exercise') {
+            return new ExercisePhysicalActivityDataExtractor();
         }
         return null;
     };

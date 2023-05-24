@@ -7,6 +7,7 @@ import { BadgeFact } from './models/bedge.facts.model';
 import { MedicationFact } from './models/medication.fact.model';
 import { DBLogger } from "./../../database/database.logger";
 import { NutritionChoiceFact } from "./models/nutrition.choice.fact.model";
+import { ExercisePhysicalActivityFact } from "./models/exercise.physical.activity.fact.model";
 
 ///////////////////////////////////////////////////////////////////////////////////
 const DATABASE_NAME = `awards_facts`;
@@ -28,6 +29,7 @@ class FactsDatabaseConnector {
             MedicationFact,
             BadgeFact,
             NutritionChoiceFact,
+            ExercisePhysicalActivityFact,
         ],
         migrations  : [],
         subscribers : [],
