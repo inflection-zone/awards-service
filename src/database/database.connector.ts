@@ -32,6 +32,8 @@ import { Role } from "./models/user/role.model";
 import { Privilege } from "./models/user/privilege.model";
 import { SchemaEventType } from "./models/engine/schema.event.type.model";
 import { DBLogger } from "./database.logger";
+import { FileResourceVersion } from "./models/general/file.resource.version.model";
+import { BadgeStockImage } from "./models/awards/badge.stock.image.model";
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -89,6 +91,8 @@ class DatabaseConnector {
             Role,
             Privilege,
             SchemaEventType,
+            FileResourceVersion,
+            BadgeStockImage,
         ],
         migrations  : [],
         subscribers : [],
