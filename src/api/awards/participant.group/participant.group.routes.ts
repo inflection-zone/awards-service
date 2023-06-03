@@ -20,5 +20,9 @@ export const register = (app: express.Application): void => {
     router.put('/:id', authenticator.authenticateClient, authenticator.authenticateUser, controller.update);
     router.delete('/:id', authenticator.authenticateClient, authenticator.authenticateUser, controller.delete);
 
+    router.post('/:id/participants/', authenticator.authenticateClient, authenticator.authenticateUser, controller.addParticipant);
+    router.delete('/:id/participants/:participantId', authenticator.authenticateClient, authenticator.authenticateUser, controller.removeParticipant);
+    router.get('/:id/participants/', authenticator.authenticateClient, authenticator.authenticateUser, controller.getParticipants);
+
     app.use('/api/v1/participant-groups', router);
 };
