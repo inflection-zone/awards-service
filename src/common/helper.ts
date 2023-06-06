@@ -2,6 +2,7 @@ import child_process from 'child_process';
 import { Gender } from '../domain.types/miscellaneous/system.types';
 import Countries from './miscellaneous/country.codes';
 import { TypeUtils } from './utilities/type.utils';
+import mime = require('mime-types');
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -160,6 +161,14 @@ export class Helper {
             possiblePhoneNumbers.push(phoneTemp);
         }
         return possiblePhoneNumbers;
+    };
+
+    public static getMimeType = (pathOrExtension: string) => {
+        var mimeType = mime.lookup(pathOrExtension);
+        if (!mimeType) {
+            mimeType = 'text/plain';
+        }
+        return mimeType;
     };
 
 }

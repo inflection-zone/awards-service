@@ -11,6 +11,7 @@ import { BadgeDataExtractor } from "./badge.data.extractor";
 import { NutritionDataExtractor } from "./nutrition.data.extractor";
 import { ExercisePhysicalActivityDataExtractor } from "./exercise.physical.activity.data.extractor";
 import { VitalDataExtractor } from "./vital.data.extractor";
+import { MentalHealthDataExtractor } from "./mental.health.data.extractor";
 
 //////////////////////////////////////////////////////////////////////
 
@@ -68,6 +69,9 @@ export class DataExtractor implements IDataExtractor {
         }
         else if (recordType === 'Vital') {
             return new VitalDataExtractor();
+        }
+        else if (recordType === 'MentalHealth') {
+            return new MentalHealthDataExtractor();
         }
         return null;
     };

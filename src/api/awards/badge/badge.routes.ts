@@ -15,6 +15,7 @@ export const register = (app: express.Application): void => {
     const controller = new BadgeController();
 
     router.post('/', authenticator.authenticateClient, authenticator.authenticateUser, controller.create);
+    router.get('/stock-images', authenticator.authenticateClient, controller.getStockBadgeImages);
     router.get('/search', authenticator.authenticateClient, authenticator.authenticateUser, controller.search);
     router.get('/:id', authenticator.authenticateClient, authenticator.authenticateUser, controller.getById);
     router.put('/:id', authenticator.authenticateClient, authenticator.authenticateUser, controller.update);
