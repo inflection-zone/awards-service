@@ -8,6 +8,7 @@ import { MedicationFact } from './models/medication.fact.model';
 import { DBLogger } from "./../../database/database.logger";
 import { NutritionChoiceFact } from "./models/nutrition.choice.fact.model";
 import { ExercisePhysicalActivityFact } from "./models/exercise.physical.activity.fact.model";
+import { VitalFact } from "./models/vital.fact.model";
 import { MentalHealthFact } from "./models/mental.health.fact.model";
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,8 @@ class FactsDatabaseConnector {
             BadgeFact,
             NutritionChoiceFact,
             ExercisePhysicalActivityFact,
-            MentalHealthFact,
+            VitalFact,
+            MentalHealthFact
         ],
         migrations  : [],
         subscribers : [],
