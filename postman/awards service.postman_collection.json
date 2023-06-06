@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d38423ff-1dbb-43c9-99a2-3c23bc63590e",
+		"_postman_id": "29ce7b9b-655c-45f2-833c-2430e2143603",
 		"name": "Awards service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15905052"
@@ -11765,6 +11765,3226 @@
 												"body": {
 													"mode": "raw",
 													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_04_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Store updated badges\",\r\n    \"Description\": \"Store updated 30-day exercise physical activity badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Store-Data\",\r\n        \"Name\": \"Store updated badges\",\r\n        \"Description\": \"Store updated 30-day exercise physical activity badges for the participant.\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Compare-Data:Badge\",\r\n            \"StorageKeys\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Exercise\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"30-Day Physical Activity\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeId\",\r\n                    \"Value\": \"{{BADGE_ID}}\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 30-day exercise physical activity badges\",\r\n            \"OutputTag\": \"Store-Data:Badge\",\r\n            \"DestinationType\": \"Database\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 04",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_05_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_04_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_04_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Get schema by Id",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Schema is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('RootNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/schema/{{SCHEMA_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"schema",
+														"{{SCHEMA_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "vital badges",
+							"item": [
+								{
+									"name": "Create badge category",
+									"item": [
+										{
+											"name": "Create badge category",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"BADGE_CATEGORY_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Participant is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital\",\r\n    \"Description\": \"Badge category for vital related badges\",\r\n    \"ImageUrl\": \"https://e7.pngegg.com/pngimages/626/893/png-clipart-blue-and-white-check-logo-facebook-social-media-verified-badge-logo-vanity-url-blue-checkmark-blue-angle.png\"\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/badge-categories",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"badge-categories"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Get badge category by id",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/badge-categories/{{BADGE_CATEGORY_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"badge-categories",
+														"{{BADGE_CATEGORY_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Schema-7-Day vital badge",
+									"item": [
+										{
+											"name": "Create badge",
+											"item": [
+												{
+													"name": "Create badge",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"try {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.environment.set(\"BADGE_ID\", jsonRes.Data.id);\r",
+																	"}\r",
+																	"catch (error) {\r",
+																	"    console.log(error.message);\r",
+																	"}\r",
+																	"\r",
+																	"pm.test(\"Request is successfull\", function () {\r",
+																	"    pm.response.to.have.status(201);\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Status).to.eql('success');\r",
+																	"});\r",
+																	"\r",
+																	"pm.test(\"Participant is created\", function () {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+																	"\r",
+																	"});\r",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															},
+															{
+																"key": "x-api-key",
+																"value": "{{API_KEY}}",
+																"type": "text"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer {{MODERATOR_USER_JWT}}",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"CategoryId\": \"{{BADGE_CATEGORY_ID}}\",\r\n    \"Name\": \"7-Day Vitals\",\r\n    \"Description\": \"Badge awarded for monitoring body vitals for 7-days consistently.\",\r\n    \"ImageUrl\": \"https://e7.pngegg.com/pngimages/626/893/png-clipart-blue-and-white-check-logo-facebook-social-media-verified-badge-logo-vanity-url-blue-checkmark-blue-angle.png\"\r\n}"
+														},
+														"url": {
+															"raw": "{{BASE_URL}}/badges",
+															"host": [
+																"{{BASE_URL}}"
+															],
+															"path": [
+																"badges"
+															]
+														},
+														"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+													},
+													"response": []
+												},
+												{
+													"name": "Get badge by id",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"\r",
+																	"pm.test(\"Request is successfull\", function () {\r",
+																	"    pm.response.to.have.status(200);\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Status).to.eql('success');\r",
+																	"});\r",
+																	"\r",
+																	"pm.test(\"Schema is created\", function () {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+																	"});\r",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															},
+															{
+																"key": "x-api-key",
+																"value": "{{API_KEY}}",
+																"type": "text"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer {{MODERATOR_USER_JWT}}",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": ""
+														},
+														"url": {
+															"raw": "{{BASE_URL}}/badges/{{BADGE_ID}}",
+															"host": [
+																"{{BASE_URL}}"
+															],
+															"path": [
+																"badges",
+																"{{BADGE_ID}}"
+															]
+														},
+														"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "Create schema",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"SCHEMA_ID\", jsonRes.Data.id);\r",
+															"    pm.environment.set(\"SCHEMA_ROOT_NODE_ID\", jsonRes.Data.RootNode.id);\r",
+															"    pm.environment.set(\"NODE_01_ID\", jsonRes.Data.RootNode.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Schema is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+															"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('RootNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/schema",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"schema"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "01 - Get root Node - Extract nutrition data",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_01_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is retrieved\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_01_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_01_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "02 - Create next node - Calculate Continuity",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_02_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_01_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Name\": \"Calculate continuity\",\r\n    \"Description\": \"This execution step involves calculating the continuity for monitoring body vital consecutively for 7-days.\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Process-Data\",\r\n        \"Name\": \"Calculate Continuity\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Vital\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Extract-Data:Vital\",\r\n            \"DataActionType\": \"Calculate-Continuity\",\r\n            \"KeyDataType\": \"Date\",\r\n            \"KeyName\": \"Date\",\r\n            \"ValueDataType\": \"Float\",\r\n            \"ValueName\": \"VitalPrimaryValue\",\r\n            \"Operator\": \"Exists\",\r\n            \"ContinuityCount\": 7\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Processing records for 7-day body vitals continuity\",\r\n            \"OutputTag\": \"Calculate-Continuity:Vital\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 01",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_02_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_01_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_01_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "03 - Create next node - Extract existing badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_03_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_02_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Get existing badges\",\r\n    \"Description\": \"Extract existing 7-day vital monitoring badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Extract-Data\",\r\n        \"Name\": \"Extract-Badges\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Database\",\r\n            \"InputTag\": \"Badge\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"7-Day Vitals\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 7-day vital monitoring badges\",\r\n            \"OutputTag\": \"Extract-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 02",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_03_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_02_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_02_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "04 - Create next node - Compare badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_04_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_03_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Compare badges\",\r\n    \"Description\": \"Compare calculated badges against existing badges for 7-day vital monitoring.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Compare-Data\",\r\n        \"Name\": \"Compare badges\",\r\n        \"Description\": \"Compare calculated badges against existing badges for 7-day vital monitoring\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Calculate-Continuity:Vital\",\r\n            \"SecondaryInputTag\": \"Extract-Data:Badge\",\r\n            \"DataActionType\": \"Find-Range-Difference\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"7-Day Vitals\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Comparing badges and get updated badge list for 7-day vital monitoring badges.\",\r\n            \"OutputTag\": \"Compare-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 03",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_04_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_03_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_03_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "05 - Create next node - Store updated badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_05_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_04_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Store updated badges\",\r\n    \"Description\": \"Store updated 7-day vital monitoring badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Store-Data\",\r\n        \"Name\": \"Store updated badges\",\r\n        \"Description\": \"Store updated 7-day vital monitoring badges for the participant.\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Compare-Data:Badge\",\r\n            \"StorageKeys\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"7-Day Vitals\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeId\",\r\n                    \"Value\": \"{{BADGE_ID}}\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 7-day vital monitoring badges\",\r\n            \"OutputTag\": \"Store-Data:Badge\",\r\n            \"DestinationType\": \"Database\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 04",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_05_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_04_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_04_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Get schema by Id",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Schema is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('RootNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/schema/{{SCHEMA_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"schema",
+														"{{SCHEMA_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Schema-15-Day vital badge",
+									"item": [
+										{
+											"name": "Create badge",
+											"item": [
+												{
+													"name": "Create badge",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"try {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.environment.set(\"BADGE_ID\", jsonRes.Data.id);\r",
+																	"}\r",
+																	"catch (error) {\r",
+																	"    console.log(error.message);\r",
+																	"}\r",
+																	"\r",
+																	"pm.test(\"Request is successfull\", function () {\r",
+																	"    pm.response.to.have.status(201);\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Status).to.eql('success');\r",
+																	"});\r",
+																	"\r",
+																	"pm.test(\"Participant is created\", function () {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+																	"\r",
+																	"});\r",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															},
+															{
+																"key": "x-api-key",
+																"value": "{{API_KEY}}",
+																"type": "text"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer {{MODERATOR_USER_JWT}}",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"CategoryId\": \"{{BADGE_CATEGORY_ID}}\",\r\n    \"Name\": \"15-Day Vitals\",\r\n    \"Description\": \"Badge awarded for monitoring body vitals for 15-days consistently.\",\r\n    \"ImageUrl\": \"https://e7.pngegg.com/pngimages/626/893/png-clipart-blue-and-white-check-logo-facebook-social-media-verified-badge-logo-vanity-url-blue-checkmark-blue-angle.png\"\r\n}"
+														},
+														"url": {
+															"raw": "{{BASE_URL}}/badges",
+															"host": [
+																"{{BASE_URL}}"
+															],
+															"path": [
+																"badges"
+															]
+														},
+														"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+													},
+													"response": []
+												},
+												{
+													"name": "Get badge by id",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"\r",
+																	"pm.test(\"Request is successfull\", function () {\r",
+																	"    pm.response.to.have.status(200);\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Status).to.eql('success');\r",
+																	"});\r",
+																	"\r",
+																	"pm.test(\"Schema is created\", function () {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+																	"});\r",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															},
+															{
+																"key": "x-api-key",
+																"value": "{{API_KEY}}",
+																"type": "text"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer {{MODERATOR_USER_JWT}}",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": ""
+														},
+														"url": {
+															"raw": "{{BASE_URL}}/badges/{{BADGE_ID}}",
+															"host": [
+																"{{BASE_URL}}"
+															],
+															"path": [
+																"badges",
+																"{{BADGE_ID}}"
+															]
+														},
+														"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "Create schema",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"SCHEMA_ID\", jsonRes.Data.id);\r",
+															"    pm.environment.set(\"SCHEMA_ROOT_NODE_ID\", jsonRes.Data.RootNode.id);\r",
+															"    pm.environment.set(\"NODE_01_ID\", jsonRes.Data.RootNode.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Schema is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+															"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('RootNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 15-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 15 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/schema",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"schema"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "01 - Get root Node - Extract nutrition data",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_01_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is retrieved\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_01_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_01_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "02 - Create next node - Calculate Continuity",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_02_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_01_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Name\": \"Calculate continuity\",\r\n    \"Description\": \"This execution step involves calculating the continuity for monitoring body vital consecutively for 15-days.\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Process-Data\",\r\n        \"Name\": \"Calculate Continuity\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Vital\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Extract-Data:Vital\",\r\n            \"DataActionType\": \"Calculate-Continuity\",\r\n            \"KeyDataType\": \"Date\",\r\n            \"KeyName\": \"Date\",\r\n            \"ValueDataType\": \"Float\",\r\n            \"ValueName\": \"VitalPrimaryValue\",\r\n            \"Operator\": \"Exists\",\r\n            \"ContinuityCount\": 15\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Processing records for 15-day body vitals continuity\",\r\n            \"OutputTag\": \"Calculate-Continuity:Vital\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 01",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_02_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_01_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_01_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "03 - Create next node - Extract existing badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_03_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_02_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Get existing badges\",\r\n    \"Description\": \"Extract existing 15-day vital monitoring badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Extract-Data\",\r\n        \"Name\": \"Extract-Badges\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Database\",\r\n            \"InputTag\": \"Badge\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"15-Day Vitals\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 15-day vital monitoring badges\",\r\n            \"OutputTag\": \"Extract-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 02",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_03_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_02_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_02_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "04 - Create next node - Compare badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_04_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_03_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Compare badges\",\r\n    \"Description\": \"Compare calculated badges against existing badges for 15-day vital monitoring.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Compare-Data\",\r\n        \"Name\": \"Compare badges\",\r\n        \"Description\": \"Compare calculated badges against existing badges for 15-day vital monitoring\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Calculate-Continuity:Vital\",\r\n            \"SecondaryInputTag\": \"Extract-Data:Badge\",\r\n            \"DataActionType\": \"Find-Range-Difference\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"15-Day Vitals\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Comparing badges and get updated badge list for 15-day vital monitoring badges.\",\r\n            \"OutputTag\": \"Compare-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 03",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_04_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_03_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_03_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "05 - Create next node - Store updated badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_05_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_04_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Store updated badges\",\r\n    \"Description\": \"Store updated 15-day vital monitoring badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Store-Data\",\r\n        \"Name\": \"Store updated badges\",\r\n        \"Description\": \"Store updated 15-day vital monitoring badges for the participant.\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Compare-Data:Badge\",\r\n            \"StorageKeys\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"15-Day Vitals\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeId\",\r\n                    \"Value\": \"{{BADGE_ID}}\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 15-day vital monitoring badges\",\r\n            \"OutputTag\": \"Store-Data:Badge\",\r\n            \"DestinationType\": \"Database\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 04",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_05_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_04_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_04_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Get schema by Id",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Schema is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('RootNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/schema/{{SCHEMA_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"schema",
+														"{{SCHEMA_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Schema-30-Day vital badge",
+									"item": [
+										{
+											"name": "Create badge",
+											"item": [
+												{
+													"name": "Create badge",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"try {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.environment.set(\"BADGE_ID\", jsonRes.Data.id);\r",
+																	"}\r",
+																	"catch (error) {\r",
+																	"    console.log(error.message);\r",
+																	"}\r",
+																	"\r",
+																	"pm.test(\"Request is successfull\", function () {\r",
+																	"    pm.response.to.have.status(201);\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Status).to.eql('success');\r",
+																	"});\r",
+																	"\r",
+																	"pm.test(\"Participant is created\", function () {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+																	"\r",
+																	"});\r",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"request": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															},
+															{
+																"key": "x-api-key",
+																"value": "{{API_KEY}}",
+																"type": "text"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer {{MODERATOR_USER_JWT}}",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"CategoryId\": \"{{BADGE_CATEGORY_ID}}\",\r\n    \"Name\": \"30-Day Vitals\",\r\n    \"Description\": \"Badge awarded for monitoring body vitals for 30-days consistently.\",\r\n    \"ImageUrl\": \"https://e7.pngegg.com/pngimages/626/893/png-clipart-blue-and-white-check-logo-facebook-social-media-verified-badge-logo-vanity-url-blue-checkmark-blue-angle.png\"\r\n}"
+														},
+														"url": {
+															"raw": "{{BASE_URL}}/badges",
+															"host": [
+																"{{BASE_URL}}"
+															],
+															"path": [
+																"badges"
+															]
+														},
+														"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+													},
+													"response": []
+												},
+												{
+													"name": "Get badge by id",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"\r",
+																	"pm.test(\"Request is successfull\", function () {\r",
+																	"    pm.response.to.have.status(200);\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Status).to.eql('success');\r",
+																	"});\r",
+																	"\r",
+																	"pm.test(\"Schema is created\", function () {\r",
+																	"    var jsonRes = pm.response.json();\r",
+																	"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+																	"});\r",
+																	""
+																],
+																"type": "text/javascript"
+															}
+														},
+														{
+															"listen": "prerequest",
+															"script": {
+																"exec": [
+																	""
+																],
+																"type": "text/javascript"
+															}
+														}
+													],
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json",
+																"type": "text"
+															},
+															{
+																"key": "x-api-key",
+																"value": "{{API_KEY}}",
+																"type": "text"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer {{MODERATOR_USER_JWT}}",
+																"type": "text"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": ""
+														},
+														"url": {
+															"raw": "{{BASE_URL}}/badges/{{BADGE_ID}}",
+															"host": [
+																"{{BASE_URL}}"
+															],
+															"path": [
+																"badges",
+																"{{BADGE_ID}}"
+															]
+														},
+														"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+													},
+													"response": []
+												}
+											]
+										},
+										{
+											"name": "Create schema",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"SCHEMA_ID\", jsonRes.Data.id);\r",
+															"    pm.environment.set(\"SCHEMA_ROOT_NODE_ID\", jsonRes.Data.RootNode.id);\r",
+															"    pm.environment.set(\"NODE_01_ID\", jsonRes.Data.RootNode.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Schema is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
+															"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('RootNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 30-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 30 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/schema",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"schema"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "01 - Get root Node - Extract nutrition data",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_01_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is retrieved\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_01_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_01_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "02 - Create next node - Calculate Continuity",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_02_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_01_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Name\": \"Calculate continuity\",\r\n    \"Description\": \"This execution step involves calculating the continuity for monitoring body vital consecutively for 30-days.\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Process-Data\",\r\n        \"Name\": \"Calculate Continuity\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Vital\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Extract-Data:Vital\",\r\n            \"DataActionType\": \"Calculate-Continuity\",\r\n            \"KeyDataType\": \"Date\",\r\n            \"KeyName\": \"Date\",\r\n            \"ValueDataType\": \"Float\",\r\n            \"ValueName\": \"VitalPrimaryValue\",\r\n            \"Operator\": \"Exists\",\r\n            \"ContinuityCount\": 30\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Processing records for 30-day body vitals continuity\",\r\n            \"OutputTag\": \"Calculate-Continuity:Vital\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 01",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_02_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_01_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_01_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "03 - Create next node - Extract existing badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_03_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_02_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Get existing badges\",\r\n    \"Description\": \"Extract existing 30-day vital monitoring badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Extract-Data\",\r\n        \"Name\": \"Extract-Badges\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Database\",\r\n            \"InputTag\": \"Badge\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"30-Day Vitals\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 30-day vital monitoring badges\",\r\n            \"OutputTag\": \"Extract-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 02",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_03_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_02_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_02_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "04 - Create next node - Compare badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_04_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_03_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Compare badges\",\r\n    \"Description\": \"Compare calculated badges against existing badges for 30-day vital monitoring.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Compare-Data\",\r\n        \"Name\": \"Compare badges\",\r\n        \"Description\": \"Compare calculated badges against existing badges for 30-day vital monitoring\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Calculate-Continuity:Vital\",\r\n            \"SecondaryInputTag\": \"Extract-Data:Badge\",\r\n            \"DataActionType\": \"Find-Range-Difference\",\r\n            \"Filters\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"30-Day Vitals\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Comparing badges and get updated badge list for 30-day vital monitoring badges.\",\r\n            \"OutputTag\": \"Compare-Data:Badge\",\r\n            \"DestinationType\": \"Almanac\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "Update next node for node 03",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(200);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is updated\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"Action\": {\r\n        \"OutputParams\": {\r\n            \"NextNodeId\": \"{{NODE_04_ID}}\"\r\n        }\r\n    }\r\n}"
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/engine/nodes/{{NODE_03_ID}}",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"engine",
+														"nodes",
+														"{{NODE_03_ID}}"
+													]
+												},
+												"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+											},
+											"response": []
+										},
+										{
+											"name": "05 - Create next node - Store updated badges",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"try {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.environment.set(\"NODE_05_ID\", jsonRes.Data.id);\r",
+															"}\r",
+															"catch (error) {\r",
+															"    console.log(error.message);\r",
+															"}\r",
+															"\r",
+															"pm.test(\"Request is successfull\", function () {\r",
+															"    pm.response.to.have.status(201);\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Status).to.eql('success');\r",
+															"});\r",
+															"\r",
+															"pm.test(\"Node is created\", function () {\r",
+															"    var jsonRes = pm.response.json();\r",
+															"    pm.expect(jsonRes.Data).to.have.property('id');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
+															"    pm.expect(jsonRes.Data).to.have.property('ParentNode');\r",
+															"});\r",
+															""
+														],
+														"type": "text/javascript"
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "x-api-key",
+														"value": "{{API_KEY}}",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{MODERATOR_USER_JWT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ParentNodeId\": \"{{NODE_04_ID}}\",\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Store updated badges\",\r\n    \"Description\": \"Store updated 30-day vital monitoring badges for the participant.\",\r\n    \"Type\": \"Execution-Node\",\r\n    \"Action\": {\r\n        \"ActionType\": \"Store-Data\",\r\n        \"Name\": \"Store updated badges\",\r\n        \"Description\": \"Store updated 30-day vital monitoring badges for the participant.\",\r\n        \"InputParams\": {\r\n            \"RecordType\": \"Badge\",\r\n            \"SourceType\": \"Almanac\",\r\n            \"InputTag\": \"Compare-Data:Badge\",\r\n            \"StorageKeys\": [\r\n                {\r\n                    \"Key\": \"BadgeCategory\",\r\n                    \"Value\": \"Vital\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeTitle\",\r\n                    \"Value\": \"30-Day Vitals\"\r\n                },\r\n                {\r\n                    \"Key\": \"BadgeId\",\r\n                    \"Value\": \"{{BADGE_ID}}\"\r\n                }\r\n            ]\r\n        },\r\n        \"OutputParams\": {\r\n            \"Message\": \"Extracting 30-day vital monitoring badges\",\r\n            \"OutputTag\": \"Store-Data:Badge\",\r\n            \"DestinationType\": \"Database\"\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/nodes",
