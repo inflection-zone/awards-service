@@ -13,6 +13,7 @@ import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { StringUtils } from '../../../common/utilities/string.utils';
 import { Context } from '../../models/engine/context.model';
 import { ContextType } from '../../../domain.types/engine/engine.types';
+import { BadgeStockImage } from '../../../database/models/awards/badge.stock.image.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,8 @@ export class ParticipantService extends BaseService {
     _participantBadgeRepository: Repository<ParticipantBadge> = Source.getRepository(ParticipantBadge);
 
     _badgeRepository: Repository<Badge> = Source.getRepository(Badge);
+
+    _badgeStockImageRepository: Repository<BadgeStockImage> = Source.getRepository(BadgeStockImage);
 
     //#endregion
 
@@ -308,6 +311,7 @@ export class ParticipantService extends BaseService {
                 //     CreatedAt : true,
                 // }
             };
+              
             const list = await this._participantBadgeRepository.find(search);
             const participantBadges = list.map(x => {
                 return {
@@ -372,6 +376,27 @@ export class ParticipantService extends BaseService {
         return search;
     };
 
+
+    public getBadgeImageUrl =async (participantBadges: ParticipantBadgeResponseDto[], classified: any) => {
+
+        var result = null;
+        for await (var participantBadge of participantBadges) {
+            var badgeimage = await this._badgeStockImageRepository.findOne({
+                where : {
+                    Code : participantBadge.Badge.Name
+                }
+            });
+            participantBadge.Badge.ImageUrl = badgeimage.PublicUrl ? badgeimage.PublicUrl: null;
+            result = {
+                BadgesByCategory: classified,
+                BadgeList: participantBadges,
+            };
+
+        }
+        return result;
+    };
+
+    
     //#endregion
 
 }

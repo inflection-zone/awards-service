@@ -1,10 +1,8 @@
 import fs from "fs";
 import path from "path";
-import { Helper } from "../common/helper";
 import { logger } from "../logger/logger";
 import * as RolePrivilegesList from '../../seed.data/role.privileges.json';
 import { UserService } from '../database/services/user/user.service';
-import { ClientService } from '../database/services/client/client.service';
 import { UserCreateModel } from "../domain.types/user/user.domain.types";
 import { Gender } from "../domain.types/miscellaneous/system.types";
 import { RoleService } from "../database/services/user/role.service";
@@ -14,6 +12,10 @@ import { RoleCreateModel } from "../domain.types/user/role.domain.types";
 import { ClientResponseDto } from "../domain.types/client/client.domain.types";
 import { FileUtils } from "../common/utilities/file.utils";
 import { StringUtils } from "../common/utilities/string.utils";
+import { BadgeStockImageDomainModel } from "../domain.types/badge.stock.image/badge.stock.image.domain.model";
+import { BadgeStockImageService } from "../database/services/badge.stock.images/badge.stock.image.service";
+import { ClientService } from "../database/services/client/client.service";
+import { Loader } from "./loader";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +31,15 @@ export class Seeder {
 
     _fileResourceService: FileResourceService = null;
 
+    _badgeStockImageService: BadgeStockImageService = new BadgeStockImageService();
+
+    constructor () {
+
+        this._fileResourceService = Loader.Container.resolve(FileResourceService);
+
+    }
+
+
     public seed = async (): Promise<void> => {
         try {
             await this.createTempFolders();
@@ -36,6 +47,7 @@ export class Seeder {
             const clients = await this.seedInternalClients();
             await this.seedRolePrivileges();
             await this.seedDefaultUsers(clients);
+            await this.seedBadgeStockImages();
         } catch (error) {
             logger.error(error.message);
         }
@@ -180,6 +192,44 @@ export class Seeder {
         }
 
         logger.info('Seeded default roles successfully!');
+    };
+
+    private seedBadgeStockImages = async () => {
+
+        var images = await this._badgeStockImageService.getAll();
+        if (images.length > 0) {
+            return;
+        }
+
+        var cloudStoragePath = 'assets/images/stock.badge.images/';
+        var sourceFilePath = path.join(process.cwd(), "./assets/images/stock.badge.images/");
+        var files = fs.readdirSync(sourceFilePath);
+        var imageFiles = files.filter((f) => {
+            return path.extname(f).toLowerCase() === '.png';
+        });
+
+        for await (const fileName of imageFiles) {
+
+            var sourceFileLocation = path.join(sourceFilePath, fileName);
+            var storageFileLocation = cloudStoragePath + fileName;
+
+            var uploaded = await this._fileResourceService.uploadLocal(
+                sourceFileLocation,
+                storageFileLocation,
+                true);
+
+            var domainModel: BadgeStockImageDomainModel = {
+                Code       : fileName.replace('.png', ''),
+                FileName   : fileName,
+                ResourceId : uploaded.id,
+                PublicUrl  : uploaded.DefaultVersion.Url
+            };
+
+            var badgeStockImage = await this._badgeStockImageService.create(domainModel);
+            if (!badgeStockImage) {
+                console.log('Error occurred while seeding medication stock images!');
+            }
+        }
     };
 
 }

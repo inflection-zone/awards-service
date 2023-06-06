@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { FileResource } from '../../models/general/file.resource.model';
 import { User } from '../../models/user/user.model';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
@@ -12,6 +13,15 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { FileResourceMapper } from '../../mappers/general/file.resource.mapper';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { logger } from '../../../logger/logger';
+import { FileResourceDto } from '../../../domain.types/general/file.resource/file.resource.dto';
+import { FileResourceMetadata } from '../../../domain.types/general/file.resource/file.resource.types';
+import path from 'path';
+import { Helper } from '../../../common/helper';
+import { AWSS3FileStorageService } from '../../../modules/storage/providers/aws.s3.file.storage.service';
+import { FileResourceVersion } from '../../../database/models/general/file.resource.version.model';
+import { FileResourceUploadDomainModel } from '../../../domain.types/general/file.resource/file.resource.domain.model';
+import { ConfigurationManager } from '../../../config/configuration.manager';
+import { TimeUtils } from '../../../common/utilities/time.utils';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +29,11 @@ export class FileResourceService {
 
     //#region Models
 
+    _storageService: AWSS3FileStorageService = new AWSS3FileStorageService();
+
     _fileResourceRepository : Repository<FileResource> = Source.getRepository(FileResource);
+
+    _fileResourceVersionRepository : Repository<FileResourceVersion> = Source.getRepository(FileResourceVersion);
 
     _userRepository : Repository<User> = Source.getRepository(User);
 
@@ -232,6 +246,122 @@ export class FileResourceService {
         } catch (error) {
             ErrorHandler.throwDbAccessError('DB Error: Unable to delete file resource!', error);
         }
+    };
+
+    uploadLocal = async (
+        sourceLocation: string,
+        storageLocation: string,
+        isPublicResource: boolean
+    ): Promise<FileResourceDto> => {
+
+        var exists = fs.existsSync(sourceLocation);
+        if (!exists) {
+            console.log('Source file location does not exist!');
+        }
+
+        var storageKey:string = null;
+        var existingStorageKey = await this._storageService.exists(storageLocation);
+        if (existingStorageKey !== undefined && existingStorageKey !== null) {
+            storageKey = existingStorageKey;
+        }
+        else {
+            storageKey = await this._storageService.upload(sourceLocation, storageLocation);
+        }
+
+        var stats = fs.statSync(sourceLocation);
+        var filename = path.basename(sourceLocation);
+
+        var metadata: FileResourceMetadata = {
+            Version        : '1',
+            OriginalName   : filename,
+            FileName       : filename,
+            SourceFilePath : null,
+            MimeType       : Helper.getMimeType(sourceLocation),
+            Size           : stats['size'] / 1024,
+            StorageKey     : storageKey,
+        };
+
+
+        var domainModel: FileResourceUploadDomainModel = {
+            FileMetadata           : metadata,
+            StorageKey             : metadata.StorageKey,
+            FileName               : metadata.FileName,
+            IsMultiResolutionImage : false,
+            MimeType               : Helper.getMimeType(sourceLocation),
+            IsPublicResource       : isPublicResource,
+        };
+
+        var resource = await this._fileResourceRepository.create(domainModel);
+        var record = await this._fileResourceRepository.save(resource);
+
+        domainModel.FileMetadata.ResourceId = record.id;
+        var version = await this.addVersion(domainModel.FileMetadata, true);
+        resource.DefaultVersion = version;
+        resource.Url = version.Url;
+        
+        return resource;
+    };
+
+    addVersion = async (metadata: FileResourceMetadata, makeDefaultVersion: boolean): Promise<FileResourceMetadata> => {
+
+        var fileVersion = {
+            ResourceId       : metadata.ResourceId,
+            Version          : metadata.Version,
+            FileName         : metadata.FileName,
+            OriginalFileName : metadata.OriginalName,
+            MimeType         : metadata.MimeType,
+            StorageKey       : metadata.StorageKey,
+            SizeInKB         : metadata.Size,
+        };
+
+        var record = await this._fileResourceVersionRepository.create(fileVersion);
+        var version = await this._fileResourceVersionRepository.save(record);
+
+        if (version === null) {
+            throw new Error('Unable to create version instance in database!');
+        }
+
+        if (makeDefaultVersion) {
+            var resource = await this._fileResourceRepository.findOne({
+                where : {
+                    id : metadata.ResourceId
+                }
+            });
+            if (resource === null) {
+                throw new Error('Unable to find resource!');
+            }
+            resource.DefaultVersionId = version.id;
+            //await resource.save();
+        }
+
+        return FileResourceMapper.toFileVersionDto(version);
+    };
+
+    downloadByVersionName = async (resourceId: string, versionName: string): Promise<string> => {
+        var downloadFolderPath = await this.generateDownloadFolderPath();
+        //var versionMetadata = await this._fileResourceRepo.getVersionByVersionName(resourceId, versionName);
+
+        var versionMetadata = await this._fileResourceVersionRepository.findOne({
+            where : {
+                ResourceId : resourceId,
+            }
+        });
+        // const versionMetadata_ = FileResourceMapper.toFileVersionDto(versionMetadata);
+        var localFilePath = path.join(downloadFolderPath, versionMetadata.FileName);
+        var localDestination = await this._storageService.download(versionMetadata.StorageKey, localFilePath);
+        return localDestination;
+    };
+
+    private generateDownloadFolderPath = async() => {
+
+        var timestamp = TimeUtils.timestamp(new Date());
+        var tempDownloadFolder = ConfigurationManager.DownloadTemporaryFolder;
+        var downloadFolderPath = path.join(tempDownloadFolder, timestamp);
+
+        //Make sure the path exists
+        await fs.promises.mkdir(downloadFolderPath, { recursive: true });
+
+        return downloadFolderPath;
     };
 
     //#endregion

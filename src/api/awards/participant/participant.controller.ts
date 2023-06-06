@@ -133,11 +133,7 @@ export class ParticipantController extends BaseController {
             const allBadges = await this._badgeService.getByClientId(clientId);
             const badges = this.classifyAllBadgesByCategory(allBadges);
             const classified = this.classifyParticipantBadges(participantBadges, badges);
-
-            const result = {
-                BadgesByCategory: classified,
-                BadgeList: participantBadges,
-            };
+            var result = await this._service.getBadgeImageUrl(participantBadges, classified);
 
             ResponseHandler.success(request, response, message, 200, result);
         } catch (error) {

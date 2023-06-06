@@ -5,7 +5,7 @@ export interface IFileStorageService {
     
     upload(inputStream, storageKey: string): Promise<string>;
     
-    download(storageKey: string): Promise<any>;
+    download(storageKey: string, localFilePath: string): Promise<any>;
     
     uploadLocally(storageKey: string, localFilePath?: string): Promise<string>;
     

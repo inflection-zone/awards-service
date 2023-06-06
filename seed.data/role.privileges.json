@@ -25,7 +25,9 @@
             "Client.Update",
             "Client.Delete",
             "Client.GetApiKey",
-            "Client.RenewApiKey"
+            "Client.RenewApiKey",
+
+            "Badge.GetStockBadgeImages"
         ]
     },
     {
@@ -100,7 +102,9 @@
             "Redemption.Delete",
 
             "Types.GetEventActionTypes",
-            "Types.GetRoles"
+            "Types.GetRoles",
+
+            "Badge.GetStockBadgeImages"
         ]
     }
 ]

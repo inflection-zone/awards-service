@@ -6,6 +6,7 @@ import { BadgeService } from '../../../database/services/awards/badge.service';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { BadgeCreateModel, BadgeSearchFilters, BadgeUpdateModel } from '../../../domain.types/awards/badge.domain.types';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import { BadgeStockImageService } from '../../../database/services/badge.stock.images/badge.stock.image.service';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -14,6 +15,8 @@ export class BadgeController extends BaseController {
     //#region member variables and constructors
 
     _service: BadgeService = new BadgeService();
+
+    _badgeStockservice: BadgeStockImageService = new BadgeStockImageService();
 
     _validator: BadgeValidator = new BadgeValidator();
 
@@ -82,6 +85,20 @@ export class BadgeController extends BaseController {
             const result = await this._service.delete(id);
             const message = 'Badge deleted successfully!';
             ResponseHandler.success(request, response, message, 200, result);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getStockBadgeImages = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            await this.authorize('Badge.GetStockBadgeImages',request, response, false);
+
+            const images = await this._badgeStockservice.getAll();
+            const message = 'Badge stock images retrieved successfully!';
+
+            ResponseHandler.success(request, response, message, 200, images);
+
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
