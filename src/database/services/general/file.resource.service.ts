@@ -74,9 +74,9 @@ export class FileResourceService {
                 where : {
                     id : id
                 },
-                relations : {
+                /*relations : {
                     UploadedBy : true
-                },
+                },*/
                 select : {
                     id               : true,
                     OriginalFilename : true,
@@ -88,7 +88,7 @@ export class FileResourceService {
                     Size             : true,
                     StorageKey       : true,
                     Tags             : true,
-                    UploadedBy       : {
+                    /*UploadedBy       : {
                         id     : true,
                         Client : {
                             Name : true
@@ -96,7 +96,7 @@ export class FileResourceService {
                         FirstName : true,
                         LastName  : true,
                         Prefix    : true
-                    },
+                    },*/
                 },
             });
             return FileResourceMapper.toResponseDto(record);
@@ -288,7 +288,7 @@ export class FileResourceService {
             FileName               : metadata.FileName,
             IsMultiResolutionImage : false,
             MimeType               : Helper.getMimeType(sourceLocation),
-            IsPublicResource       : isPublicResource,
+            Public                 : isPublicResource,
         };
 
         var resource = await this._fileResourceRepository.create(domainModel);

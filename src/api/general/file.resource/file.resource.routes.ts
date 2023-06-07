@@ -15,7 +15,7 @@ export const register = (app: express.Application): void => {
     router.get('/:id', authenticator.authenticateUser, controller.getById);
     router.delete('/:id', authenticator.authenticateUser, controller.delete);
 
-    router.get('/:id/download-by-version-name/:version', controller.downloadByVersionName);
+    router.get('/:id/download-by-version-name/:version', authenticator.authenticateClient, controller.downloadByVersionName);
 
     app.use('/api/v1/file-resources', router);
 };

@@ -74,7 +74,29 @@ export class AWSS3FileStorageService implements IFileStorageService {
                 Bucket : process.env.STORAGE_BUCKET,
                 Key    : storageKey,
             };
-            return s3.getObject(params).createReadStream();
+            var file = fs.createWriteStream(localFilePath);
+
+            return new Promise((resolve, reject) => {
+                s3.getObject(params).createReadStream()
+                    .on('end', () => {
+    
+                        //var st = fs.existsSync(localFilePath);
+    
+                        var stats = fs.statSync(localFilePath);
+                        var count = 0;
+                        while (stats.size === 0 && count < 5) {
+                            setTimeout(() => {
+                                stats = fs.statSync(localFilePath);
+                            }, 3000);
+                            count++;
+                        }
+                        return resolve(localFilePath);
+                    })
+                    .on('error', (error) => {
+                        return reject(error);
+                    })
+                    .pipe(file);
+            });
         }
         catch (error) {
             logger.error(error.message);

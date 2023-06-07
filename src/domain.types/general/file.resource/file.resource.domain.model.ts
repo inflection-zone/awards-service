@@ -4,7 +4,7 @@ export interface FileResourceUploadDomainModel {
     FileMetadata            : FileResourceMetadata;
     OwnerUserId?            : string;
     UploadedByUserId?       : string;
-    IsPublicResource?       : boolean;
+    Public?                 : boolean;
     IsMultiResolutionImage? : boolean;
     MimeType?               : string;
     DefaultVersionId?       : string;
