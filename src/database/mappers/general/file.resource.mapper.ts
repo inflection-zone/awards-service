@@ -23,7 +23,7 @@ export class FileResourceMapper {
             Public           : fileResource.Public,
             Size             : fileResource.Size,
             Tags             : fileResource.Tags,
-            UploadedBy       : fileResource.UploadedBy.id,
+            UploadedBy       : null,
             CreatedAt        : fileResource.CreatedAt,
             UpdatedAt        : fileResource.UpdatedAt,
         };
@@ -36,7 +36,7 @@ export class FileResourceMapper {
             return null;
         }
 
-        var url = ConfigurationManager.BaseUrl + '/api/v1/file-resources/' + fileVersion.ResourceId + '/download-by-version-name/' + fileVersion.Version;
+        var url = ConfigurationManager.BaseUrl + '/file-resources/' + fileVersion.ResourceId + '/download-by-version-name/' + fileVersion.Version;
 
         var v: FileResourceMetadata = {
             VersionId    : fileVersion.id,

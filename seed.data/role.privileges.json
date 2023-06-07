@@ -18,6 +18,7 @@
             "FileResource.GetById",
             "FileResource.Search",
             "FileResource.Download",
+            "FileResource.DownloadByVersionName",
 
             "Client.Create",
             "Client.Search",
@@ -48,6 +49,7 @@
             "FileResource.GetById",
             "FileResource.Search",
             "FileResource.Download",
+            "FileResource.DownloadByVersionName",
 
             "Participant.Create",
             "Participant.Search",
