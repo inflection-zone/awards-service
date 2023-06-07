@@ -30,11 +30,12 @@ export class AWSS3FileStorageService implements IFileStorageService {
 
     upload = async (inputStream: any, storageKey: string): Promise<string> => {
         try {
+            const fileContent = fs.readFileSync(inputStream);
             var s3 = this.getS3Client();
             const params = {
                 Bucket : process.env.STORAGE_BUCKET,
                 Key    : storageKey,
-                Body   : inputStream //Request stream piped directly
+                Body   : fileContent //Request stream piped directly
             };
             var stored = await s3.upload(params).promise();
             logger.info(JSON.stringify(stored, null, 2));

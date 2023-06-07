@@ -203,6 +203,7 @@ export class Seeder {
 
         var cloudStoragePath = 'assets/images/stock.badge.images/';
         var sourceFilePath = path.join(process.cwd(), "./assets/images/stock.badge.images/");
+
         var files = fs.readdirSync(sourceFilePath);
         var imageFiles = files.filter((f) => {
             return path.extname(f).toLowerCase() === '.png';
@@ -227,7 +228,7 @@ export class Seeder {
 
             var badgeStockImage = await this._badgeStockImageService.create(domainModel);
             if (!badgeStockImage) {
-                console.log('Error occurred while seeding medication stock images!');
+                console.log('Error occurred while seeding badge stock images!');
             }
         }
     };
