@@ -201,7 +201,7 @@ export class Seeder {
             return;
         }
 
-        var cloudStoragePath = 'assets/images/stock.badge.images/';
+        var destinationStoragePath = 'assets/images/stock.badge.images/';
         var sourceFilePath = path.join(process.cwd(), "./assets/images/stock.badge.images/");
 
         var files = fs.readdirSync(sourceFilePath);
@@ -211,13 +211,17 @@ export class Seeder {
 
         for await (const fileName of imageFiles) {
 
-            var sourceFileLocation = path.join(sourceFilePath, fileName);
-            var storageFileLocation = cloudStoragePath + fileName;
+            var sourceLocation = path.join(sourceFilePath, fileName);
+            var storageKey = destinationStoragePath + fileName;
 
             var uploaded = await this._fileResourceService.uploadLocal(
-                sourceFileLocation,
-                storageFileLocation,
+                storageKey,
+                sourceLocation,
                 true);
+            
+            if (!uploaded) {
+                continue;
+            }
 
             var domainModel: BadgeStockImageDomainModel = {
                 Code       : fileName.replace('.png', ''),

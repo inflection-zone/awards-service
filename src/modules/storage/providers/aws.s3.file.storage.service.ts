@@ -28,7 +28,7 @@ export class AWSS3FileStorageService implements IFileStorageService {
         }
     };
 
-    upload = async (inputStream: any, storageKey: string): Promise<string> => {
+    upload = async (storageKey: string, inputStream: any): Promise<string|null|undefined> => {
         try {
             const fileContent = fs.readFileSync(inputStream);
             var s3 = this.getS3Client();
@@ -43,10 +43,11 @@ export class AWSS3FileStorageService implements IFileStorageService {
         }
         catch (error) {
             logger.error(error.message);
+            return null;
         }
     };
 
-    uploadLocally = async (storageKey: string, localFilePath: string): Promise<string> => {
+    uploadLocally = async (storageKey: string, localFilePath: string): Promise<string|null|undefined> => {
 
         try {
             const fileContent = fs.readFileSync(localFilePath);
@@ -65,6 +66,7 @@ export class AWSS3FileStorageService implements IFileStorageService {
         }
         catch (error) {
             logger.error(error.message);
+            return null;
         }
     };
 

@@ -17,11 +17,12 @@ import { FileResourceDto } from '../../../domain.types/general/file.resource/fil
 import { FileResourceMetadata } from '../../../domain.types/general/file.resource/file.resource.types';
 import path from 'path';
 import { Helper } from '../../../common/helper';
-import { AWSS3FileStorageService } from '../../../modules/storage/providers/aws.s3.file.storage.service';
 import { FileResourceVersion } from '../../../database/models/general/file.resource.version.model';
 import { FileResourceUploadDomainModel } from '../../../domain.types/general/file.resource/file.resource.domain.model';
 import { ConfigurationManager } from '../../../config/configuration.manager';
 import { TimeUtils } from '../../../common/utilities/time.utils';
+import { StorageService } from '../../../modules/storage/storage.service';
+import { Loader } from '../../../startup/loader';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,13 +30,17 @@ export class FileResourceService {
 
     //#region Models
 
-    _storageService: AWSS3FileStorageService = new AWSS3FileStorageService();
+    _storageService: StorageService = null;
 
     _fileResourceRepository : Repository<FileResource> = Source.getRepository(FileResource);
 
     _fileResourceVersionRepository : Repository<FileResourceVersion> = Source.getRepository(FileResourceVersion);
 
     _userRepository : Repository<User> = Source.getRepository(User);
+
+    constructor() {
+        this._storageService = Loader.Container.resolve(StorageService);
+    }
 
     //#endregion
 
@@ -249,8 +254,8 @@ export class FileResourceService {
     };
 
     uploadLocal = async (
+        storageKey: string,
         sourceLocation: string,
-        storageLocation: string,
         isPublicResource: boolean
     ): Promise<FileResourceDto> => {
 
@@ -259,15 +264,19 @@ export class FileResourceService {
             console.log('Source file location does not exist!');
         }
 
-        var storageKey:string = null;
-        var existingStorageKey = await this._storageService.exists(storageLocation);
+        var existingStorageKey = await this._storageService.exists(storageKey);
         if (existingStorageKey !== undefined && existingStorageKey !== null) {
             storageKey = existingStorageKey;
         }
         else {
-            storageKey = await this._storageService.upload(sourceLocation, storageLocation);
+            storageKey = await this._storageService.uploadLocally(storageKey, sourceLocation);
         }
 
+        if(!storageKey) {
+            console.log('Unable to upload file to storage!');
+            return null;
+        }
+        
         var stats = fs.statSync(sourceLocation);
         var filename = path.basename(sourceLocation);
 
@@ -280,7 +289,6 @@ export class FileResourceService {
             Size           : stats['size'] / 1024,
             StorageKey     : storageKey,
         };
-
 
         var domainModel: FileResourceUploadDomainModel = {
             FileMetadata           : metadata,
@@ -337,7 +345,7 @@ export class FileResourceService {
         return FileResourceMapper.toFileVersionDto(version);
     };
 
-    downloadByVersionName = async (resourceId: string, versionName: string): Promise<string> => {
+    DownloadByVersion = async (resourceId: string, versionName: string): Promise<string> => {
         var downloadFolderPath = await this.generateDownloadFolderPath();
         //var versionMetadata = await this._fileResourceRepo.getVersionByVersionName(resourceId, versionName);
 
