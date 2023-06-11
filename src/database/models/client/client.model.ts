@@ -6,7 +6,6 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
-    ManyToOne,
     OneToMany,
 } from 'typeorm';
 import { IsEmail } from 'class-validator';

@@ -87,4 +87,42 @@ export class ParticipantGroupController extends BaseController {
         }
     };
 
+    addParticipant = async (request: express.Request, response: express.Response): Promise < void > => {
+        try {
+            await this.authorize('ParticipantGroup.AddParticipant', request, response);
+            var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
+            var participantId: uuid = await this._validator.validateParamAsUUID(request, 'participantId');
+            const result = await this._service.addParticipant(id, participantId);
+            const message = 'Participant added to group successfully!';
+            ResponseHandler.success(request, response, message, 200, result);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    removeParticipant = async (request: express.Request, response: express.Response): Promise < void > => {
+        try {
+            await this.authorize('ParticipantGroup.RemoveParticipant', request, response);
+            var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
+            var participantId: uuid = await this._validator.validateParamAsUUID(request, 'participantId');
+            const result = await this._service.removeParticipant(id, participantId);
+            const message = 'Participant removed from group successfully!';
+            ResponseHandler.success(request, response, message, 200, result);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getParticipants = async (request: express.Request, response: express.Response): Promise < void > => {
+        try {
+            await this.authorize('ParticipantGroup.GetParticipants', request, response);
+            var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
+            const result = await this._service.getParticipants(id);
+            const message = 'Participants retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, result);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
 }
