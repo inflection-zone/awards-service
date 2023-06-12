@@ -65,7 +65,7 @@ export class ClientController extends BaseController {
                 ErrorHandler.throwNotFoundError('Api client with id ' + id.toString() + ' cannot be found!');
             }
             const message = 'Api client retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200, { Client: record });
+            ResponseHandler.success(request, response, message, 200, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -79,7 +79,7 @@ export class ClientController extends BaseController {
                 ErrorHandler.throwNotFoundError('Api client with code ' + currentClient?.Code?.toString() + ' cannot be found!');
             }
             const message = 'Api client retrieved successfully!';
-            ResponseHandler.success(request, response, message, 200, { Client: record });
+            ResponseHandler.success(request, response, message, 200, record);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
