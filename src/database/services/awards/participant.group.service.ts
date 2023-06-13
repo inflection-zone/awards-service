@@ -8,14 +8,14 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { ParticipantGroupMapper } from '../../mappers/awards/participant.group.mapper';
 import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { 
-    ParticipantGroupCreateModel, 
-    ParticipantGroupResponseDto, 
-    ParticipantGroupSearchFilters, 
-    ParticipantGroupSearchResults, 
+import {
+    ParticipantGroupCreateModel,
+    ParticipantGroupResponseDto,
+    ParticipantGroupSearchFilters,
+    ParticipantGroupSearchResults,
     ParticipantGroupUpdateModel } from '../../../domain.types/awards/participant.group.domain.types';
-    import { Context } from '../../models/engine/context.model';
-    import { ContextType } from '../../../domain.types/engine/engine.types';
+import { Context } from '../../models/engine/context.model';
+import { ContextType } from '../../../domain.types/engine/engine.types';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -38,19 +38,20 @@ export class ParticipantGroupService extends BaseService {
 
         const client = await this.getClient(createModel.ClientId);
         const badge = this._groupRepository.create({
-            Client     : client,
-            Name       : createModel.Name,
-            Description: createModel.Description,
-            ImageUrl   : createModel.ImageUrl,
+            Client      : client,
+            ReferenceId : createModel.ReferenceId,
+            Name        : createModel.Name,
+            Description : createModel.Description,
+            ImageUrl    : createModel.ImageUrl,
         });
         var record = await this._groupRepository.save(badge);
 
         //Keep group context for this participant group
         const context = this._contextRepository.create({
-            Type: ContextType.Group,
-            ReferenceId : record.id,
-            Group : record,
-        })
+            Type        : ContextType.Group,
+            ReferenceId : record.ReferenceId,
+            Group       : record,
+        });
         const contextRecord = await this._contextRepository.save(context);
         logger.info(JSON.stringify(contextRecord, null, 2));
 
@@ -143,6 +144,77 @@ export class ParticipantGroupService extends BaseService {
         }
     };
 
+    public addParticipant = async (groupId: uuid, participantId: uuid): Promise<boolean> => {
+        try {
+            var group = await this._groupRepository.findOne({
+                where : {
+                    id : groupId
+                }
+            });
+            if (!group) {
+                ErrorHandler.throwNotFoundError('ParticipantGroup not found!');
+            }
+            var participant = await this._participantRepository.findOne({
+                where : {
+                    id : participantId
+                }
+            });
+            if (!participant) {
+                ErrorHandler.throwNotFoundError('Participant not found!');
+            }
+            group.Participants.push(participant);
+            var result = await this._groupRepository.save(group);
+            return result != null;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
+    public removeParticipant = async (groupId: uuid, participantId: uuid): Promise<boolean> => {
+        try {
+            var group = await this._groupRepository.findOne({
+                where : {
+                    id : groupId
+                }
+            });
+            if (!group) {
+                ErrorHandler.throwNotFoundError('ParticipantGroup not found!');
+            }
+            var participant = await this._participantRepository.findOne({
+                where : {
+                    id : participantId
+                }
+            });
+            if (!participant) {
+                ErrorHandler.throwNotFoundError('Participant not found!');
+            }
+            group.Participants = group.Participants.filter(x => x.id !== participant.id);
+            var result = await this._groupRepository.save(group);
+            return result != null;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
+    public getParticipants = async (groupId: uuid): Promise<Participant[]> => {
+        try {
+            var group = await this._groupRepository.findOne({
+                where : {
+                    id : groupId
+                }
+            });
+            if (!group) {
+                ErrorHandler.throwNotFoundError('ParticipantGroup not found!');
+            }
+            return group.Participants;
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
     //#region Privates
 
     private getSearchModel = (filters: ParticipantGroupSearchFilters) => {
@@ -156,20 +228,21 @@ export class ParticipantGroupService extends BaseService {
                 // }
             },
             select : {
-                id      : true,
-                Client       : {
-                    id  : true,
-                    Name: true,
-                    Code: true,
+                id     : true,
+                ReferenceId : true,
+                Client : {
+                    id   : true,
+                    Name : true,
+                    Code : true,
                 },
                 Participants : {
                     id : true,
                 },
-                Name       : true,
-                Description: true,
-                ImageUrl   : true,
-                CreatedAt  : true,
-                UpdatedAt  : true,
+                Name        : true,
+                Description : true,
+                ImageUrl    : true,
+                CreatedAt   : true,
+                UpdatedAt   : true,
             }
         };
 
@@ -190,8 +263,8 @@ export class ParticipantGroupService extends BaseService {
 
     private async getClient(clientId: uuid) {
         const client = await this._clientRepository.findOne({
-            where: {
-                id: clientId
+            where : {
+                id : clientId
             }
         });
         if (!client) {

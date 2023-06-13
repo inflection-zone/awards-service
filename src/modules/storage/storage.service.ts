@@ -12,15 +12,15 @@ export class StorageService {
         return await this._storageService.exists(storageKey);
     }
     
-    upload = async (inputStream, storageKey: string): Promise<string> => {
-        return await this._storageService.upload(inputStream, storageKey);
+    upload = async (storageKey: string, inputStream): Promise<string|null|undefined> => {
+        return await this._storageService.upload(storageKey, inputStream);
     }
     
     download = async (storageKey: string, localFilePath?: string): Promise<any> => {
         return await this._storageService.download(storageKey,  localFilePath);
     }
     
-    uploadLocally = async (storageKey: string, localFilePath?: string): Promise<string> => {
+    uploadLocally = async (storageKey: string, localFilePath?: string): Promise<string|null|undefined> => {
         return await this._storageService.uploadLocally(storageKey, localFilePath);
     }
     

@@ -11,7 +11,6 @@ import { FileResourceCreateModel } from '../../../domain.types/general/file.reso
 import { FileUtils } from '../../../common/utilities/file.utils';
 import { Loader } from '../../../startup/loader';
 import { StorageService } from '../../../modules/storage/storage.service';
-import { IFileStorageService } from '../../../modules/storage/interfaces/file.storage.service.interface';
 import { FileResourceMetadata } from '../../../domain.types/general/file.resource/file.resource.types';
 import { Authenticator } from '../../../auth/authenticator';
 import path from 'path';
@@ -58,7 +57,7 @@ export class FileResourceController extends BaseController {
             filename = filename + '_' + timestamp + '.' + ext;
             var storageKey = 'uploaded/' + dateFolder + '/' + filename;
 
-            var key = await this._storageService.upload(request, storageKey);
+            var key = await this._storageService.upload(storageKey, request);
             if (!key) {
                 ErrorHandler.throwInternalServerError(`Unable to upload the file!`);
             }
@@ -166,9 +165,9 @@ export class FileResourceController extends BaseController {
         }
     };
 
-    downloadByVersionName = async (request: express.Request, response: express.Response): Promise<void> => {
+    DownloadByVersion = async (request: express.Request, response: express.Response): Promise<void> => {
         try {
-            request.context = 'FileResource.DownloadByVersionName';
+            request.context = 'FileResource.DownloadByVersion';
             const metadata = await this._validator.getByVersionName(request);
             var resource = await this._service.getById(metadata.ResourceId);
 
@@ -184,7 +183,7 @@ export class FileResourceController extends BaseController {
 
             console.log(`Download request for Resource Id:: ${metadata.ResourceId}
                 and Version:: ${metadata.Version}`);
-            const localDestination = await this._service.downloadByVersionName(
+            const localDestination = await this._service.DownloadByVersion(
                 metadata.ResourceId,
                 metadata.Version);
 
