@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "29ce7b9b-655c-45f2-833c-2430e2143603",
+		"_postman_id": "f1b0e9a5-9223-4ad2-972c-9446fcab3430",
 		"name": "Awards service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11713506"
+		"_exporter_id": "15905052"
 	},
 	"item": [
 		{
@@ -680,7 +680,7 @@
 										"exec": [
 											"try {\r",
 											"    var jsonRes = pm.response.json();\r",
-											"    pm.environment.set(\"HEALTH_JOURNEY_EVENT_TYPE_ID\", jsonRes.Data.id);\r",
+											"    pm.environment.set(\"VITAL_EVENT_TYPE_ID\", jsonRes.Data.id);\r",
 											"}\r",
 											"catch (error) {\r",
 											"    console.log(error.message);\r",
@@ -733,7 +733,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"Name\": \"Health Journey\",\r\n    \"Description\": \"This event is triggered when a patient marks health journey task as done\"\r\n}\r\n"
+									"raw": "{\r\n    \"Name\": \"Vital\",\r\n    \"Description\": \"This event is triggered when a patient record vitals regularily\"\r\n}\r\n"
 								},
 								"url": {
 									"raw": "{{BASE_URL}}/engine/event-types",
@@ -743,74 +743,6 @@
 									"path": [
 										"engine",
 										"event-types"
-									]
-								},
-								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
-							},
-							"response": []
-						},
-						{
-							"name": "Search all event types",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"\r",
-											"pm.test(\"Request is successfull\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"    var jsonRes = pm.response.json();\r",
-											"    pm.expect(jsonRes.Status).to.eql('success');\r",
-											"});\r",
-											"\r",
-											"pm.test(\"All event types are returned\", function () {\r",
-											"    var jsonRes = pm.response.json();\r",
-											"    pm.expect(jsonRes.Data).to.have.property('Items');\r",
-											"    pm.expect(jsonRes.Data.Items.length).greaterThan(0);\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API_KEY}}",
-										"type": "text"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{MODERATOR_USER_JWT}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{BASE_URL}}/engine/event-types/search",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"engine",
-										"event-types",
-										"search"
 									]
 								},
 								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
@@ -889,6 +821,74 @@
 									"path": [
 										"engine",
 										"event-types"
+									]
+								},
+								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
+							},
+							"response": []
+						},
+						{
+							"name": "Search all event types",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Request is successfull\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Status).to.eql('success');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"All event types are returned\", function () {\r",
+											"    var jsonRes = pm.response.json();\r",
+											"    pm.expect(jsonRes.Data).to.have.property('Items');\r",
+											"    pm.expect(jsonRes.Data.Items.length).greaterThan(0);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{MODERATOR_USER_JWT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/engine/event-types/search",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"engine",
+										"event-types",
+										"search"
 									]
 								},
 								"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
@@ -2177,7 +2177,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"ReferenceId\": \"{{REFERENCE_ID}}\",\r\n    \"Prefix\": \"Mr.\",\r\n    \"FirstName\": \"Sachin\",\r\n    \"LastName\": \"Tendulkar\",\r\n    \"Gender\": \"Male\",\r\n    \"BirthDate\": \"1974-04-24\",\r\n    \"Email\": \"sachin.tendulkar@gmail.com\",\r\n    \"CountryCode\": \"+91\",\r\n    \"Phone\": \"1234567890\",\r\n    \"OnboardingDate\": \"{{TODAY}}\"\r\n}"
+									"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"ReferenceId\": \"{{REFERENCE_ID}}\",\r\n    \"Prefix\": \"Mr.\",\r\n    \"FirstName\": \"Sachin\",\r\n    \"LastName\": \"Tendulkar\",\r\n    \"Gender\": \"Male\",\r\n    \"BirthDate\": \"1974-04-24\",\r\n    \"Email\": \"sachin.tendulkar@gmail.com\",\r\n    \"CountryCode\": \"+91\",\r\n    \"Phone\": \"1234567891\",\r\n    \"OnboardingDate\": \"{{TODAY}}\"\r\n}"
 								},
 								"url": {
 									"raw": "{{BASE_URL}}/participants",
@@ -2733,7 +2733,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting medication data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Medication\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"All\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting medication data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Medication\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
@@ -3755,7 +3755,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 15-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 15 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting medication data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Medication\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 15-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 15 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"All\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting medication data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Medication\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
@@ -4777,7 +4777,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 30-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 30 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting medication data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Medication\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Medication 30-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes medication regularly for 30 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MEDICATION_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract medication data\",\r\n        \"Description\": \"Extract medication data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract medication data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Medication\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"All\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting medication data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Medication\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
@@ -12393,7 +12393,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"All\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
@@ -13415,7 +13415,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 15-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 15 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 15-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 15 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"All\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
@@ -14437,7 +14437,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 30-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 30 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Vital Monitoring 30-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient monitor body vitals for 30 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{VITAL_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract vital data\",\r\n        \"Description\": \"Extract vital data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract vital data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"Vital\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"All\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting vital data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:Vital\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
@@ -15233,178 +15233,6 @@
 									]
 								}
 							]
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "Get context for participant / reference id",
-			"item": [
-				{
-					"name": "Get schema instance by id",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"try {\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.environment.set(\"SCHEMA_INSTANCE_ID\", jsonRes.Data.id);\r",
-									"}\r",
-									"catch (error) {\r",
-									"    console.log(error.message);\r",
-									"}\r",
-									"\r",
-									"pm.test(\"Request is successfull\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.expect(jsonRes.Status).to.eql('success');\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Schema instance is returned\", function () {\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
-									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "x-api-key",
-								"value": "{{API_KEY}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"SchemaId\": \"{{SCHEMA_ID}}\",\r\n    \"Name\": \"Medication 7 Day Badge Rule\",\r\n    \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n    \"ParentNodeId\": \"{{SCHEMA_ROOT_NODE_ID}}\",\r\n    \"Action\": {\r\n        \"ActionType\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n        \"Name\": \"Medication 7-Days Badge\",\r\n        \"Description\": \"This rule represents logical steps involved in awarding a badge for consecutive 7 days.\",\r\n        \"Params\": {\r\n            \"Message\": \"Award medication 7-days badge.\",\r\n            \"Action\": \"{{AWARD_BADGE_EVENT_TYPE}}\",\r\n            \"NextNodeId\": null,\r\n            \"Extra\": {}\r\n        }\r\n    }\r\n}"
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/engine/schema-instances/{{SCHEMA_INSTANCE_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"engine",
-								"schema-instances",
-								"{{SCHEMA_INSTANCE_ID}}"
-							]
-						},
-						"description": "User login with username/phone/email and password.\n\n'LoginRoleId' is the role id through which user wants to log into the system provided the user has the role."
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Get participant badges",
-			"item": [
-				{
-					"name": "Get participant by reference id",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"try {\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.environment.set(\"PARTICIPANT_ID\", jsonRes.Data.id);\r",
-									"}\r",
-									"catch (error) {\r",
-									"    console.log(error.message);\r",
-									"}\r",
-									"\r",
-									"pm.test(\"Request is successfull\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.expect(jsonRes.Status).to.eql('success');\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Schema instance is returned\", function () {\r",
-									"    var jsonRes = pm.response.json();\r",
-									"    pm.expect(jsonRes.Data).to.have.property('id');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Client');\r",
-									"    pm.expect(jsonRes.Data.Client).to.have.property('id');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Name');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('Description');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('ValidFrom');\r",
-									"    pm.expect(jsonRes.Data).to.have.property('RootNodeId');\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "x-api-key",
-								"value": "{{API_KEY}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/participants/by-reference-id/{{REFERENCE_ID}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"participants",
-								"by-reference-id",
-								"{{REFERENCE_ID}}"
-							]
 						},
 						{
 							"name": "mental health badges",
@@ -15785,7 +15613,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Nutrition 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes chooses mental health monitoring for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MENTAL_HEALTH_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract mental health data\",\r\n        \"Description\": \"Extract mental health data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract mental health data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"MentalHealth\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting mental health data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:MentalHealth\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Mental health 7-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes chooses mental health monitoring for 7 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MENTAL_HEALTH_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract mental health data\",\r\n        \"Description\": \"Extract mental health data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract mental health data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"MentalHealth\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting mental health data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:MentalHealth\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
@@ -16807,7 +16635,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Mental health 15-Day Badgee\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes chooses mental health monitoring for 15 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MENTAL_HEALTH_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract mental health data\",\r\n        \"Description\": \"Extract mental health data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract mental health data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"MentalHealth\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting mental health data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:MentalHealth\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
+													"raw": "{\r\n    \"ClientId\": \"{{CLIENT_ID}}\",\r\n    \"Name\": \"Mental health 15-Day Badge\",\r\n    \"Description\": \"This schema represents a badge award logic when a patient takes chooses mental health monitoring for 15 consecutive days. The patient can keep accumulating these badges.\",\r\n    \"Type\": \"Reuse-Existing-Instance\",\r\n    \"EventTypeIds\": [\r\n        \"{{MENTAL_HEALTH_EVENT_TYPE_ID}}\"\r\n    ],\r\n    \"RootNode\": {\r\n        \"Type\": \"Execution-Node\",\r\n        \"Name\": \"Extract mental health data\",\r\n        \"Description\": \"Extract mental health data\",\r\n        \"Action\": {\r\n            \"ActionType\": \"Extract-Data\",\r\n            \"Name\": \"Extract mental health data\",\r\n            \"InputParams\": {\r\n                \"RecordType\": \"MentalHealth\",\r\n                \"SourceType\": \"Database\",\r\n                \"Filters\": [\r\n                    {\r\n                        \"Key\": \"SamplingMethod\",\r\n                        \"Value\": \"Any\"\r\n                    }\r\n                ]\r\n            },\r\n            \"OutputParams\": {\r\n                \"Message\": \"Extracting mental health data for the given context.\",\r\n                \"OutputTag\": \"Extract-Data:MentalHealth\",\r\n                \"DestinationType\": \"Almanac\"\r\n            }\r\n        }\r\n    }\r\n}"
 												},
 												"url": {
 													"raw": "{{BASE_URL}}/engine/schema",
