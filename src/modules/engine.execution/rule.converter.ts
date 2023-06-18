@@ -1,7 +1,7 @@
 import { CompositionOperator, LogicalOperator, OperatorType } from '../../domain.types/engine/engine.types';
 import {
     CCondition,
-    CRule} from './execution.types';
+    CRule } from './execution.types';
 
 export class RuleConverter {
 
@@ -10,30 +10,30 @@ export class RuleConverter {
         var condition = rule.RootCondition as CCondition;
 
         var decision: any = {
-            conditions: RuleConverter.addCompositeCondition(condition),
-            event: {
-                type: rule.Action?.ActionType,
-                params: rule.Action?.OutputParams
+            conditions : RuleConverter.addCompositeCondition(condition),
+            event      : {
+                type   : rule.Action?.ActionType,
+                params : rule.Action?.OutputParams
             }
         };
 
         return decision;
-    }
+    };
 
     private static addCompositeCondition(condition: CCondition) {
-        if(condition.OperatorType !== OperatorType.Composition) {
+        if (condition.OperatorType !== OperatorType.Composition) {
             throw new Error('Expecting a composite condition!');
         }
         var list = RuleConverter.addChildrenConditions(condition);
         if (condition.Operator == CompositionOperator.And) {
             return {
                 all : list
-            }
+            };
         }
         else {
             return {
                 any : list
-            }
+            };
         }
     }
 
@@ -58,14 +58,14 @@ export class RuleConverter {
         }
         var operator = RuleConverter.translateLogicalOperator(condition.Operator as LogicalOperator);
         return {
-            fact: condition.Fact,
-            operator: operator,
-            value: condition.Value
-        }
+            fact     : condition.Fact,
+            operator : operator,
+            value    : condition.Value
+        };
     }
 
     private static translateLogicalOperator(operator: LogicalOperator) {
-        switch(operator) {
+        switch (operator) {
             case LogicalOperator.Equal:
             {
                 return 'equal';
