@@ -18,7 +18,7 @@ export class Privilege {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
-    @Column({ type: 'varchar', length: 32, nullable: false, unique: true })
+    @Column({ type: 'varchar', length: 128, nullable: false, unique: true })
     Name : string;
 
     @Column({ type: 'varchar', length: 1024, nullable: true })

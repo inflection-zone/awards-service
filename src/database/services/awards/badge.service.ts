@@ -10,6 +10,7 @@ import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { 
     BadgeCreateModel, 
+    BadgeDto, 
     BadgeResponseDto, 
     BadgeSearchFilters, 
     BadgeSearchResults, 
@@ -63,6 +64,16 @@ export class BadgeService extends BaseService {
         }
     };
 
+    public getAll = async (): Promise<BadgeDto[]> => {
+        try {
+            var badges = await this._badgeRepository.find();
+            return badges.map(x => BadgeMapper.toDto(x));
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
     public getByClientId = async (clientId: uuid): Promise<BadgeResponseDto[]> => {
         try {
             var badges = await this._badgeRepository.find({
@@ -89,6 +100,7 @@ export class BadgeService extends BaseService {
             var search = this.getSearchModel(filters);
             var { search, pageIndex, limit, order, orderByColumn } = this.addSortingAndPagination(search, filters);
             const [list, count] = await this._badgeRepository.findAndCount(search);
+
             const searchResults = {
                 TotalCount     : count,
                 RetrievedCount : list.length,
@@ -96,7 +108,7 @@ export class BadgeService extends BaseService {
                 ItemsPerPage   : limit,
                 Order          : order === 'DESC' ? 'descending' : 'ascending',
                 OrderedBy      : orderByColumn,
-                Items          : list.map(x => BadgeMapper.toResponseDto(x)),
+                Items          : list.map(x => BadgeMapper.toDto(x)),
             };
             return searchResults;
         } catch (error) {
@@ -138,6 +150,29 @@ export class BadgeService extends BaseService {
             }
             var record = await this._badgeRepository.save(badge);
             return BadgeMapper.toResponseDto(record);
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
+    public updateContent = async (id: uuid, model: BadgeUpdateModel)
+        : Promise<BadgeDto> => {
+        try {
+            const badge = await this._badgeRepository.findOne({
+                where : {
+                    id : id
+                }
+            });
+            if (!badge) {
+                ErrorHandler.throwNotFoundError('Badge not found!');
+            }
+
+            if (model.HowToEarn != null) {
+                badge.HowToEarn = model.HowToEarn;
+            }
+            var record = await this._badgeRepository.save(badge);
+            return BadgeMapper.toDto(record);
         } catch (error) {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
