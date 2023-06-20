@@ -42,7 +42,7 @@ export class DataComparator implements IDataComparator {
                     if (toBeAdded.length > 0) {
                         for (const r of referenceRange) {
                             const found = toBeAdded.find(x => x.key === r.key);
-                            if (!found) {
+                            if (found) {
                                 toBeRemoved.push(r);
                             }
                         }
