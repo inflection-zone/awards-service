@@ -1,6 +1,5 @@
 import { Badge } from '../../models/awards/badge.model';
 import {
-    BadgeDto,
     BadgeResponseDto
 } from '../../../domain.types/awards/badge.domain.types';
 
@@ -24,22 +23,6 @@ export class BadgeMapper {
                 Name: badge.Client.Name,
                 Code: badge.Client.Code,
             },
-            Name       : badge.Name,
-            Description: badge.Description,
-            ImageUrl   : badge.ImageUrl,
-            HowToEarn  : badge.HowToEarn,
-            CreatedAt  : badge.CreatedAt,
-            UpdatedAt  : badge.UpdatedAt,
-        };
-        return dto;
-    };
-
-    static toDto = (badge: Badge): BadgeDto => {
-        if (badge == null) {
-            return null;
-        }
-        const dto: BadgeDto = {
-            id         : badge.id,
             Name       : badge.Name,
             Description: badge.Description,
             ImageUrl   : badge.ImageUrl,

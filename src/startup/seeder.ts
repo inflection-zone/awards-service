@@ -263,10 +263,12 @@ export class Seeder {
 
                 const entity = existingRecord.Items[0];
                 const model: BadgeUpdateModel = {
-                    HowToEarn       : arr[i]['HowToEarn']
+                    HowToEarn       : arr[i]['HowToEarn'],
+                    ClientId        : entity.Client.id,
+                    CategoryId      : entity.Category.id
                 };
     
-                var record = await this._badgeService.updateContent(entity.id, model);
+                var record = await this._badgeService.update(entity.id, model);
                 var str = JSON.stringify(record, null, '  ');
                 logger.info(str);
             }   

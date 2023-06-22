@@ -45,16 +45,6 @@ export interface BadgeResponseDto {
     UpdatedAt : Date;
 }
 
-export interface BadgeDto {
-    id          : uuid;
-    Name        : string;
-    Description : string;
-    ImageUrl    : string;
-    HowToEarn   : string;
-    CreatedAt   : Date;
-    UpdatedAt   : Date;
-}
-
 export interface BadgeSearchFilters extends BaseSearchFilters {
     Name ?       : string;
     CategoryId ? : uuid;
@@ -62,5 +52,5 @@ export interface BadgeSearchFilters extends BaseSearchFilters {
 }
 
 export interface BadgeSearchResults extends BaseSearchResults {
-    Items: BadgeDto[];
+    Items: BadgeResponseDto[];
 }
