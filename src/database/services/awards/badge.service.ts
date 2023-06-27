@@ -81,7 +81,7 @@ export class BadgeService extends BaseService {
             logger.error(error.message);
             ErrorHandler.throwInternalServerError(error.message, 500);
         }
-    }
+    };
 
     public search = async (filters: BadgeSearchFilters)
         : Promise<BadgeSearchResults> => {
