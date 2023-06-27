@@ -53,6 +53,17 @@ export class BadgeController extends BaseController {
         }
     };
 
+    getAll = async (request: express.Request, response: express.Response) => {
+        try {
+            await this.authorize('Badge.GetAll', request, response, false);
+            const records = await this._service.search({});
+            const message = 'Badge records with how to earn content retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, records);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
     update = async (request: express.Request, response: express.Response) => {
         try {
             await this.authorize('Badge.Update', request, response);
