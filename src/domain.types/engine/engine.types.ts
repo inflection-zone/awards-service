@@ -143,6 +143,7 @@ export const ConditionOperandDataTypeList: OperandDataType[] = [
     OperandDataType.Boolean,
     OperandDataType.Text,
     OperandDataType.Array,
+    OperandDataType.Object,
     OperandDataType.Date,
 ];
 

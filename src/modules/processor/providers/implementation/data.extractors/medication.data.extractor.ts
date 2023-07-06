@@ -21,7 +21,7 @@ export class MedicationDataExtractor implements IExtractor {
         const filters = inputParams.Filters ?? {};
         var samplingMethod = filters['SamplingMethod'] as DataSamplingMethod;
         if (!samplingMethod) {
-            samplingMethod = DataSamplingMethod.Any;
+            samplingMethod = DataSamplingMethod.All;
         }
 
         const records = await this._medicationRepository.find({

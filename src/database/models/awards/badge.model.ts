@@ -40,6 +40,9 @@ export class Badge {
     @JoinTable()
     Category: BadgeCategory;
 
+    @Column({ type: 'varchar', length: 4096, nullable: true })
+    HowToEarn : string;
+
     @CreateDateColumn()
     CreatedAt : Date;
 

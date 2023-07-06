@@ -30,7 +30,7 @@ export class SchemaEngine {
         logger.info(`Current node    : ${currentNodeInstance.Name}`);
         logger.info(`Current node Id : ${currentNodeInstance.id}`);
 
-        while (currentNodeInstance && 
+        while (currentNodeInstance &&
                currentNodeInstance.ExecutionStatus === ExecutionStatus.Pending) {
             currentNodeInstance = await SchemaEngine.traverse(
                 schemaInstance.Context,
@@ -47,7 +47,7 @@ export class SchemaEngine {
         schemaInstance: CSchemaInstance,
         currentNodeInstance: CNodeInstance,
         facts: any
-        ): Promise<CNodeInstance> {
+    ): Promise<CNodeInstance> {
 
         const processor = Loader.Container.resolve(ProcessorService);
 
@@ -80,8 +80,8 @@ export class SchemaEngine {
                 //Extract data based on the action subject filters
                 const data = await processor.extractData(context.id, action.InputParams, action.OutputParams);
                 schemaInstance.Almanac.push({
-                    Name: data.Tag,
-                    Data: data.Data
+                    Name : data.Tag,
+                    Data : data.Data
                 });
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
             }
@@ -94,12 +94,12 @@ export class SchemaEngine {
                 }
                 if (dataActionType === DataActionType.CalculateContinuity) {
                     const data = await processor.calculateContinuity(
-                        almanacObject.Data, 
-                        action.InputParams as ContinuityInputParams, 
+                        almanacObject.Data,
+                        action.InputParams as ContinuityInputParams,
                         action.OutputParams as OutputParams);
                     schemaInstance.Almanac.push({
-                        Name: data.Tag,
-                        Data: data.Data
+                        Name : data.Tag,
+                        Data : data.Data
                     });
                 }
 
@@ -118,13 +118,13 @@ export class SchemaEngine {
                 }
                 if (dataActionType === DataActionType.FindRangeDifference) {
                     const data = await processor.compareRanges(
-                        almanacObjectFirst.Data, 
+                        almanacObjectFirst.Data,
                         almanacObjectSecond.Data,
-                        action.InputParams as RangeComparisonInputParams, 
+                        action.InputParams as RangeComparisonInputParams,
                         action.OutputParams as OutputParams);
                     schemaInstance.Almanac.push({
-                        Name: data.Tag,
-                        Data: data.Data
+                        Name : data.Tag,
+                        Data : data.Data
                     });
                 }
 
@@ -138,16 +138,16 @@ export class SchemaEngine {
                 }
                 const added = await processor.storeData(context.id, almanacObject.Data.ToBeAdded, action.InputParams, action.OutputParams);
                 var removedData = null;
-                if (almanacObject.Data.ToBeRemoved) {
+                if (almanacObject.Data.ToBeRemoved.length > 0) {
                     const removed = await processor.removeData(context.id, almanacObject.Data.ToBeRemoved, action.InputParams, action.OutputParams);
                     removedData = removed?.Data;
                 }
 
                 schemaInstance.Almanac.push({
-                    Name: action.OutputParams.OutputTag,
-                    Data: {
-                        Added  : added.Data,
-                        Removed: removedData,
+                    Name : action.OutputParams.OutputTag,
+                    Data : {
+                        Added   : added.Data,
+                        Removed : removedData,
                     }
                 });
                 return SchemaEngine.getNextNode(currentNodeInstance, schemaInstance);
@@ -212,8 +212,8 @@ export class SchemaEngine {
     }
 
     private static getNextNode = (currentNodeInstance, schemaInstance) => {
-        if (currentNodeInstance.Action && 
-            currentNodeInstance.Action.OutputParams && 
+        if (currentNodeInstance.Action &&
+            currentNodeInstance.Action.OutputParams &&
             currentNodeInstance.Action.OutputParams.NextNodeId) {
             const nextNodeId = currentNodeInstance.Action.OutputParams.NextNodeId;
             const nodeInstances = schemaInstance.NodeInstances;

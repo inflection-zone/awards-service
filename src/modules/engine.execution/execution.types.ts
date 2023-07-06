@@ -59,29 +59,43 @@ export class CCondition {
 }
 
 export class CContext {
+
     id          : uuid;
+    
     ReferenceId : uuid;
+
     Type        : ContextType;
+
     Participant?: {
         id       : uuid;
         FirstName: string;
         LastName : string;
     };
+
     ParticipantGroup ?: {
         id         : uuid;
         Name       : string;
         Description: string;
-    }
+    };
+
 }
 
 export class CAction {
+
     id          : uuid;
+
     ActionType  : EventActionType;
+
     Name        : string | undefined;
+
     Description : string | undefined;
+
     ParentNodeId: uuid | undefined;
+
     InputParams : any;
+
     OutputParams: ActionOutputParams;
+
 }
 
 export class CNode {
@@ -249,6 +263,7 @@ export class CSchemaInstance {
     Almanac            : AlmanacObject[];
 
     CSchemaInstance() {
+        //
     }
 
     public setCurrent = (instance: CNodeInstance) => {
@@ -257,6 +272,6 @@ export class CSchemaInstance {
 
     public fetchAlmanacData = (tag: string) => {
         return this.Almanac.find(x => x.Name === tag);
-    }
+    };
 
 }
