@@ -13,7 +13,7 @@ export class IncomingEventTypeValidator extends BaseValidator {
         try {
             const type = joi.object({
                 Name        : joi.string().max(32).required(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
             });
             await type.validateAsync(request.body);
             return {
@@ -30,7 +30,7 @@ export class IncomingEventTypeValidator extends BaseValidator {
         try {
             const condition = joi.object({
                 Name        : joi.string().max(32).optional(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
             });
             await condition.validateAsync(request.body);
             return {
