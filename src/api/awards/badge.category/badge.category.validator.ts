@@ -16,7 +16,7 @@ export class BadgeCategoryValidator extends BaseValidator {
             const schema = joi.object({
                 ClientId    : joi.string().uuid().required(),
                 Name        : joi.string().max(32).required(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
                 ImageUrl    : joi.string().max(1024).uri().required(),
             });
             await schema.validateAsync(request.body);
@@ -37,7 +37,7 @@ export class BadgeCategoryValidator extends BaseValidator {
             const schema = joi.object({
                 ClientId    : joi.string().uuid().optional(),
                 Name        : joi.string().max(32).optional(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
                 ImageUrl    : joi.string().max(1024).uri().optional(),
             });
             await schema.validateAsync(request.body);
