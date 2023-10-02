@@ -4,13 +4,13 @@ import { SchemaCreateModel, SchemaUpdateModel, SchemaSearchFilters } from '../..
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
 import { EventActionType, NodeType, SchemaType } from '../../../domain.types/engine/engine.types';
-import { 
-    ActionInputParamsObj_Create, 
-    ActionOutputParamsObj_Create, 
-    ContinuityInputParamsObj_Create, 
-    DataExtractionInputParamsObj_Create, 
-    DataStorageInputParamsObj_Create, 
-    RangeComparisonInputParamsObj_Create, 
+import {
+    ActionInputParamsObj_Create,
+    ActionOutputParamsObj_Create,
+    ContinuityInputParamsObj_Create,
+    DataExtractionInputParamsObj_Create,
+    DataStorageInputParamsObj_Create,
+    RangeComparisonInputParamsObj_Create,
     ValueComparisonInputParamsObj_Create } from '../../../api/common.validations';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ export class SchemaValidator extends BaseValidator {
                     Type        : joi.string().valid(...Object.values(NodeType)).required(),
                     Name        : joi.string().max(32).required(),
                     Description : joi.string().max(256).optional(),
-                    Action   : {
+                    Action      : {
                         ActionType  : joi.string().valid(...Object.values(EventActionType)).required(),
                         Name        : joi.string().max(32).required(),
                         Description : joi.string().max(256).optional(),
@@ -43,7 +43,7 @@ export class SchemaValidator extends BaseValidator {
                             DataStorageInputParamsObj_Create,
                             RangeComparisonInputParamsObj_Create,
                             ValueComparisonInputParamsObj_Create).optional(),
-                        OutputParams: joi.alternatives().try(ActionOutputParamsObj_Create).optional(),
+                        OutputParams : joi.alternatives().try(ActionOutputParamsObj_Create).optional(),
                     }
                 }).optional()
             });
@@ -57,15 +57,15 @@ export class SchemaValidator extends BaseValidator {
             // }
 
             return {
-                ClientId    : request.body.ClientId,
-                Name        : request.body.Name,
-                Description : request.body.Description ?? null,
-                Type        : request.body.Type,
-                ValidFrom   : request.body.ValidFrom ?? new Date(),
-                ValidTill   : request.body.ValidTill ?? null,
-                IsValid     : request.body.IsValid ?? true,
-                EventTypeIds: request.body.EventTypeIds ?? [],
-                RootNode    : node ?? null,
+                ClientId     : request.body.ClientId,
+                Name         : request.body.Name,
+                Description  : request.body.Description ?? null,
+                Type         : request.body.Type,
+                ValidFrom    : request.body.ValidFrom ?? new Date(),
+                ValidTill    : request.body.ValidTill ?? null,
+                IsValid      : request.body.IsValid ?? true,
+                EventTypeIds : request.body.EventTypeIds ?? [],
+                RootNode     : node ?? null,
             };
 
         } catch (error) {
@@ -103,8 +103,13 @@ export class SchemaValidator extends BaseValidator {
     public validateSearchRequest = async (request: express.Request): Promise<SchemaSearchFilters> => {
         try {
             const schema = joi.object({
-                clientId : joi.string().uuid().optional(),
-                name     : joi.string().max(64).optional(),
+                clientId     : joi.string().uuid().optional(),
+                name         : joi.string().max(64).optional(),
+                pageIndex    : joi.number().min(0).optional(),
+                itemsPerPage : joi.number().min(1).optional(),
+                orderBy      : joi.string().max(256).optional(),
+                order        : joi.string().valid('ascending', 'descending').optional()
+                    .error(()=> new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await schema.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
@@ -126,7 +131,18 @@ export class SchemaValidator extends BaseValidator {
         if (clientId != null) {
             filters['ClientId'] = clientId;
         }
-        
+        var itemsPerPage = query.itemsPerPage ? query.itemsPerPage : 25;
+        if (itemsPerPage != null) {
+            filters['ItemsPerPage'] = itemsPerPage;
+        }
+        var orderBy = query.orderBy ? query.orderBy : 'CreatedAt';
+        if (orderBy != null) {
+            filters['OrderBy'] = orderBy;
+        }
+        var order = query.order ? query.order : 'ASC';
+        if (order != null) {
+            filters['Order'] = order;
+        }
         return filters;
     };
 

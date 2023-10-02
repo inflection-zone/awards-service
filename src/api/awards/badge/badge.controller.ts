@@ -56,7 +56,8 @@ export class BadgeController extends BaseController {
     getAll = async (request: express.Request, response: express.Response) => {
         try {
             await this.authorize('Badge.GetAll', request, response, false);
-            const records = await this._service.search({});
+            var filters: BadgeSearchFilters = this.getSearchFilters(request.query);
+            const records = await this._service.search(filters);
             const message = 'Badge records with how to earn content retrieved successfully!';
             ResponseHandler.success(request, response, message, 200, records);
         } catch (error) {
@@ -113,6 +114,35 @@ export class BadgeController extends BaseController {
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
+    };
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    getSearchFilters = (query) => {
+
+        var filters = {};
+
+        var categoryId = query.categoryId ? query.categoryId : null;
+        if (categoryId != null) {
+            filters['CategoryId'] = categoryId;
+        }
+        var name = query.name ? query.name : null;
+        if (name != null) {
+            filters['Name'] = name;
+        }
+        var clientId = query.clientId ? query.clientId : null;
+        if (clientId != null) {
+            filters['ClientId'] = clientId;
+        }
+        var orderBy = query.orderBy ? query.orderBy : 'CreatedAt';
+        if (orderBy != null) {
+            filters['OrderBy'] = orderBy;
+        }
+        var order = query.order ? query.order : 'ASC';
+        if (order != null) {
+            filters['Order'] = order;
+        }
+        return filters;
     };
 
 }
