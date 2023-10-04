@@ -21,10 +21,10 @@ export class BadgeCategoryValidator extends BaseValidator {
             });
             await schema.validateAsync(request.body);
             return {
-                Name       : request.body.Name,
-                ClientId   : request.body.ClientId,
-                Description: request.body.Description ?? null,
-                ImageUrl   : request.body.ImageUrl
+                Name        : request.body.Name,
+                ClientId    : request.body.ClientId,
+                Description : request.body.Description ?? null,
+                ImageUrl    : request.body.ImageUrl
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -42,10 +42,10 @@ export class BadgeCategoryValidator extends BaseValidator {
             });
             await schema.validateAsync(request.body);
             return {
-                Name       : request.body.Name ?? null,
-                ClientId   : request.body.ClientId ?? null,
-                Description: request.body.Description ?? null,
-                ImageUrl   : request.body.ImageUrl ?? null
+                Name        : request.body.Name ?? null,
+                ClientId    : request.body.ClientId ?? null,
+                Description : request.body.Description ?? null,
+                ImageUrl    : request.body.ImageUrl ?? null
             };
         } catch (error) {
             ErrorHandler.handleValidationError(error);
@@ -56,8 +56,13 @@ export class BadgeCategoryValidator extends BaseValidator {
         : Promise<BadgeCategorySearchFilters> => {
         try {
             const schema = joi.object({
-                clientId   : joi.string().uuid().optional(),
-                name       : joi.string().max(64).optional(),
+                clientId     : joi.string().uuid().optional(),
+                name         : joi.string().max(64).optional(),
+                pageIndex    : joi.number().min(0).optional(),
+                itemsPerPage : joi.number().min(1).optional(),
+                orderBy      : joi.string().max(256).optional(),
+                order        : joi.string().valid('ascending', 'descending').optional()
+                    .error(()=> new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await schema.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
@@ -79,7 +84,18 @@ export class BadgeCategoryValidator extends BaseValidator {
         if (clientId != null) {
             filters['ClientId'] = clientId;
         }
-
+        var itemsPerPage = query.itemsPerPage ? query.itemsPerPage : 25;
+        if (itemsPerPage != null) {
+            filters['ItemsPerPage'] = itemsPerPage;
+        }
+        var orderBy = query.orderBy ? query.orderBy : 'CreatedAt';
+        if (orderBy != null) {
+            filters['OrderBy'] = orderBy;
+        }
+        var order = query.order ? query.order : 'ASC';
+        if (order != null) {
+            filters['Order'] = order;
+        }
         return filters;
     };
 

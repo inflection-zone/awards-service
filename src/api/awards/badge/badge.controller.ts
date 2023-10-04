@@ -114,5 +114,5 @@ export class BadgeController extends BaseController {
             ResponseHandler.handleError(request, response, error);
         }
     };
-
+    
 }
