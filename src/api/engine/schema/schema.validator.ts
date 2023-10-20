@@ -22,7 +22,7 @@ export class SchemaValidator extends BaseValidator {
             const schema = joi.object({
                 ClientId     : joi.string().uuid().required(),
                 Name         : joi.string().max(32).required(),
-                Description  : joi.string().max(256).optional(),
+                Description  : joi.string().max(256).allow('', null).optional(),
                 Type         : joi.string().valid(...Object.values(SchemaType)).required(),
                 ValidFrom    : joi.date().iso().greater('now').optional(),
                 ValidTill    : joi.date().iso().greater(joi.ref('ValidFrom')).optional(),
@@ -79,11 +79,11 @@ export class SchemaValidator extends BaseValidator {
                 ClientId     : joi.string().uuid().optional(),
                 Name         : joi.string().max(32).optional(),
                 Type         : joi.string().valid(...Object.values(SchemaType)).optional(),
-                Description  : joi.string().max(256).optional(),
+                Description  : joi.string().max(256).allow('', null).optional(),
                 ValidFrom    : joi.date().iso().greater('now').optional(),
                 ValidTill    : joi.date().iso().greater(joi.ref('ValidFrom')).optional(),
                 IsValid      : joi.boolean().optional(),
-                EventTypeIds : joi.array().items(joi.string().uuid()).optional(),
+                EventTypeIds : joi.array().items(joi.string().uuid()).empty().optional(),
             });
             await schema.validateAsync(request.body);
             return {
