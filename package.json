@@ -19,7 +19,7 @@
     "author": "Dattatraya Londhe",
     "license": "ISC",
     "dependencies": {
-        "@prisma/client": "^4.9.0",
+        "@prisma/client": "^4.16.2",
         "@types/adm-zip": "^0.5.0",
         "@types/bcryptjs": "^2.4.2",
         "@types/express": "^4.17.17",
