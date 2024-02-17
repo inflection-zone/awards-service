@@ -30,7 +30,7 @@
         "ansi-regex": "^6.0.1",
         "approx-string-match": "^2.0.0",
         "async": "^3.2.4",
-        "aws-sdk": "^2.991.0",
+        "aws-sdk": "^2.1545.0",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.1",
         "bunyan": "^1.8.15",
