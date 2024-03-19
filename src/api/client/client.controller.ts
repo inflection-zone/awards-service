@@ -71,6 +71,20 @@ export class ClientController extends BaseController {
         }
     };
 
+    getByApiKey = async (request: express.Request, response: express.Response) => {
+        try {
+            const currentClient = request.currentClient;
+            const record = await this._service.getByClientCode(currentClient?.Code);
+            if (record === null) {
+                ErrorHandler.throwNotFoundError('Api client with code ' + currentClient?.Code?.toString() + ' cannot be found!');
+            }
+            const message = 'Api client retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, record);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
     search = async (request: express.Request, response: express.Response) => {
         try {
             await this.authorize('ApiClient.Search', request, response);

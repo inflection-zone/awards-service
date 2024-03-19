@@ -1,0 +1,62 @@
+[
+    {
+        "Name": "7-Day Medication Adherence",
+        "HowToEarn": "Earn a badge for every medications you take.\n\n1. Daily Mark your medication as 'Taken' by swiping left in the Medication Reminders.\nYou can also mark the medication as 'taken' in the To Do's.\n\n2. For 7 consistent days take your medications and earn a badge."
+    },
+    {
+        "Name": "15-Day Medication Adherence",
+        "HowToEarn": "Earn a badge for every medications you take.\n\n1. Daily Mark your medication as 'Taken' by swiping left in the Medication Reminders.\nYou can also mark the medication as 'taken' in the To Do's.\n\n2. For 15 consistent days take your medications and earn a badge."
+    },
+    {
+        "Name": "30-Day Medication Adherence",
+        "HowToEarn": "Earn a badge for every medications you take.\n\n1. Daily Mark your medication as 'Taken' by swiping left in the Medication Reminders.\nYou can also mark the medication as 'taken' in the To Do's.\n\n2. For 30 consistent days take your medications and earn a badge."
+    },
+    {   
+        "Name": "7-Day Healthy Nutrition Choice",
+        "HowToEarn": "Earn a badge for having health food.\n\n1. Daily Mark Yes on the home screen for the question - Were most of your food choices health today?\n\n2. For 7 consistent days have health food choices and earn a badge."
+    },
+    {
+        "Name": "15-Day Healthy Nutrition Choice",
+        "HowToEarn": "Earn a badge for having health food.\n\n1. Daily Mark Yes on the home screen for the question - Were most of your food choices health today?\n\n2. For 15 consistent days have health food choices and earn a badge."
+    },
+    {
+        "Name": "30-Day Healthy Nutrition Choice",
+        "HowToEarn": "Earn a badge for having health food.\n\n1. Daily Mark Yes on the home screen for the question - Were most of your food choices health today?\n\n2. For 30 consistent days have health food choices and earn a badge."
+    },
+    {
+        "Name": "7-Day Physical Activity",
+        "HowToEarn": "Earn a badge by adding movement to your day.\n\n1. Daily Mark Yes on the home screen for the question - Did you add movement to your day today?\n\n2. For 7 consistent days add movement to your day and earn a badge."
+    },
+    {
+        "Name": "15-Day Physical Activity",
+        "HowToEarn": "Earn a badge by adding movement to your day.\n\n1. Daily Mark Yes on the home screen for the question - Did you add movement to your day today?\n\n2. For 15 consistent days add movement to your day and earn a badge."
+    },
+    {
+        "Name": "30-Day Physical Activity",
+        "HowToEarn": "Earn a badge by adding movement to your day.\n\n1. Daily Mark Yes on the home screen for the question - Did you add movement to your day today?\n\n2. For 30 consistent days add movement to your day and earn a badge."
+    },
+    {
+        "Name": "Mental health 7-Day Badge",
+        "HowToEarn": "Earn a badge by practicing mindfulness and recording your sleep.\n\n1. Daily record your Sleep hours or Mindfulness time in the Mental Well-Being section.\n\n2. For 7 consistent days record your sleep and mindfulness time to earn a badge."
+    },
+    {   
+        "Name": "Mental health 15-Day Badge",
+        "HowToEarn": "Earn a badge by practicing mindfulness and recording your sleep.\n\n1. Daily record your Sleep hours or Mindfulness time in the Mental Well-Being section.\n\n2. For 15 consistent days record your sleep and mindfulness time to earn a badge."
+    },
+    {
+        "Name": "Mental health 30-Day Badge",
+        "HowToEarn": "Earn a badge by practicing mindfulness and recording your sleep.\n\n1. Daily record your Sleep hours or Mindfulness time in the Mental Well-Being section.\n\n2. For 30 consistent days record your sleep and mindfulness time to earn a badge."
+    },
+    {
+        "Name": "7-Day Vitals",
+        "HowToEarn": "Earn a badge by recording your daily vitals.\n\n1. Daily record your Vitals to get the badge.\n\n2. For 7 consistent days record your vitals to earn a badge."
+    },
+    {
+        "Name": "15-Day Vitals",
+        "HowToEarn": "Earn a badge by recording your daily vitals.\n\n1. Daily record your Vitals to get the badge.\n\n2. For 15 consistent days record your vitals to earn a badge."
+    },
+    {
+        "Name": "30-Day Vitals",
+        "HowToEarn": "Earn a badge by recording your daily vitals.\n\n1. Daily record your Vitals to get the badge.\n\n2. For 30 consistent days record your vitals to earn a badge."
+    }
+]

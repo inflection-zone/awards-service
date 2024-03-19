@@ -4,8 +4,10 @@ import { ParticipantValidator } from './participant.validator';
 import { BaseController } from '../../base.controller';
 import { ParticipantService } from '../../../database/services/awards/participant.service';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
-import { ParticipantCreateModel, ParticipantSearchFilters, ParticipantUpdateModel } from '../../../domain.types/awards/participant.domain.types';
+import { ParticipantBadgeResponseDto, ParticipantCreateModel, ParticipantSearchFilters, ParticipantUpdateModel } from '../../../domain.types/awards/participant.domain.types';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import { BadgeService } from '../../../database/services/awards/badge.service';
+import { BadgeResponseDto } from '../../../domain.types/awards/badge.domain.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,11 +17,14 @@ export class ParticipantController extends BaseController {
 
     _service: ParticipantService = null;
 
+    _badgeService: BadgeService = null;
+
     _validator: ParticipantValidator = null;
 
     constructor() {
         super();
         this._service = new ParticipantService();
+        this._badgeService = new BadgeService();
         this._validator = new ParticipantValidator();
     }
 
@@ -117,11 +122,83 @@ export class ParticipantController extends BaseController {
         try {
             await this.authorize('Participant.GetBadges', request, response, false);
             var id: uuid = await this._validator.validateParamAsUUID(request, 'id');
-            const result = await this._service.getBadges(id);
+            const participantBadges = await this._service.getBadges(id);
             const message = 'Participant badges retrieved successfully!';
+
+            const participant = await this._service.getById(id);
+            if (participant === null) {
+                ErrorHandler.throwNotFoundError(`Participant with Id: ${id} does not exist!`);
+            }
+            const clientId = participant.Client?.id;
+            const allBadges = await this._badgeService.getByClientId(clientId);
+            const badges = this.classifyAllBadgesByCategory(allBadges);
+            const classified = this.classifyParticipantBadges(participantBadges, badges);
+            var result = await this._service.getBadgeImageUrl(participantBadges, classified);
+
             ResponseHandler.success(request, response, message, 200, result);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
     };
+
+    private classifyAllBadgesByCategory = (allBadges: BadgeResponseDto[]) => {
+        const badges = allBadges.reduce((acc, x) => {
+            if (!acc[x.Category?.Name]) {
+                acc[x.Category?.Name] = {
+                    CategoryName: x.Category?.Name,
+                    Badges: {},
+                };
+            }
+            acc[x.Category?.Name].Badges[x.Name] = {
+                BadgeName: x.Name,
+                Occurrences: 0,
+                BadgeList: [],
+            };
+            return acc;
+        }, {});
+        return badges;
+    };
+
+    private classifyParticipantBadges = (participantBadges: ParticipantBadgeResponseDto[], badges: any) => {
+
+        const badgesByCategoryName = participantBadges.reduce((acc, x) => {
+            if (!acc[x.Badge?.Category?.Name]) {
+                acc[x.Badge?.Category?.Name] = [];
+            }
+            acc[x.Badge?.Category?.Name].push(x);
+            return acc;
+        }, {});
+
+        for (const key in badgesByCategoryName) {
+
+            const arr = badgesByCategoryName[key];
+            const classfiedByBadgeName = arr.reduce((acc, x) => {
+                if (!acc[x.Badge?.Name]) {
+                    acc[x.Badge?.Name] = [];
+                }
+                acc[x.Badge?.Name].push(x);
+                return acc;
+            }, {});
+
+            badges[key] = {
+                CategoryName: key,
+                Badges: {},
+            };
+
+            for (const badgeName in classfiedByBadgeName) {
+                let bArr = classfiedByBadgeName[badgeName] as any[];
+                bArr = bArr.sort((a, b) => {
+                    return a.Badge.Name.localeCompare(b.Badge.Name);
+                });
+                const occurrences = bArr.length;
+                badges[key].Badges[badgeName] = {
+                    BadgeName: badgeName,
+                    Occurrences: occurrences,
+                    BadgeList: bArr,
+                };
+            }
+        }
+        return badges;
+    };
+
 }

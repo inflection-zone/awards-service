@@ -6,6 +6,7 @@ import { BadgeService } from '../../../database/services/awards/badge.service';
 import { ErrorHandler } from '../../../common/handlers/error.handler';
 import { BadgeCreateModel, BadgeSearchFilters, BadgeUpdateModel } from '../../../domain.types/awards/badge.domain.types';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
+import { BadgeStockImageService } from '../../../database/services/badge.stock.images/badge.stock.image.service';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -14,6 +15,8 @@ export class BadgeController extends BaseController {
     //#region member variables and constructors
 
     _service: BadgeService = new BadgeService();
+
+    _badgeStockservice: BadgeStockImageService = new BadgeStockImageService();
 
     _validator: BadgeValidator = new BadgeValidator();
 
@@ -45,6 +48,17 @@ export class BadgeController extends BaseController {
             const record = await this._service.getById(id);
             const message = 'Badge retrieved successfully!';
             return ResponseHandler.success(request, response, message, 200, record);
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    getAll = async (request: express.Request, response: express.Response) => {
+        try {
+            await this.authorize('Badge.GetAll', request, response, false);
+            const records = await this._service.search({});
+            const message = 'Badge records with how to earn content retrieved successfully!';
+            ResponseHandler.success(request, response, message, 200, records);
         } catch (error) {
             ResponseHandler.handleError(request, response, error);
         }
@@ -87,4 +101,18 @@ export class BadgeController extends BaseController {
         }
     };
 
+    getStockBadgeImages = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            await this.authorize('Badge.GetStockBadgeImages',request, response, false);
+
+            const images = await this._badgeStockservice.getAll();
+            const message = 'Badge stock images retrieved successfully!';
+
+            ResponseHandler.success(request, response, message, 200, images);
+
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+    
 }

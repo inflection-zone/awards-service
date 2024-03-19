@@ -9,11 +9,11 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { NodeMapper } from '../../mappers/engine/node.mapper';
 import { BaseService } from '../base.service';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { 
-    NodeCreateModel, 
-    NodeResponseDto, 
-    NodeSearchFilters, 
-    NodeSearchResults, 
+import {
+    NodeCreateModel,
+    NodeResponseDto,
+    NodeSearchFilters,
+    NodeSearchResults,
     NodeUpdateModel } from '../../../domain.types/engine/node.domain.types';
 import { CommonUtilsService } from './common.utils.service';
 
@@ -44,11 +44,11 @@ export class NodeService extends BaseService {
         const parentNode = await this.getNode(createModel.ParentNodeId);
 
         const node = this._nodeRepository.create({
-            Schema     : schema,
-            ParentNode : parentNode,
-            Name       : createModel.Name,
-            Description: createModel.Description,
-            Action     : actionRecord,
+            Schema      : schema,
+            ParentNode  : parentNode,
+            Name        : createModel.Name,
+            Description : createModel.Description,
+            Action      : actionRecord,
         });
         var record = await this._nodeRepository.save(node);
         return NodeMapper.toResponseDto(record);
@@ -60,12 +60,12 @@ export class NodeService extends BaseService {
                 where : {
                     id : id
                 },
-                relations: {
-                    Action    : true,
-                    ParentNode: true,
-                    Schema    : true,
-                    Rules     : true,
-                    Children  : true,
+                relations : {
+                    Action     : true,
+                    ParentNode : true,
+                    Schema     : true,
+                    Rules      : true,
+                    Children   : true,
                 }
             });
             return NodeMapper.toResponseDto(node);
@@ -104,11 +104,11 @@ export class NodeService extends BaseService {
                 where : {
                     id : id
                 },
-                relations: {
-                    Action: true,
-                    Children: true,
-                    ParentNode: true,
-                    Schema: true,
+                relations : {
+                    Action     : true,
+                    Children   : true,
+                    ParentNode : true,
+                    Schema     : true,
                 }
             });
             if (!node) {
@@ -161,45 +161,49 @@ export class NodeService extends BaseService {
 
         var search : FindManyOptions<Node> = {
             relations : {
+                Schema     : true,
+                ParentNode : true,
+                Children   : true,
+                Action     : true
             },
             where : {
             },
             select : {
-                id      : true,
-                Name       : true,
-                Description: true,
-                Schema: {
-                    id         : true,
-                    Name       : true,
-                    Description: true,
-                },
-                ParentNode       : {
-                    id  : true,
-                    Name: true,
-                    Description: true,
-                },
-                Children: {
+                id          : true,
+                Name        : true,
+                Description : true,
+                Schema      : {
                     id          : true,
                     Name        : true,
                     Description : true,
                 },
-                Rules: {
+                ParentNode : {
                     id          : true,
                     Name        : true,
                     Description : true,
                 },
-                Action   : {
+                Children : {
                     id          : true,
                     Name        : true,
-                    Description : true,   
+                    Description : true,
                 },
-                CreatedAt  : true,
-                UpdatedAt  : true,
+                Rules : {
+                    id          : true,
+                    Name        : true,
+                    Description : true,
+                },
+                Action : {
+                    id          : true,
+                    Name        : true,
+                    Description : true,
+                },
+                CreatedAt : true,
+                UpdatedAt : true,
             }
         };
 
         if (filters.SchemaId) {
-            search.where['Schema'].id = filters.SchemaId;
+            search.where['Schema.id'] = filters.SchemaId;
         }
         if (filters.ParentNodeId) {
             search.where['ParentNode'].id = filters.ParentNodeId;
@@ -218,8 +222,8 @@ export class NodeService extends BaseService {
             return null;
         }
         const node = await this._nodeRepository.findOne({
-            where: {
-                id: nodeId
+            where : {
+                id : nodeId
             }
         });
         if (!node) {
@@ -233,36 +237,37 @@ export class NodeService extends BaseService {
             ErrorHandler.throwNotFoundError('Action cannot be found');
         }
         const action = await this._actionRepository.findOne({
-            where: {
-                id: actionId
+            where : {
+                id : actionId
             }
         });
         if (!action) {
             ErrorHandler.throwNotFoundError('Action cannot be found');
         }
-        if(actionModel && actionModel.ActionType) {
+        if (actionModel && actionModel.ActionType) {
             action.ActionType = actionModel.ActionType;
         }
-        if(actionModel && actionModel.Name) {
+        if (actionModel && actionModel.Name) {
             action.Name = actionModel.Name;
         }
-        if(actionModel && actionModel.Description) {
+        if (actionModel && actionModel.Description) {
             action.Description = actionModel.Description;
         }
-        if(actionModel && actionModel.InputParams) {
+        if (actionModel && actionModel.InputParams) {
             action.InputParams = actionModel.InputParams;
         }
-        if(actionModel && actionModel.OutputParams && actionModel.OutputParams.Message) {
+        if (actionModel && actionModel.OutputParams && actionModel.OutputParams.Message) {
             action.OutputParams.Message = actionModel.OutputParams.Message;
         }
-        if(actionModel && actionModel.OutputParams && actionModel.OutputParams.NextNodeId) {
+        if (actionModel && actionModel.OutputParams && actionModel.OutputParams.NextNodeId) {
             action.OutputParams.NextNodeId = actionModel.OutputParams.NextNodeId;
         }
-        if(actionModel && actionModel.OutputParams && actionModel.OutputParams.Extra) {
+        if (actionModel && actionModel.OutputParams && actionModel.OutputParams.Extra) {
             action.OutputParams.Extra = actionModel.OutputParams.Extra;
         }
 
         const updated = await this._actionRepository.save(action);
         return updated;
     }
+
 }

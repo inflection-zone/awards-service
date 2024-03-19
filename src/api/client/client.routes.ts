@@ -21,8 +21,10 @@ export const register = (app: express.Application): void => {
 
     router.get('/search', authenticator.authenticateUser, controller.search);
     router.get('/:id', authenticator.authenticateUser, controller.getById);
+    router.get('/', authenticator.authenticateClient, controller.getByApiKey);
     router.put('/:id', authenticator.authenticateUser, controller.update);
     router.delete('/:id', authenticator.authenticateUser, controller.delete);
+
 
     app.use('/api/v1/clients', router);
 };

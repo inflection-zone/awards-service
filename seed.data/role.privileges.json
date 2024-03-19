@@ -18,6 +18,7 @@
             "FileResource.GetById",
             "FileResource.Search",
             "FileResource.Download",
+            "FileResource.DownloadByVersion",
 
             "Client.Create",
             "Client.Search",
@@ -25,7 +26,9 @@
             "Client.Update",
             "Client.Delete",
             "Client.GetApiKey",
-            "Client.RenewApiKey"
+            "Client.RenewApiKey",
+
+            "Badge.GetStockBadgeImages"
         ]
     },
     {
@@ -46,6 +49,7 @@
             "FileResource.GetById",
             "FileResource.Search",
             "FileResource.Download",
+            "FileResource.DownloadByVersion",
 
             "Participant.Create",
             "Participant.Search",
@@ -100,7 +104,9 @@
             "Redemption.Delete",
 
             "Types.GetEventActionTypes",
-            "Types.GetRoles"
+            "Types.GetRoles",
+
+            "Badge.GetStockBadgeImages"
         ]
     }
 ]

@@ -13,7 +13,7 @@ export class IncomingEventTypeValidator extends BaseValidator {
         try {
             const type = joi.object({
                 Name        : joi.string().max(32).required(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
             });
             await type.validateAsync(request.body);
             return {
@@ -30,7 +30,7 @@ export class IncomingEventTypeValidator extends BaseValidator {
         try {
             const condition = joi.object({
                 Name        : joi.string().max(32).optional(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
             });
             await condition.validateAsync(request.body);
             return {
@@ -46,7 +46,12 @@ export class IncomingEventTypeValidator extends BaseValidator {
         : Promise<IncomingEventTypeSearchFilters> => {
         try {
             const condition = joi.object({
-                name : joi.string().optional(),
+                name         : joi.string().optional(),
+                pageIndex    : joi.number().min(0).optional(),
+                itemsPerPage : joi.number().min(1).optional(),
+                orderBy      : joi.string().max(256).optional(),
+                order        : joi.string().valid('ascending', 'descending').optional()
+                    .error(()=> new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await condition.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
@@ -61,6 +66,18 @@ export class IncomingEventTypeValidator extends BaseValidator {
         var name = query.name ? query.name : null;
         if (name != null) {
             filters['Name'] = name;
+        }
+        var itemsPerPage = query.itemsPerPage ? query.itemsPerPage : 25;
+        if (itemsPerPage != null) {
+            filters['ItemsPerPage'] = itemsPerPage;
+        }
+        var orderBy = query.orderBy ? query.orderBy : 'CreatedAt';
+        if (orderBy != null) {
+            filters['OrderBy'] = orderBy;
+        }
+        var order = query.order ? query.order : 'ASC';
+        if (order != null) {
+            filters['Order'] = order;
         }
         return filters;
     };

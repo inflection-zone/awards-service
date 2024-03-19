@@ -1,10 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { Helper } from "../common/helper";
 import { logger } from "../logger/logger";
 import * as RolePrivilegesList from '../../seed.data/role.privileges.json';
+import * as seedHowToEarnBadgeContent from '../../seed.data/how.to.earn.badge.content.seed..json';
 import { UserService } from '../database/services/user/user.service';
-import { ClientService } from '../database/services/client/client.service';
 import { UserCreateModel } from "../domain.types/user/user.domain.types";
 import { Gender } from "../domain.types/miscellaneous/system.types";
 import { RoleService } from "../database/services/user/role.service";
@@ -14,6 +13,12 @@ import { RoleCreateModel } from "../domain.types/user/role.domain.types";
 import { ClientResponseDto } from "../domain.types/client/client.domain.types";
 import { FileUtils } from "../common/utilities/file.utils";
 import { StringUtils } from "../common/utilities/string.utils";
+import { BadgeStockImageDomainModel } from "../domain.types/badge.stock.image/badge.stock.image.domain.model";
+import { BadgeStockImageService } from "../database/services/badge.stock.images/badge.stock.image.service";
+import { ClientService } from "../database/services/client/client.service";
+import { Loader } from "./loader";
+import { BadgeService } from "../database/services/awards/badge.service";
+import { BadgeUpdateModel } from "../domain.types/awards/badge.domain.types";
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +34,17 @@ export class Seeder {
 
     _fileResourceService: FileResourceService = null;
 
+    _badgeStockImageService: BadgeStockImageService = new BadgeStockImageService();
+
+    _badgeService: BadgeService = new BadgeService();
+
+    constructor () {
+
+        this._fileResourceService = Loader.Container.resolve(FileResourceService);
+
+    }
+
+
     public seed = async (): Promise<void> => {
         try {
             await this.createTempFolders();
@@ -36,6 +52,8 @@ export class Seeder {
             const clients = await this.seedInternalClients();
             await this.seedRolePrivileges();
             await this.seedDefaultUsers(clients);
+            await this.seedBadgeStockImages();
+            await this.seedHowToEarnBadgeContent();
         } catch (error) {
             logger.error(error.message);
         }
@@ -180,6 +198,82 @@ export class Seeder {
         }
 
         logger.info('Seeded default roles successfully!');
+    };
+
+    private seedBadgeStockImages = async () => {
+
+        var images = await this._badgeStockImageService.getAll();
+        if (images.length > 0) {
+            return;
+        }
+
+        var destinationStoragePath = 'assets/images/stock.badge.images/';
+        var sourceFilePath = path.join(process.cwd(), "./assets/images/stock.badge.images/");
+
+        var files = fs.readdirSync(sourceFilePath);
+        var imageFiles = files.filter((f) => {
+            return path.extname(f).toLowerCase() === '.png';
+        });
+
+        for await (const fileName of imageFiles) {
+
+            var sourceLocation = path.join(sourceFilePath, fileName);
+            var storageKey = destinationStoragePath + fileName;
+
+            var uploaded = await this._fileResourceService.uploadLocal(
+                storageKey,
+                sourceLocation,
+                true);
+            
+            if (!uploaded) {
+                continue;
+            }
+
+            var domainModel: BadgeStockImageDomainModel = {
+                Code       : fileName.replace('.png', ''),
+                FileName   : fileName,
+                ResourceId : uploaded.id,
+                PublicUrl  : uploaded.DefaultVersion.Url
+            };
+
+            var badgeStockImage = await this._badgeStockImageService.create(domainModel);
+            if (!badgeStockImage) {
+                logger.info('Error occurred while seeding badge stock images!');
+            }
+        }
+    };
+
+    public seedHowToEarnBadgeContent = async () => {
+
+        logger.info('Seeding how to earn content for badges...');
+
+        const arr = seedHowToEarnBadgeContent['default'];
+        //console.log(JSON.stringify(arr, null, 2));
+
+        for (let i = 0; i < arr.length; i++) {
+
+            const filters = {
+                Name : arr[i]['Name']
+            };
+
+            const existingRecord = await this._badgeService.search(filters);
+            //console.log(JSON.stringify(existingRecord, null, 2));
+            
+            if (existingRecord.Items.length > 0) {
+
+                const entity = existingRecord.Items[0];
+                const model: BadgeUpdateModel = {
+                    HowToEarn       : arr[i]['HowToEarn'],
+                    ClientId        : entity.Client.id,
+                    CategoryId      : entity.Category.id
+                };
+    
+                var record = await this._badgeService.update(entity.id, model);
+                var str = JSON.stringify(record, null, '  ');
+                logger.info(str);
+            }   
+
+        }
     };
 
 }

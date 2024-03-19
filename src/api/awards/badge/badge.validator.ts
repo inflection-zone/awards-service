@@ -16,7 +16,7 @@ export class BadgeValidator extends BaseValidator {
                 CategoryId  : joi.string().uuid().required(),
                 ClientId    : joi.string().uuid().required(),
                 Name        : joi.string().max(32).required(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
                 ImageUrl    : joi.string().max(1024).uri().required(),
             });
             await schema.validateAsync(request.body);
@@ -38,7 +38,7 @@ export class BadgeValidator extends BaseValidator {
                 CategoryId  : joi.string().uuid().optional(),
                 ClientId    : joi.string().uuid().optional(),
                 Name        : joi.string().max(32).optional(),
-                Description : joi.string().max(256).optional(),
+                Description : joi.string().max(256).allow('', null).optional(),
                 ImageUrl    : joi.string().max(1024).uri().optional(),
             });
             await schema.validateAsync(request.body);
@@ -57,9 +57,14 @@ export class BadgeValidator extends BaseValidator {
     public validateSearchRequest = async (request: express.Request): Promise<BadgeSearchFilters> => {
         try {
             const schema = joi.object({
-                categoryId : joi.string().uuid().optional(),
-                clientId   : joi.string().uuid().optional(),
-                name       : joi.string().max(64).optional(),
+                categoryId   : joi.string().uuid().optional(),
+                clientId     : joi.string().uuid().optional(),
+                name         : joi.string().max(64).optional(),
+                pageIndex    : joi.number().min(0).optional(),
+                itemsPerPage : joi.number().min(1).optional(),
+                orderBy      : joi.string().max(256).optional(),
+                order        : joi.string().valid('ascending', 'descending').optional()
+                    .error(()=> new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await schema.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
@@ -85,7 +90,18 @@ export class BadgeValidator extends BaseValidator {
         if (categoryId != null) {
             filters['CategoryId'] = categoryId;
         }
-
+        var itemsPerPage = query.itemsPerPage ? query.itemsPerPage : 25;
+        if (itemsPerPage != null) {
+            filters['ItemsPerPage'] = itemsPerPage;
+        }
+        var orderBy = query.orderBy ? query.orderBy : 'CreatedAt';
+        if (orderBy != null) {
+            filters['OrderBy'] = orderBy;
+        }
+        var order = query.order ? query.order : 'ASC';
+        if (order != null) {
+            filters['Order'] = order;
+        }
         return filters;
     };
 

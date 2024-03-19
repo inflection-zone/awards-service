@@ -39,6 +39,7 @@ export class ParticipantGroupService extends BaseService {
         const client = await this.getClient(createModel.ClientId);
         const badge = this._groupRepository.create({
             Client      : client,
+            ReferenceId : createModel.ReferenceId,
             Name        : createModel.Name,
             Description : createModel.Description,
             ImageUrl    : createModel.ImageUrl,
@@ -48,7 +49,7 @@ export class ParticipantGroupService extends BaseService {
         //Keep group context for this participant group
         const context = this._contextRepository.create({
             Type        : ContextType.Group,
-            ReferenceId : record.id,
+            ReferenceId : record.ReferenceId,
             Group       : record,
         });
         const contextRecord = await this._contextRepository.save(context);
@@ -228,6 +229,7 @@ export class ParticipantGroupService extends BaseService {
             },
             select : {
                 id     : true,
+                ReferenceId : true,
                 Client : {
                     id   : true,
                     Name : true,

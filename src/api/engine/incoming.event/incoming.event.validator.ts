@@ -16,7 +16,7 @@ export class IncomingEventValidator extends BaseValidator {
                 ReferenceId : joi.string().uuid().required(),
                 Payload     : joi.any().required(),
             });
-            console.log(request.body);
+   
             await event.validateAsync(request.body);
             const model: IncomingEventCreateModel = {
                 TypeId      : request.body.TypeId,
@@ -33,8 +33,13 @@ export class IncomingEventValidator extends BaseValidator {
         : Promise<IncomingEventSearchFilters> => {
         try {
             const condition = joi.object({
-                typeId      : joi.string().uuid().optional(),
-                referenceId : joi.string().uuid().optional(),
+                typeId       : joi.string().uuid().optional(),
+                referenceId  : joi.string().uuid().optional(),
+                pageIndex    : joi.number().min(0).optional(),
+                itemsPerPage : joi.number().min(1).optional(),
+                orderBy      : joi.string().max(256).optional(),
+                order        : joi.string().valid('ascending', 'descending').optional()
+                    .error(()=> new Error("order param: 'ascending' and 'descending' are the only valid values.")),
             });
             await condition.validateAsync(request.query);
             const filters = this.getSearchFilters(request.query);
@@ -55,6 +60,18 @@ export class IncomingEventValidator extends BaseValidator {
         var ReferenceId = query.ReferenceId ? query.ReferenceId : null;
         if (ReferenceId != null) {
             filters['ReferenceId'] = ReferenceId;
+        }
+        var itemsPerPage = query.itemsPerPage ? query.itemsPerPage : 25;
+        if (itemsPerPage != null) {
+            filters['ItemsPerPage'] = itemsPerPage;
+        }
+        var orderBy = query.orderBy ? query.orderBy : 'CreatedAt';
+        if (orderBy != null) {
+            filters['OrderBy'] = orderBy;
+        }
+        var order = query.order ? query.order : 'ASC';
+        if (order != null) {
+            filters['Order'] = order;
         }
         return filters;
     };
