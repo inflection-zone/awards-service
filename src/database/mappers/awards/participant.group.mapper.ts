@@ -15,6 +15,7 @@ export class ParticipantGroupMapper {
         const client = ClientMapper.toResponseDto(group.Client);
         const dto: ParticipantGroupResponseDto = {
             id          : group.id,
+            ReferenceId : group.ReferenceId,
             Client      : client,
             Name        : group.Name,
             Description : group.Description,

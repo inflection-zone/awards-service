@@ -10,6 +10,7 @@ import {
 
 export interface ParticipantGroupCreateModel {
     ClientId     : uuid;
+    ReferenceId? : uuid;
     Name         : string;
     Description? : string;
     ImageUrl     : string;
@@ -18,12 +19,14 @@ export interface ParticipantGroupCreateModel {
 export interface ParticipantGroupUpdateModel {
     ClientId     : uuid;
     Name?        : string;
+    ReferenceId? : uuid;
     Description? : string;
     ImageUrl?    : string;
 }
 
 export interface ParticipantGroupResponseDto {
-    id    : uuid;
+    id         : uuid;
+    ReferenceId: uuid;
     Client: {
         id  : uuid;
         Name: string;
@@ -47,6 +50,7 @@ export interface ParticipantGroupResponseDto {
 
 export interface ParticipantGroupSearchFilters extends BaseSearchFilters {
     ClientId?      : uuid;
+    ReferenceId?   : uuid;
     Name?          : string;
     ParticipantId? : uuid;
 }

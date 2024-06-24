@@ -145,32 +145,83 @@ export class DataProcessorr implements IDataProcessor {
     //#region Private methods
 
     getConsecutiveOccurrences = (
-        records: any[], predicate: PredicateType, options: ContinuityInputParams) => {
-        let count = 0;
+        records: any[], 
+        predicate: PredicateType, 
+        options: ContinuityInputParams, 
+        uniqueKeys = true) => {
+
         const foundBundles = [];
         var bundle = [];
         const numOccurrences: number = options.ContinuityCount;
         const valueName = 'value'; // Pl. check this again...
 
-        for (let i = 0; i < records.length; i++) {
-            if (predicate(
-                records[i],
-                valueName,
-                options.Operator,
-                options.Value,
-                options.SecondaryValue)) {
-                count++;
-                bundle.push(records[i]);
-                if (count === numOccurrences) {
-                    foundBundles.push(bundle);
+        //Sort records in ascending order of the key
+        var sortedRecords = records.sort((a, b) => { return a.key - b.key; });
+            
+        if (!uniqueKeys) {
+
+            let count = 0;
+
+            for (let i = 0; i < sortedRecords.length; i++) {
+
+                const record = sortedRecords[i];
+
+                if (predicate(
+                    record,
+                    valueName,
+                    options.Operator,
+                    options.Value,
+                    options.SecondaryValue)) {
+
+                    count++;
+                    bundle.push(record);
+
+                    if (count === numOccurrences) {
+                        foundBundles.push(bundle);
+                        count = 0;
+                        bundle = [];
+                    }
+
+                } else {
                     count = 0;
                     bundle = [];
                 }
-            } else {
-                count = 0;
-                bundle = [];
+            }
+        } else {
+            var bundleKeySet = new Set();
+
+            for (let i = 0; i < sortedRecords.length; i++) {
+                
+                const record = sortedRecords[i];
+                const recordKey = record.key;
+
+                if (predicate(
+                    record,
+                    valueName,
+                    options.Operator,
+                    options.Value,
+                    options.SecondaryValue)) {
+
+                    if (bundleKeySet.has(recordKey)) {
+                        continue;
+                    }
+
+                    bundleKeySet.add(recordKey);
+                    bundle.push(record);
+
+                    if (bundleKeySet.size === numOccurrences) {
+                        foundBundles.push(bundle);
+                        bundle = [];
+                        bundleKeySet = new Set();
+                    }
+                } 
+                else {
+                    bundle = [];
+                    bundleKeySet = new Set();
+                }
             }
         }
+
         return foundBundles;
     };
 

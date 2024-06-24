@@ -1,30 +1,41 @@
 import express from 'express';
+import fs from 'fs';
 import { ResponseHandler } from '../../../common/handlers/response.handler';
 import { FileResourceService } from '../../../database/services/general/file.resource.service';
 import { BaseController } from '../../base.controller';
 import { uuid } from '../../../domain.types/miscellaneous/system.types';
-import { ErrorHandler } from '../../../common/handlers/error.handler';
+import { ApiError, ErrorHandler } from '../../../common/handlers/error.handler';
 import BaseValidator from '../../base.validator';
 import * as mime from 'mime-types';
 import { FileResourceCreateModel } from '../../../domain.types/general/file.resource.domain.types';
 import { FileUtils } from '../../../common/utilities/file.utils';
 import { Loader } from '../../../startup/loader';
 import { StorageService } from '../../../modules/storage/storage.service';
+import { FileResourceMetadata } from '../../../domain.types/general/file.resource/file.resource.types';
+import { Authenticator } from '../../../auth/authenticator';
+import path from 'path';
+import { Helper } from '../../../common/helper';
+import { DownloadDisposition } from '../../../domain.types/general/file.resource/file.resource.types';
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 export class FileResourceController extends BaseController {
 
     //#region member variables and constructors
-
-    _service: FileResourceService = new FileResourceService();
-
-    _validator: BaseValidator = new BaseValidator();
+    _service: FileResourceService = null;
 
     _storageService: StorageService = Loader.Container.resolve(StorageService);
 
+    _validator: BaseValidator = new BaseValidator();
+
+    _authenticator: Authenticator = null;
+
+
     constructor() {
         super();
+        this._service = new FileResourceService();
+        this._authenticator = Loader.Authenticator;
+
     }
 
     //#endregion
@@ -46,7 +57,7 @@ export class FileResourceController extends BaseController {
             filename = filename + '_' + timestamp + '.' + ext;
             var storageKey = 'uploaded/' + dateFolder + '/' + filename;
 
-            var key = await this._storageService.upload(request, storageKey);
+            var key = await this._storageService.upload(storageKey, request);
             if (!key) {
                 ErrorHandler.throwInternalServerError(`Unable to upload the file!`);
             }
@@ -95,7 +106,7 @@ export class FileResourceController extends BaseController {
             response.setHeader('Content-type', mimeType as string);
             this.setResponseHeaders(response, originalFilename, disposition);
 
-            var readStream = await this._storageService.download(storageKey);
+            var readStream = await this._storageService.download(storageKey, '');
             if (!readStream) {
                 ErrorHandler.throwInternalServerError(`Unable to download the file!`);
             }
@@ -152,6 +163,79 @@ export class FileResourceController extends BaseController {
         else {
             response.setHeader('Content-disposition', 'attachment;filename=' + filename);
         }
+    };
+
+    DownloadByVersion = async (request: express.Request, response: express.Response): Promise<void> => {
+        try {
+            request.context = 'FileResource.DownloadByVersion';
+            const metadata = await this._validator.getByVersionName(request);
+            var resource = await this._service.getById(metadata.ResourceId);
+
+            if (resource.Public === false) {
+
+                //NOTE: Please note that this is deviation from regular pattern of
+                //authentication middleware pipeline. Here we are authenticating client
+                //and user only when the file resource is not public.
+
+                await this._authenticator.checkAuthentication(request);
+                await this._authorizer.authorize(request, response);
+            }
+
+            console.log(`Download request for Resource Id:: ${metadata.ResourceId}
+                and Version:: ${metadata.Version}`);
+            const localDestination = await this._service.DownloadByVersion(
+                metadata.ResourceId,
+                metadata.Version);
+
+            this.streamToResponse(localDestination, response, metadata);
+
+        } catch (error) {
+            ResponseHandler.handleError(request, response, error);
+        }
+    };
+
+    private streamToResponse(
+        localDestination: string,
+        response: express.Response<any, Record<string, any>>,
+        metadata: FileResourceMetadata) {
+
+        if (localDestination == null) {
+            throw new ApiError(404, 'File resource not found.');
+        }
+
+        var filename = path.basename(localDestination);
+        var mimetype = metadata.MimeType ?? Helper.getMimeType(localDestination);
+        if (!mimetype) {
+            mimetype = 'text/plain';
+        }
+
+        this.setDownloadResponseHeaders(response, metadata.Disposition, mimetype, filename);
+
+        var filestream = fs.createReadStream(localDestination);
+        filestream.pipe(response);
+    };
+
+    private setDownloadResponseHeaders(
+        response: express.Response,
+        disposition: DownloadDisposition,
+        mimeType: string,
+        filename: string) {
+
+        response.setHeader('Content-type', mimeType);
+
+        if (disposition === DownloadDisposition.Attachment) {
+            response.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        }
+        else if (disposition === DownloadDisposition.Inline ||
+            (mimeType === 'image/jpeg' ||
+            mimeType === 'image/png' ||
+            mimeType === 'image/bmp')) {
+            response.setHeader('Content-disposition', 'inline');
+        }
+        else {
+            response.setHeader('Content-disposition', 'attachment; filename=' + filename);
+        }
+
     }
 
     //#endregion

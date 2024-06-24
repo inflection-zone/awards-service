@@ -13,6 +13,7 @@ import { uuid } from '../../../domain.types/miscellaneous/system.types';
 import { StringUtils } from '../../../common/utilities/string.utils';
 import { Context } from '../../models/engine/context.model';
 import { ContextType } from '../../../domain.types/engine/engine.types';
+import { BadgeStockImage } from '../../../database/models/awards/badge.stock.image.model';
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,8 @@ export class ParticipantService extends BaseService {
     _participantBadgeRepository: Repository<ParticipantBadge> = Source.getRepository(ParticipantBadge);
 
     _badgeRepository: Repository<Badge> = Source.getRepository(Badge);
+
+    _badgeStockImageRepository: Repository<BadgeStockImage> = Source.getRepository(BadgeStockImage);
 
     //#endregion
 
@@ -60,7 +63,7 @@ export class ParticipantService extends BaseService {
         var record = await this._participantRepository.save(participant);
 
         var context = await this._contextRepository.findOne({
-            where: {
+            where : {
                 ReferenceId : createModel.ReferenceId
             }
         });
@@ -73,10 +76,10 @@ export class ParticipantService extends BaseService {
         else {
             //Keep person context for this participant
             context = this._contextRepository.create({
-                Type: ContextType.Person,
+                Type        : ContextType.Person,
                 ReferenceId : createModel.ReferenceId,
                 Participant : record,
-            })
+            });
             const contextRecord = await this._contextRepository.save(context);
             logger.info(JSON.stringify(contextRecord, null, 2));
         }
@@ -90,13 +93,13 @@ export class ParticipantService extends BaseService {
                 where : {
                     id : id
                 },
-                relations: {
-                    Client: true,
+                relations : {
+                    Client : true,
                 }
             });
             var context = await this._contextRepository.findOne({
-                where: {
-                    ReferenceId: participant.ReferenceId
+                where : {
+                    ReferenceId : participant.ReferenceId
                 }
             });
             return ParticipantMapper.toResponseDto(participant, context);
@@ -112,32 +115,32 @@ export class ParticipantService extends BaseService {
                 where : {
                     ReferenceId : referenceId
                 },
-                select: {
-                    id         : true,
-                    ReferenceId: true,
-                    Client     : {
-                        id   : true,
-                        Name : true,
-                        Code : true,
-                        Email: true,
+                select : {
+                    id          : true,
+                    ReferenceId : true,
+                    Client      : {
+                        id    : true,
+                        Name  : true,
+                        Code  : true,
+                        Email : true,
                     },
-                    BirthDate     : true,
-                    Prefix        : true,
-                    FirstName     : true,
-                    LastName      : true,
-                    CountryCode   : true,
-                    Phone         : true,
-                    Email         : true,
-                    Gender        : true,
-                    OnboardingDate: true,
+                    BirthDate      : true,
+                    Prefix         : true,
+                    FirstName      : true,
+                    LastName       : true,
+                    CountryCode    : true,
+                    Phone          : true,
+                    Email          : true,
+                    Gender         : true,
+                    OnboardingDate : true,
                 },
-                relations: {
-                    Client: true,
+                relations : {
+                    Client : true,
                 }
             });
             var context = await this._contextRepository.findOne({
-                where: {
-                    ReferenceId: participant.ReferenceId
+                where : {
+                    ReferenceId : participant.ReferenceId
                 }
             });
             return ParticipantMapper.toResponseDto(participant, context);
@@ -249,7 +252,6 @@ export class ParticipantService extends BaseService {
             ErrorHandler.throwInternalServerError(error.message, 500);
         }
     };
-
     
     public awardBadge = async (id: string, badgeId: uuid, reason: string, acquiredDate = new Date())
         : Promise<ParticipantBadge> => {
@@ -265,10 +267,10 @@ export class ParticipantService extends BaseService {
                 }
             });
             var participantBadge = await this._participantBadgeRepository.create({
-                Participant: participant,
-                Badge: badge,
-                AcquiredDate: acquiredDate,
-                Reason : reason
+                Participant  : participant,
+                Badge        : badge,
+                AcquiredDate : acquiredDate,
+                Reason       : reason
             });
             var record = await this._participantBadgeRepository.save(participantBadge);
             return record;
@@ -286,11 +288,11 @@ export class ParticipantService extends BaseService {
                         id : id
                     }
                 },
-                relations: {
-                    Badge: {
-                        Category: true,
+                relations : {
+                    Badge : {
+                        Category : true,
                     },
-                    Participant: true,
+                    Participant : true,
                 },
                 // select: {
                 //     Badge : {
@@ -309,25 +311,26 @@ export class ParticipantService extends BaseService {
                 //     CreatedAt : true,
                 // }
             };
+              
             const list = await this._participantBadgeRepository.find(search);
             const participantBadges = list.map(x => {
                 return {
-                    ParticipantId: id,
-                    Badge: {
-                        id : x.Badge.id,
-                        Name: x.Badge.Name,
+                    ParticipantId : id,
+                    Badge         : {
+                        id          : x.Badge.id,
+                        Name        : x.Badge.Name,
                         Description : x.Badge.Description,
-                        Category: {
-                            id: x.Badge.Category.id,
-                            Name: x.Badge.Category.Name,
-                            ImageUrl: x.Badge.Category.ImageUrl,
+                        Category    : {
+                            id       : x.Badge.Category.id,
+                            Name     : x.Badge.Category.Name,
+                            ImageUrl : x.Badge.Category.ImageUrl,
                         },
                         ImageUrl : x.Badge.ImageUrl,
                     },
-                    AcquiredDate: x.AcquiredDate,
-                    Reason: x.Reason,
-                    CreatedAt: x.CreatedAt
-                }
+                    AcquiredDate : x.AcquiredDate,
+                    Reason       : x.Reason,
+                    CreatedAt    : x.CreatedAt
+                };
             });
             return participantBadges;
         } catch (error) {
@@ -373,6 +376,27 @@ export class ParticipantService extends BaseService {
         return search;
     };
 
+
+    public getBadgeImageUrl =async (participantBadges: ParticipantBadgeResponseDto[], classified: any) => {
+
+        var result = null;
+        for await (var participantBadge of participantBadges) {
+            var badgeimage = await this._badgeStockImageRepository.findOne({
+                where : {
+                    Code : participantBadge.Badge.Name
+                }
+            });
+            participantBadge.Badge.ImageUrl = badgeimage.PublicUrl ? badgeimage.PublicUrl: null;
+            result = {
+                BadgesByCategory: classified,
+                BadgeList: participantBadges,
+            };
+
+        }
+        return result;
+    };
+
+    
     //#endregion
 
 }

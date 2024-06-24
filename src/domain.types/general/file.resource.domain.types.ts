@@ -4,6 +4,7 @@ import { uuid } from "../miscellaneous/system.types";
 export interface FileResourceCreateModel {
     StorageKey       ?: string;
     MimeType         ?: string;
+    Metadata         ?: any;
     OriginalFilename ?: string;
     UserId           ?: uuid;
     Size             ?: number;

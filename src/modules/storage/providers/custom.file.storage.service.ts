@@ -28,7 +28,7 @@ export class CustomFileStorageService implements IFileStorageService {
         }
     };
 
-    upload = async (inputStream: any, storageKey: string): Promise<string> => {
+    upload = async (storageKey: string, inputStream: any): Promise<string|null|undefined> => {
         return new Promise((resolve, reject) => {
             try {
                 var storagePath = FileUtils.getStoragePath();
@@ -46,13 +46,14 @@ export class CustomFileStorageService implements IFileStorageService {
                 });
             }
             catch (error) {
+                logger.error("Unable to create file resource!");
                 logger.error(error.message);
-                reject("Unable to create file resource!");
+                reject(null);
             }
         });
     };
 
-    uploadLocally = async (storageKey: string, localFilePath: string): Promise<string> => {
+    uploadLocally = async (storageKey: string, localFilePath: string): Promise<string|null|undefined> => {
         try {
             const fileContent = fs.readFileSync(localFilePath);
             const location = path.join(this._storagePath, storageKey);

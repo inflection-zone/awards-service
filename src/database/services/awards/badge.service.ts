@@ -63,12 +63,33 @@ export class BadgeService extends BaseService {
         }
     };
 
+    public getByClientId = async (clientId: uuid): Promise<BadgeResponseDto[]> => {
+        try {
+            var badges = await this._badgeRepository.find({
+                where : {
+                    Client : {
+                        id : clientId
+                    }
+                },
+                relations: {
+                    Category: true,
+                    Client  : true
+                }
+            });
+            return badges.map(x => BadgeMapper.toResponseDto(x));
+        } catch (error) {
+            logger.error(error.message);
+            ErrorHandler.throwInternalServerError(error.message, 500);
+        }
+    };
+
     public search = async (filters: BadgeSearchFilters)
         : Promise<BadgeSearchResults> => {
         try {
             var search = this.getSearchModel(filters);
             var { search, pageIndex, limit, order, orderByColumn } = this.addSortingAndPagination(search, filters);
             const [list, count] = await this._badgeRepository.findAndCount(search);
+
             const searchResults = {
                 TotalCount     : count,
                 RetrievedCount : list.length,
@@ -116,6 +137,9 @@ export class BadgeService extends BaseService {
             if (model.ImageUrl != null) {
                 badge.ImageUrl = model.ImageUrl;
             }
+            if (model.HowToEarn != null) {
+                badge.HowToEarn = model.HowToEarn;
+            }
             var record = await this._badgeRepository.save(badge);
             return BadgeMapper.toResponseDto(record);
         } catch (error) {
@@ -144,7 +168,9 @@ export class BadgeService extends BaseService {
     private getSearchModel = (filters: BadgeSearchFilters) => {
 
         var search : FindManyOptions<Badge> = {
-            relations : {
+            relations: {
+                Category: true,
+                Client  : true
             },
             where : {
             },
@@ -163,6 +189,7 @@ export class BadgeService extends BaseService {
                 Name       : true,
                 Description: true,
                 ImageUrl   : true,
+                HowToEarn  : true,
                 CreatedAt  : true,
                 UpdatedAt  : true,
             }

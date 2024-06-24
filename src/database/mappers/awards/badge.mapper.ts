@@ -26,6 +26,7 @@ export class BadgeMapper {
             Name       : badge.Name,
             Description: badge.Description,
             ImageUrl   : badge.ImageUrl,
+            HowToEarn  : badge.HowToEarn,
             CreatedAt  : badge.CreatedAt,
             UpdatedAt  : badge.UpdatedAt,
         };

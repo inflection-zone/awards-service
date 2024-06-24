@@ -23,6 +23,9 @@ export class ParticipantGroup {
     @PrimaryGeneratedColumn('uuid')
     id : string;
 
+    @Column({ type: 'varchar', length: 256, nullable: true })
+    ReferenceId : string; //This is id of the group in external system
+
     @ManyToOne(() => Client, { nullable: true })
     @JoinColumn()
     Client : Client;

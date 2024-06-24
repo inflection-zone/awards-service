@@ -1,5 +1,5 @@
 {
-    "SystemIdentifier": "REAN Careplan Service",
+    "SystemIdentifier": "Awards Service",
     "Auth" : {
         "Authentication": "Custom",
         "Authorization": "Custom"
@@ -25,6 +25,6 @@
     },
     "MaxUploadFileSize": 104857600,
     "JwtExpiresIn": 2592000,
-    "Logger" : "Winston",
+    "Logger" : "Custom",
     "UseHTTPLogging" : true
 }

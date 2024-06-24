@@ -22,25 +22,27 @@ export interface BadgeUpdateModel {
     Name?        : string;
     Description? : string;
     ImageUrl?    : string;
+    HowToEarn?   : string;
 }
 
 export interface BadgeResponseDto {
-    id         : uuid;
-    Name       : string;
-    Description: string;
-    ImageUrl   : string;
-    Category   : {
-        id         : uuid;
-        Name       : string;
-        Description: string;
+    id          : uuid;
+    Name        : string;
+    Description : string;
+    ImageUrl    : string;
+    HowToEarn   : string;
+    Category    : {
+        id          : uuid;
+        Name        : string;
+        Description : string;
     };
     Client: {
-        id  : uuid;
-        Name: string;
-        Code: string;
+        id   : uuid;
+        Name : string;
+        Code : string;
     };
-    CreatedAt: Date;
-    UpdatedAt: Date;
+    CreatedAt : Date;
+    UpdatedAt : Date;
 }
 
 export interface BadgeSearchFilters extends BaseSearchFilters {

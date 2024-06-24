@@ -292,13 +292,13 @@ export class SchemaInstanceService extends BaseService {
         if (filters.SchemaId) {
             search.where['Schema'] = {
                 id: ''
-            }
+            };
             search.where['Schema'].id = filters.SchemaId;
         }
         if (filters.ContextId) {
             search.where['Context'] = {
                 id: ''
-            }
+            };
             search.where['Context'].id = filters.ContextId;
         }
 

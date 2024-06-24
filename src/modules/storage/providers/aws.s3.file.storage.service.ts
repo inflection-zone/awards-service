@@ -28,13 +28,14 @@ export class AWSS3FileStorageService implements IFileStorageService {
         }
     };
 
-    upload = async (inputStream: any, storageKey: string): Promise<string> => {
+    upload = async (storageKey: string, inputStream: any): Promise<string|null|undefined> => {
         try {
+            const fileContent = fs.readFileSync(inputStream);
             var s3 = this.getS3Client();
             const params = {
                 Bucket : process.env.STORAGE_BUCKET,
                 Key    : storageKey,
-                Body   : inputStream //Request stream piped directly
+                Body   : fileContent //Request stream piped directly
             };
             var stored = await s3.upload(params).promise();
             logger.info(JSON.stringify(stored, null, 2));
@@ -42,10 +43,11 @@ export class AWSS3FileStorageService implements IFileStorageService {
         }
         catch (error) {
             logger.error(error.message);
+            return null;
         }
     };
 
-    uploadLocally = async (storageKey: string, localFilePath: string): Promise<string> => {
+    uploadLocally = async (storageKey: string, localFilePath: string): Promise<string|null|undefined> => {
 
         try {
             const fileContent = fs.readFileSync(localFilePath);
@@ -64,17 +66,40 @@ export class AWSS3FileStorageService implements IFileStorageService {
         }
         catch (error) {
             logger.error(error.message);
+            return null;
         }
     };
 
-    download = async (storageKey: string): Promise<any> => {
+    download = async (storageKey: string, localFilePath?: string): Promise<any> => {
         try {
             const s3 = this.getS3Client();
             const params = {
                 Bucket : process.env.STORAGE_BUCKET,
                 Key    : storageKey,
             };
-            return s3.getObject(params).createReadStream();
+            var file = fs.createWriteStream(localFilePath);
+
+            return new Promise((resolve, reject) => {
+                s3.getObject(params).createReadStream()
+                    .on('end', () => {
+    
+                        //var st = fs.existsSync(localFilePath);
+    
+                        var stats = fs.statSync(localFilePath);
+                        var count = 0;
+                        while (stats.size === 0 && count < 5) {
+                            setTimeout(() => {
+                                stats = fs.statSync(localFilePath);
+                            }, 3000);
+                            count++;
+                        }
+                        return resolve(localFilePath);
+                    })
+                    .on('error', (error) => {
+                        return reject(error);
+                    })
+                    .pipe(file);
+            });
         }
         catch (error) {
             logger.error(error.message);
