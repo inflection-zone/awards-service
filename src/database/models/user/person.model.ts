@@ -21,7 +21,7 @@ export class Person {
     @Column({ type: 'varchar', length: 256, nullable: true })
     ReferenceId : string; //This is id of the person in external system
 
-    @Column({ type: 'varchar', length: 256, nullable: false })
+    @Column({ type: 'varchar', length: 256, nullable: true })
     Prefix : string;
 
     @Column({ type: 'varchar', length: 256, nullable: false })
